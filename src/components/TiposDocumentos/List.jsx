@@ -20,12 +20,12 @@ function DataFetcher() {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         
-        const totalRecords = response.headers.get('x-total-count');
-        setTotalPages(Math.ceil(totalRecords / recordsPerPage));
-        console.log('Total Records:', totalRecords);
-
         const fetchedData = await response.json();
-        setData(fetchedData);
+
+        const totalRecords = fetchedData.totalRecords;
+        setTotalPages(Math.ceil(totalRecords / recordsPerPage));
+
+        setData(fetchedData.data);
         setError(null);
 
       } catch (error) {
@@ -59,21 +59,38 @@ function DataFetcher() {
   }
 
   return (
-    <div>
-      <h1>Tipos de Documentos</h1>
-      <ul>
-        {data.map(doc => (
-          <li key={doc.id}>
-            {doc.sintetico} - {doc.descripcion}
-          </li>
-        ))}
-      </ul>
-      <div>
-        <button onClick={prevPage} disabled={currentPage === 1}>
+    <div className="container mt-4">
+      <h1 className="mb-4">Tipos de Documentos</h1>
+      <table className="table table-striped mb-3">
+        <thead>
+          <tr>
+            <th>Sintético</th>
+            <th>Descripción</th>
+          </tr>
+        </thead>
+        <tbody>
+          {data.map(doc => (
+            <tr key={doc.id}>
+              <td>{doc.sintetico}</td>
+              <td>{doc.descripcion}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <div className="d-flex justify-content-between align-items-center">
+        <button
+          className="btn btn-primary"
+          onClick={prevPage}
+          disabled={currentPage === 1}
+        >
           Anterior
         </button>
         <span> Página {currentPage} de {totalPages} </span>
-        <button onClick={nextPage} disabled={currentPage === totalPages}>
+        <button
+          className="btn btn-primary"
+          onClick={nextPage}
+          disabled={currentPage === totalPages}
+        >
           Siguiente
         </button>
       </div>
