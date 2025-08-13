@@ -51,11 +51,23 @@ function DataFetcher() {
   };
 
   if (loading) {
-    return <div>Cargando...</div>;
+    return (
+      <div className='text-center'>
+        <div className="spinner-border" role="status">
+          <span className="visually-hidden">Cargando...</span>
+        </div>
+      </div>
+    );
   }
 
   if (error) {
-    return <div>Error: {error}</div>;
+    return (
+      <div className="alert alert-danger d-flex align-items-center" role="alert">
+        <div>
+          {error}
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -69,12 +81,18 @@ function DataFetcher() {
           </tr>
         </thead>
         <tbody>
-          {data.map(doc => (
+          {data.length === 0 ? (
+            <tr>
+              <td colSpan="2" className="text-center">
+                <span className='badge text-bg-warning fw-normal'>No hay datos disponibles</span>
+              </td>
+            </tr>
+          ) : (data.map(doc => (
             <tr key={doc.id}>
               <td>{doc.sintetico}</td>
               <td>{doc.descripcion}</td>
             </tr>
-          ))}
+          )))}
         </tbody>
       </table>
       <div className="d-flex justify-content-between align-items-center">
