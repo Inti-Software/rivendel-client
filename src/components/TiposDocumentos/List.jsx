@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 function DataFetcher() {
   const [data, setData] = useState([]);
@@ -7,6 +8,9 @@ function DataFetcher() {
   const [currentPage, setCurrentPage] = useState(1);
   const [recordsPerPage] = useState(5);
   const [totalPages, setTotalPages] = useState(0);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [mensaje, setMensaje] = useState(location.state?.mensaje || null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -38,6 +42,16 @@ function DataFetcher() {
     fetchData();
   }, [currentPage, recordsPerPage]);
 
+  useEffect(() => {
+    if (mensaje) {
+      const timer = setTimeout(() => {
+        setMensaje(null);
+        navigate(location.pathname, { replace: true });
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [mensaje, navigate, location.pathname]);
+
   const nextPage = () => {
     if (currentPage < totalPages) {
       setCurrentPage(prev => prev + 1);
@@ -62,17 +76,40 @@ function DataFetcher() {
 
   if (error) {
     return (
-      <div className="alert alert-danger d-flex align-items-center" role="alert">
-        <div>
-          {error}
+      <>
+        <Link to="/tipos-documentos/new" className="btn btn-outline-primary mb-2">Nuevo tipo de documento</Link>
+        <div className="alert alert-danger d-flex align-items-center" role="alert">
+          <div>
+            {error}
+          </div>
         </div>
-      </div>
+      </>
+    );
+  }
+
+  function getMessage(message) {
+    let cssClass = 'badge m-auto p-2 fw-normal' +
+      (message ? ' text-bg-information' : ' text-bg-none');
+    return (
+        <span className={cssClass}>
+          {message || "."}
+        </span>
     );
   }
 
   return (
     <div className="container mt-4">
-      <h1 className="mb-4">Tipos de Documentos</h1>
+      <div>
+        <div className='col-8 d-inline-block'>
+          <h1>Tipos de Documentos</h1>
+        </div>
+        <div className='col-4 d-inline-flex justify-content-end'>
+          <Link to="/tipos-documentos/new" className="btn btn-outline-primary mb-2">Nuevo</Link>
+        </div>
+      </div>
+      <div id='mensaje' className='d-flex justify-content-between align-items-center'>
+        {getMessage(location.state?.mensaje || null)}
+      </div>
       <table className="table table-striped mb-3">
         <thead>
           <tr>

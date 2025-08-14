@@ -6,3 +6,13 @@ body {
   /* Margin bottom by footer height */
   margin-bottom: 60px;
 }
+
+.text-bg-information {
+  background-color: #ff0 !important;
+  color: #000 !important;
+}
+
+.text-bg-none {
+  background-color: transparent !important;
+  columns: transparent !important;
+}
