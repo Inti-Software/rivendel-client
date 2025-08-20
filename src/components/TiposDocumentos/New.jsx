@@ -20,7 +20,7 @@ const NewTipoDocumento = () => {
         let s = sintetico;
         setSintetico("");
         setDescripcion("");
-        setTimeout(() => navigate("/tiposdocumentos"), 
+        setTimeout(() => navigate("/tipos-documentos"), 
             { state: { mensaje: "El tipo de documento " + s + " se creó correctamente." } });
       } else {
         const msg = await response.json();
