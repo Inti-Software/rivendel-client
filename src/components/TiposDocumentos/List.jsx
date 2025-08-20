@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
-function DataFetcher() {
+const ListTiposDocumentos = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -153,4 +153,4 @@ function DataFetcher() {
   );
 }
 
-export default DataFetcher;
+export default ListTiposDocumentos;

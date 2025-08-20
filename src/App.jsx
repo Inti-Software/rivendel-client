@@ -1,12 +1,12 @@
+//import MyForm from "./components/TipoDocumentoEdit";
 //import './App.css'
-import MyForm from './components/TipoDocumentoEdit'
 
 function App() {
   return (
     <>
-      <MyForm />
+      <h1>An app</h1>
     </>
-  )
+  );
 }
 
-export default App
+export default App;

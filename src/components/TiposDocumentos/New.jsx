@@ -35,7 +35,6 @@ const NewTipoDocumento = () => {
   return (
     <div className="container col-md-6 text-justify-center">
       <h2>Nuevo Tipo de Documento</h2>
-      {/* {error && <div className="alert alert-danger">{error}</div>} */}
       {error && <span className="text-danger bg-body-secondary rounded-2 border border-danger mb-2 d-block text-center">{error}</span>}
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
