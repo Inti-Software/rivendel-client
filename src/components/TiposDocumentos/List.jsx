@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { useNotification } from "../../contexts/Constants";
+import NotificationDisplay from "../NotificationDisplay";
 
 const ListTiposDocumentos = () => {
   const [data, setData] = useState([]);
@@ -8,9 +10,7 @@ const ListTiposDocumentos = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [recordsPerPage] = useState(5);
   const [totalPages, setTotalPages] = useState(0);
-  const navigate = useNavigate();
-  const location = useLocation();
-  const [mensaje, setMensaje] = useState(location.state?.mensaje || null);
+  const { showNotification } = useNotification();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -40,21 +40,6 @@ const ListTiposDocumentos = () => {
     };
     fetchData();
   }, [currentPage, recordsPerPage]);
-
-  useEffect(() => {
-    console.log("mensaje: " + mensaje);
-    if (mensaje) {
-      const timer = setTimeout(() => {
-        setMensaje(null);
-        navigate(location.pathname, { replace: true });
-      }, 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [mensaje, navigate, location.pathname]);
-  
-  useEffect(() => {
-    console.log("Data fetched:", data);
-  }, [data]);
 
   const nextPage = () => {
     if (currentPage < totalPages) {
@@ -97,13 +82,6 @@ const ListTiposDocumentos = () => {
     );
   }
 
-  function getMessage(message) {
-    let cssClass =
-      "badge m-auto p-2 fw-normal" +
-      (message ? " text-bg-information" : " text-bg-none");
-    return <span className={cssClass}>{message || "."}</span>;
-  }
-
   const deleteRecord = async (e, id) => {
     e.preventDefault();
     if (window.confirm("¿Está seguro de eliminar este tipo de documento?")) {
@@ -114,11 +92,10 @@ const ListTiposDocumentos = () => {
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
-        //const result = await response.json();
-        setMensaje("Tipo de documento eliminado exitosamente.");
         setData((prevData) => prevData.filter((doc) => doc.id !== id));
+        showNotification("Tipo de documento eliminado exitosamente.", "success");
       } catch (error) {
-        setMensaje(`Error al eliminar: ${error.message}`);
+        showNotification(`Error al eliminar: ${error.message}`, "danger");
       }
     }
   };
@@ -138,12 +115,7 @@ const ListTiposDocumentos = () => {
           </Link>
         </div>
       </div>
-      <div
-        id="mensaje"
-        className="d-flex justify-content-between align-items-center"
-      >
-        {getMessage(location.state?.mensaje || null)}
-      </div>
+      <NotificationDisplay />
       <table className="table table-striped mb-3">
         <thead>
           <tr>

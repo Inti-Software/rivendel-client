@@ -1,12 +1,13 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useNotification } from "../../contexts/Constants";
 
 const NewTipoDocumento = () => {
   const [sintetico, setSintetico] = useState("");
   const [descripcion, setDescripcion] = useState("");
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const { showNotification } = useNotification();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -17,14 +18,12 @@ const NewTipoDocumento = () => {
         body: JSON.stringify({ sintetico, descripcion }),
       });
       if (response.ok) {
-        let s = sintetico;
         setSintetico("");
         setDescripcion("");
-        setTimeout(() => navigate("/tipos-documentos"), 
-            { state: { mensaje: "El tipo de documento " + s + " se creó correctamente." } });
+        showNotification("El tipo de documento " + sintetico + " se creó correctamente.", "success");
+        navigate("/tipos-documentos");
       } else {
         const msg = await response.json();
-        console.log(msg);
         setError(msg.code + ": " + msg.message);
       }
     } catch (error) {
