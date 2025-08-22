@@ -8,20 +8,25 @@ export const NotificationProvider = ({ children }) => {
     visible: false,
   });
 
-  const showNotification = (message, type = 'success', duration = 3000) => {
-    setNotification({ message, type, visible: true });
-    
+  const showNotification = (message, duration = 3000) => {
+    setNotification({ message, type: "information", visible: true });   
     setTimeout(() => {
       setNotification(prev => ({ ...prev, visible: false }));
     }, duration);
   };
-  
-  const hideNotification = () => {
-    setNotification(prev => ({ ...prev, visible: false }));
-  };
 
+  const showError = (message, duration = 3000) => {
+    setNotification({ message, type: "danger", visible: true });
+
+    if (duration > 0) {
+      setTimeout(() => {
+        setNotification(prev => ({ ...prev, visible: false }));
+      }, duration);
+    }
+  }
+  
   return (
-    <NotificationContext.Provider value={{ notification, showNotification, hideNotification }}>
+    <NotificationContext.Provider value={{ notification, showNotification, showError }}>
       {children}
     </NotificationContext.Provider>
   );

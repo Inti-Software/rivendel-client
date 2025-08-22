@@ -1,15 +1,19 @@
 import { useNotification } from "../contexts/Constants";
 
 const NotificationDisplay = () => {
-  const { notification, hideNotification } = useNotification();
-  if (!notification.visible) return null;
+  const { notification } = useNotification();
 
-  return (
-    <div
-      className={`alert alert-${notification.type} d-flex align-items-center`}
-    >
-      {notification.message}
-      <button onClick={hideNotification}>&times;</button>
+	const backgroundColor = notification.type === "danger" ? "text-bg-danger" : "text-bg-information";
+
+	return (
+    <div className="row" style={{ minHeight: "30px" }}>
+			{notification.visible && (
+				<div id="mensaje" className="d-flex justify-content-between align-items-center">
+					<span className={`badge m-auto p-2 fw-normal ${backgroundColor}`}>
+						{notification.message || "No hay mensajes"}
+					</span>				
+			</div>
+			)}
     </div>
   );
 };
