@@ -61,14 +61,21 @@ const EditTipoDocumento = () => {
     }
   };
 
+  const displayError = (errors) => {
+    if (!errors) return null;
+    return (
+      <div className="card border-danger p-2 m-md-4">
+        <ul className="mb-0">
+          { errors.map((err, index) => <li key={index} className="text-danger">{err}</li>) }
+        </ul>
+      </div>
+    );
+  };  
+
   return (
     <div className="container col-md-6 text-justify-center">
       <h2>Nuevo Tipo de Documento</h2>
-      {error && (
-        <span className="text-danger bg-body-secondary rounded-2 border border-danger mb-2 d-block text-center">
-          {error}
-        </span>
-      )}
+      { displayError(error) }
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
           <label htmlFor="sintetico" className="form-label">
