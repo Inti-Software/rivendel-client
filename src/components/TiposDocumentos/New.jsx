@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useNotification } from "../../contexts/Constants";
 
@@ -8,6 +8,10 @@ const NewTipoDocumento = () => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
   const { showNotification } = useNotification();
+
+  useEffect(() => {
+    document.title = "Nuevo Tipo de Documento - Rivendel";
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

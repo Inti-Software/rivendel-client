@@ -102,7 +102,7 @@ const ListTiposDocumentos = () => {
                   <td>{doc.descripcion}</td>
                   <td>
                     <Link
-                      to={`/tipos-documentos/${doc.id}/edit`}
+                      to={`/tipos-documentos/edit/${doc.id}`}
                       className="btn btn-outline-secondary btn-sm ms-2"
                     >
                       Editar
