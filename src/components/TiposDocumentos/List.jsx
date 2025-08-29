@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { FOR_EVER, useNotification } from "../../contexts/Constants";
+import { useNotification } from "../../contexts/Constants";
 import NotificationDisplay from "../NotificationDisplay";
 
 const ListTiposDocumentos = () => {
@@ -9,7 +9,7 @@ const ListTiposDocumentos = () => {
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
-  const { showNotification, showError } = useNotification();
+  const { showSuccess, showError } = useNotification();
   const RECORDS_PER_PAGE = 5;
 
   useEffect(() => {
@@ -155,7 +155,7 @@ const ListTiposDocumentos = () => {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         setData((prevData) => prevData.filter((doc) => doc.id !== id));
-        showNotification("Tipo de documento eliminado exitosamente.");
+        showSuccess("Se eliminó un tipo de documento.");
       } catch (error) {
         showError(`Error al eliminar: ${error.message}`);
       }

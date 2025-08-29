@@ -8,7 +8,7 @@ export const NotificationProvider = ({ children }) => {
     visible: false,
   });
 
-  const showNotification = (message, duration = 3000) => {
+  const showSuccess = (message, duration = 3000) => {
     setNotification({ message, type: "information", visible: true });   
     setTimeout(() => {
       setNotification(prev => ({ ...prev, visible: false }));
@@ -26,7 +26,7 @@ export const NotificationProvider = ({ children }) => {
   }
   
   return (
-    <NotificationContext.Provider value={{ notification, showNotification, showError }}>
+    <NotificationContext.Provider value={{ notification, showSuccess, showError }}>
       {children}
     </NotificationContext.Provider>
   );

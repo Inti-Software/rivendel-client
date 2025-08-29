@@ -1,44 +1,11 @@
-import { useEffect, useState } from "react";
-import { Route, useParams } from "react-router-dom";
-import { Link, useNavigate } from "react-router-dom";
-import { useNotification } from "../../contexts/Constants";
+import FormContainer from "../Layout/FormContainer";
+import FormFields from "./FormFields";
+import { ACTION_UPDATE } from "../../utils/constants";
+import { useTipoDocumento } from "../../hooks/useTipoDocumento";
 
 const EditTipoDocumento = () => {
-  const { id } = useParams();
-  //  const [id, setId] = useState(idTipoDocumento);
-  const [sintetico, setSintetico] = useState("");
-  const [descripcion, setDescripcion] = useState("");
-  const [error, setError] = useState(null);
-  const navigate = useNavigate();
-  const { showNotification } = useNotification();
-
-  useEffect(() => {
-    document.title = "Editar Tipo de Documento - Rivendel";
-
-    try {
-      const fetchData = async () => {
-        const response = await fetch(
-          `http://localhost:3000/tipdocs/${id}`
-        );
-        if (response.ok) {
-          const data = await response.json();
-          setSintetico(data.sintetico);
-          setDescripcion(data.descripcion);
-        } else {
-          const msg = await response.json();
-          setError(msg.code + ": " + msg.message);
-        }
-      };
-      fetchData();
-    } catch (error) {
-      setError("Error de conexión: " + error.message);
-    }
-  }, [id]);
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await fetch(
+  const postRequest = async ({id, sintetico, descripcion}) => {
+    return fetch(
         `http://localhost:3000/tipdocs/${id}`,
         {
           method: "PATCH",
@@ -46,71 +13,20 @@ const EditTipoDocumento = () => {
           body: JSON.stringify({ sintetico, descripcion }),
         }
       );
-      if (response.ok) {
-        showNotification(
-          "El tipo de documento " + sintetico + " se actualizó correctamente.",
-          "success"
-        );
-        navigate("/tipos-documentos");
-      } else {
-        const msg = await response.json();
-        setError(msg.message);
-      }
-    } catch (error) {
-      setError("Error de conexión: " + error.message);
-    }
-  };
+    };
 
-  const displayError = (errors) => {
-    if (!errors) return null;
-    return (
-      <div className="card border-danger p-2 m-md-4">
-        <ul className="mb-0">
-          { errors.map((err, index) => <li key={index} className="text-danger">{err}</li>) }
-        </ul>
-      </div>
-    );
-  };  
+  const getRequest = async (id) => {
+    return fetch(`http://localhost:3000/tipdocs/${id}`);
+  }
+
+  const {fields, error, handleSubmit} = useTipoDocumento (postRequest, ACTION_UPDATE, getRequest);
 
   return (
-    <div className="container col-md-6 text-justify-center">
-      <h2>Nuevo Tipo de Documento</h2>
-      { displayError(error) }
-      <form onSubmit={handleSubmit}>
-        <div className="mb-3">
-          <label htmlFor="sintetico" className="form-label">
-            Sintético
-          </label>
-          <input
-            id="sintetico"
-            className="form-control"
-            type="text"
-            value={sintetico}
-            onChange={(e) => setSintetico(e.target.value)}
-            required
-          />
-        </div>
-        <div className="mb-3">
-          <label htmlFor="descripcion" className="form-label">
-            Descripción
-          </label>
-          <input
-            id="descripcion"
-            className="form-control"
-            value={descripcion}
-            onChange={(e) => setDescripcion(e.target.value)}
-          />
-        </div>
-        <div className="mb-3">
-          <button type="submit" className="btn btn-primary me-2">
-            Grabar
-          </button>
-          <Link to="/tipos-documentos" className="btn btn-outline-primary">
-            Cancelar
-          </Link>
-        </div>
-      </form>
-    </div>
+    <FormContainer 
+      title="Edición de Tipo de Documento" 
+      error={error} 
+      handleSubmit={handleSubmit} 
+      body={FormFields(fields)} />
   );
 };
 
