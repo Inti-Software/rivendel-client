@@ -8,6 +8,7 @@ import NewTipoDocumento from "./components/TiposDocumentos/New.jsx";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { NotificationProvider } from "./contexts/NotificationContext.jsx";
 import EditTipoDocumento from "./components/TiposDocumentos/Edit.jsx";
+import ListPatrocinantes from "./components/Patrocinantes/List.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -19,6 +20,7 @@ createRoot(document.getElementById("root")).render(
             <Route path="/tipos-documentos" element={<ListTiposDocumentos />} />
             <Route path="/tipos-documentos/new" element={<NewTipoDocumento />} />
             <Route path="/tipos-documentos/edit/:id" element={<EditTipoDocumento />} />
+            <Route path="/patrocinantes" element={<ListPatrocinantes />} />
           </Routes>
         </Layout>
       </BrowserRouter>

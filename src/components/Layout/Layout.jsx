@@ -29,6 +29,11 @@ function Layout({ children }) {
                 Tipos de documentos
               </Link>
             </li>
+            <li className="nav-item">
+              <Link className="nav-link active" to="/patrocinantes">
+                Patrocinantes
+              </Link>
+            </li>
           </ul>
         </div>
       </nav>
