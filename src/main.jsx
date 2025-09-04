@@ -10,6 +10,8 @@ import NewTipoDocumento from "./components/TiposDocumentos/New.jsx";
 import { NotificationProvider } from "./contexts/NotificationContext.jsx";
 import EditTipoDocumento from "./components/TiposDocumentos/Edit.jsx";
 import ListPatrocinantes from "./components/Patrocinantes/List.jsx";
+import NewPatrocinante from "./components/Patrocinantes/New.jsx"
+import EditPatrocinante from "./components/Patrocinantes/Edit.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -22,6 +24,8 @@ createRoot(document.getElementById("root")).render(
             <Route path="/tipos-documentos/new" element={<NewTipoDocumento />} />
             <Route path="/tipos-documentos/edit/:id" element={<EditTipoDocumento />} />
             <Route path="/patrocinantes" element={<ListPatrocinantes />} />
+            <Route path="/patrocinantes/new" element={<NewPatrocinante />} />
+            <Route path="/patrocinantes/edit/:id" element={<EditPatrocinante />} />
           </Routes>
         </Layout>
       </BrowserRouter>
