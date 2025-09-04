@@ -16,3 +16,22 @@ body {
   background-color: transparent !important;
   columns: transparent !important;
 }
+
+.modal-backdrop-50 {
+  --bs-backdrop-zindex: 1050;
+  --bs-backdrop-bg: rgb(0,0,0,0.5);
+  --bs-backdrop-opacity: 0.1;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: var(--bs-backdrop-zindex);
+  width: 100vw;
+  height: 100vh;
+  background-color: var(--bs-backdrop-bg);
+}
+
+.center-vertical {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

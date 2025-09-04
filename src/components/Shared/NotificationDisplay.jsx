@@ -1,4 +1,4 @@
-import { useNotification } from "../contexts/Constants";
+import { useNotification } from "../../contexts/Constants";
 
 const NotificationDisplay = () => {
   const { notification } = useNotification();

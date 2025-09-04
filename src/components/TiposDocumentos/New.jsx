@@ -1,6 +1,6 @@
 import FormContainer from "../Layout/FormContainer";
 import FormFields from "./FormFields";
-import { useTipoDocumento } from "../../hooks/useTipoDocumento";
+import { useTipoDocumento } from "./hooks/useTipoDocumento";
 import { ACTION_CREATE } from "../../utils/constants";
 
 const NewTipoDocumento = () => {

@@ -1,4 +1,4 @@
-import ErrorMessage from "../Shared/ErrorMessage";
+import ValidationErrors from "../Shared/ValidationErrors";
 import useDocumentTitle from "./DocumentTitle";
 
 const FormContainer = ({ title, error, handleSubmit, body }) => {
@@ -7,7 +7,7 @@ const FormContainer = ({ title, error, handleSubmit, body }) => {
   return (
     <div className="container col-md-6 text-justify-center">
       <h2>{title}</h2>
-      <ErrorMessage errors={error} />
+      <ValidationErrors errors={error} />
       <form onSubmit={handleSubmit}>{body}</form>
     </div>
   );

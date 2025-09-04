@@ -1,7 +1,7 @@
 import FormContainer from "../Layout/FormContainer";
 import FormFields from "./FormFields";
 import { ACTION_UPDATE } from "../../utils/constants";
-import { useTipoDocumento } from "../../hooks/useTipoDocumento";
+import { useTipoDocumento } from "./hooks/useTipoDocumento";
 
 const EditTipoDocumento = () => {
   const postRequest = async ({id, sintetico, descripcion}) => {
