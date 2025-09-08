@@ -3,16 +3,11 @@ import Container from "../Forms/Container";
 import Spinner from "../Shared/Spinner";
 import TipoDocumentoGrid from "./TipoDocumentoGrid";
 import useFormGrid from "../../hooks/useFormGrid";
+import { TiposDocumento } from "../../utils/endpoints";
 
 const ListTiposDocumentos = () => {
-  const RECORDS_PER_PAGE = 5;
-
-  const request = async (currentPage) => fetch(
-    `http://localhost:3000/tipdocs?page=${currentPage}&limit=${RECORDS_PER_PAGE}`
-  );
-
   const { loading, data, error, currentPage, totalPages, setData,
-    setCurrentPage } = useFormGrid(request, RECORDS_PER_PAGE)
+    setCurrentPage } = useFormGrid(TiposDocumento.findAll, TiposDocumento.RECORDS_PER_PAGE)
     
   if (loading) {
     return <Spinner />;

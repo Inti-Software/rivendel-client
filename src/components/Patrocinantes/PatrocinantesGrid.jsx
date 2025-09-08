@@ -3,6 +3,8 @@ import { GridEditButton, GridDeleteButton } from "../Grid/GridButtons";
 import { useState } from "react";
 import { useNotification } from "../../contexts/Constants";
 import DeleteDialog from "../Modals/DeleteDialog";
+import { Patrocinantes } from "../../utils/endpoints";
+
 
 const PatrocinantesGrid = ({data, currentPage, totalPages, setData, setCurrentPage}) => {
 	const [onDeleteId, setOnDeleteId] = useState(null);
@@ -24,14 +26,9 @@ const PatrocinantesGrid = ({data, currentPage, totalPages, setData, setCurrentPa
     );
   };
 
-  const deleteRequest = async (id) => fetch(
-    `http://localhost:3000/patrocinantes/${id}`, {
-    method: "DELETE"
-  });
-
   const handleDelete = async () => {
     try {
-      const response = await deleteRequest(onDeleteId);
+      const response = await Patrocinantes.delete(onDeleteId);
       if (!response.ok) {
         console.log(
           `HTTP error! status: ${response.status} - ${response.body}`

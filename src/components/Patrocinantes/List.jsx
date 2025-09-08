@@ -3,17 +3,11 @@ import Spinner from "../Shared/Spinner";
 import Container from "../Forms/Container";
 import PatrocinantesGrid from "./PatrocinantesGrid";
 import useFormGrid from "../../hooks/useFormGrid";
+import { RECORDS_PER_PAGE, Patrocinantes } from "../../utils/endpoints";
 
 const ListPatrocinantes = () => {
-  const RECORDS_PER_PAGE = 5;
-
-  const request = async (currentPage) => fetch(
-    `http://localhost:3000/patrocinantes?page=${currentPage}&limit=${RECORDS_PER_PAGE}`
-  );
-  
   const { loading, data, error, currentPage, totalPages, setData, 
-    setCurrentPage } = useFormGrid(request, RECORDS_PER_PAGE)
-
+    setCurrentPage } = useFormGrid(Patrocinantes.findAll, RECORDS_PER_PAGE)
 
   if (loading) {
     return <Spinner/>
