@@ -1,4 +1,4 @@
-const RECORDS_PER_PAGE = 5;
+import { RECORDS_PER_PAGE } from "./constants";
 
 export const Patrocinantes = {
   get: async (id) => {

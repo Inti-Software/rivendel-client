@@ -4,10 +4,11 @@ import Spinner from "../Shared/Spinner";
 import TipoDocumentoGrid from "./TipoDocumentoGrid";
 import useFormGrid from "../../hooks/useFormGrid";
 import { TiposDocumento } from "../../utils/endpoints";
+import { RECORDS_PER_PAGE } from "../../utils/constants";
 
 const ListTiposDocumentos = () => {
   const { loading, data, error, currentPage, totalPages, setData,
-    setCurrentPage } = useFormGrid(TiposDocumento.findAll, TiposDocumento.RECORDS_PER_PAGE)
+    setCurrentPage } = useFormGrid(TiposDocumento.findAll, RECORDS_PER_PAGE)
     
   if (loading) {
     return <Spinner />;

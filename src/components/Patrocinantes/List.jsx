@@ -3,7 +3,8 @@ import Spinner from "../Shared/Spinner";
 import Container from "../Forms/Container";
 import PatrocinantesGrid from "./PatrocinantesGrid";
 import useFormGrid from "../../hooks/useFormGrid";
-import { RECORDS_PER_PAGE, Patrocinantes } from "../../utils/endpoints";
+import { Patrocinantes } from "../../utils/endpoints";
+import { RECORDS_PER_PAGE } from "../../utils/constants";
 
 const ListPatrocinantes = () => {
   const { loading, data, error, currentPage, totalPages, setData, 
