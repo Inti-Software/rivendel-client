@@ -34,6 +34,11 @@ function Layout({ children }) {
                 Patrocinantes
               </Link>
             </li>
+            <li className="nav-item">
+              <Link className="nav-link active" to="/partes">
+                Partes
+              </Link>
+            </li>
           </ul>
         </div>
       </nav>

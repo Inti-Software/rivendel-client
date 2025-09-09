@@ -2,7 +2,7 @@ import FormContainer from "../Layout/FormContainer";
 import FormFields from "./FormFields";
 import { ACTION_UPDATE } from "../../utils/constants";
 import { Patrocinantes } from "../../utils/endpoints";
-import usePatrocinante from "./hooks/usePatrocinante"
+import { usePatrocinante } from "./hooks/usePatrocinante"
 
 const EditPatrocinante = () => {
   const {fields, error, handleSubmit} = usePatrocinante(Patrocinantes.update, 
