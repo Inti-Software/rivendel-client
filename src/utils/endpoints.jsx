@@ -51,6 +51,9 @@ export const Patrocinantes = {
     fetch(`http://localhost:3000/patrocinantes/${id}`, {
       method: "DELETE",
     }),
+  search: async (term) => {
+    return fetch(`http://localhost:3000/patrocinantes/search?term=${term}`);
+  },
 };
 
 export const TiposDocumento = {
