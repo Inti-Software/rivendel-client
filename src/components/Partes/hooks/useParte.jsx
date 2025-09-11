@@ -9,7 +9,7 @@ export function useParte(request, accion, getRequest) {
   const [idTipoDocumento, setIdTipoDocumento] = useState(0);
   const [nroDocumento, setNroDocumento] = useState("");
   const [cuil, setCuil] = useState(0);
-  const [idPatrocinante, setIdPatrocinante] = useState(0);
+  const [patrocinante, setPatrocinante] = useState({id: 0, nombre: "", nroMatricula: ""});
   const [nroWhatsapp, setNroWhatsapp] = useState("");
   const [localidad, setLocalidad] = useState("");
   const [error, setError] = useState(null);
@@ -29,7 +29,7 @@ export function useParte(request, accion, getRequest) {
           setIdTipoDocumento(data.nroMatricula);
           setNroDocumento(data.domicilio);
           setCuil(data.nroCasillero);
-          setIdPatrocinante(data.idPatrocinante);
+          //setIdPatrocinante(data.idPatrocinante);
           setNroWhatsapp(data.nroWhatsapp);
           setLocalidad(data.localidad);
         } else {
@@ -64,7 +64,7 @@ export function useParte(request, accion, getRequest) {
         setIdTipoDocumento("");
         setNroDocumento("");
         setCuil("");
-        setIdPatrocinante(0);
+        //setIdPatrocinante(0);
         setNroWhatsapp("");
         setLocalidad("");
         setError(null);
@@ -89,8 +89,8 @@ export function useParte(request, accion, getRequest) {
       setNroDocumento,
       cuil,
       setCuil,
-      idPatrocinante,
-      setIdPatrocinante,
+      patrocinante,
+      setPatrocinante,
       nroWhatsapp,
       setNroWhatsapp,
       localidad,

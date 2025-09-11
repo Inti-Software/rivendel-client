@@ -1,5 +1,7 @@
 import { Link } from "react-router-dom";
 import DataBindedSelect from "../Forms/DataBindedSelect";
+import { useEffect, useState } from "react";
+import SearchPatrocinanteDialog from "./SearchPatrocinanteDialog";
 
 const FormFields = ({
   nombre,
@@ -10,16 +12,31 @@ const FormFields = ({
   setNroDocumento,
   cuil,
   setCuil,
-  idPatrocinante,
-  setIdPatrocinante,
+  patrocinante,
+  setPatrocinante,
   nroWhatsapp,
   setNroWhatsapp,
   localidad,
   setLocalidad,
   tiposDocumento}) => {
 
+  const [showSearchPatrocinante, setShowSearchPatrocinante] = useState(false);
+
+  const onAcceptSearchPatrocinante = (patrocinante) => {
+    setPatrocinante(patrocinante);
+    setShowSearchPatrocinante(false);
+  }
+  
+  useEffect(() => {
+    if (patrocinante.id === 0) return;
+    document.getElementById("patrocinante").value = `${patrocinante.nombre} - ${"Matrícula Nº " + patrocinante.nroMatricula}`;
+  }, [patrocinante]);
+
   return (
       <>
+        {showSearchPatrocinante && (
+          <SearchPatrocinanteDialog handleAccept={onAcceptSearchPatrocinante} 
+            handleCancel={() => setShowSearchPatrocinante(false)} />) }
         <div className="mb-3">
           <label htmlFor="nombre" className="form-label">Nombre</label>
           <input id="nombre" className="form-control" type="text" value={nombre} onChange={(e) => setNombre(e.target.value)} required />
@@ -38,6 +55,17 @@ const FormFields = ({
         <div className="mb-3">
           <label htmlFor="cuil" className="form-label">CUIL</label>
           <input id="cuil" className="form-control" value={cuil} onChange={(e) => setCuil(e.target.value)} />
+        </div>
+        <div className="mb-3">
+          <label htmlFor="patrocinante" className="form-label">Patrocinante</label>
+          <div className="row g-3">
+            <div className="col-10">
+              <input id="patrocinante" className="form-control bg-dark-subtle" readOnly={true} />
+            </div>
+            <div className="col-2">
+              <button type="button" className="btn btn-outline-primary me-2" onClick={() => setShowSearchPatrocinante(true)} >Buscar</button>
+            </div>
+          </div>
         </div>
         <div className="mb-3">
           <label htmlFor="nroWhatsapp" className="form-label">Nº Casillero</label>
