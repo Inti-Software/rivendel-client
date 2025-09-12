@@ -25,7 +25,7 @@ const PartesGrid = ({data, currentPage, totalPages, setData, setCurrentPage}) =>
 "patrocinante": "1234 - Juan Pérez"
 	 */
 
-  const headers = ["Documento", "Nombre", "Localidad", "Nº Whatsapp", "Patrocinante", ""];
+  const headers = ["Documento", "Nombre", "Domicilio", "Patrocinante", ""];
 
   const onDeleteRecord = (e, id, sintetico) => {
     e.preventDefault();
@@ -64,8 +64,7 @@ const PartesGrid = ({data, currentPage, totalPages, setData, setCurrentPage}) =>
       columns: [
         `${p.tipoDocumento} ${p.nroDocumento}`,
 				p.nombre,
-				p.localidad,
-				p.nroWhatsapp,
+				p.domicilio,
 				p.patrocinante,
         <>
           <GridEditButton path={`/partes/edit/${p.id}`} />

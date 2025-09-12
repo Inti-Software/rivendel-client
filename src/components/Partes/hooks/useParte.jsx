@@ -11,6 +11,7 @@ export function useParte(request, accion, getRequest) {
   const [cuil, setCuil] = useState(0);
   const [patrocinante, setPatrocinante] = useState({id: 0, nombre: "", nroMatricula: ""});
   const [nroWhatsapp, setNroWhatsapp] = useState("");
+  const [domicilio, setDomicilio] = useState("");
   const [localidad, setLocalidad] = useState("");
   const [error, setError] = useState(null);
   const navigate = useNavigate();
@@ -47,12 +48,14 @@ export function useParte(request, accion, getRequest) {
     e.preventDefault();
     try {
       const response = await request({
-        id,
         nombre,
-        nroMatricula: idTipoDocumento,
-        domicilio: nroDocumento,
+        idTipoDocumento,
+        nroDocumento,
+        cuil,
+        domicilio,
         localidad,
-        nroCasillero: cuil,
+        idPatrocinante: patrocinante.id,
+        nroWhatsapp,
       });
       if (response.ok) {
         showSuccess(
@@ -64,9 +67,10 @@ export function useParte(request, accion, getRequest) {
         setIdTipoDocumento("");
         setNroDocumento("");
         setCuil("");
-        //setIdPatrocinante(0);
-        setNroWhatsapp("");
+        setDomicilio("");
         setLocalidad("");
+        setPatrocinante({id: 0, nombre: "", nroMatricula: ""});
+        setNroWhatsapp("");
         setError(null);
         navigate("/partes");
       } else {
@@ -93,6 +97,8 @@ export function useParte(request, accion, getRequest) {
       setPatrocinante,
       nroWhatsapp,
       setNroWhatsapp,
+      domicilio,
+      setDomicilio,
       localidad,
       setLocalidad,
     },
