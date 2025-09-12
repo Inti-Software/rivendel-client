@@ -18,13 +18,15 @@ const Grid = ({data, headers, row, currentPage, totalPages, setCurrentPage}) => 
       <>
       <NotificationDisplay />
         <table className="table table-striped table-hover">
+          {headers && (
           <thead>
             <tr>
               {headers.map((h, i) => (
                 <th key={i}>{h}</th>
               ))}
             </tr>
-          </thead>
+          </thead>)
+          }
           <tbody>
             {data.length === 0 ? (
               <tr>
