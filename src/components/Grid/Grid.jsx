@@ -17,7 +17,7 @@ const Grid = ({data, headers, row, currentPage, totalPages, setCurrentPage}) => 
     return (
       <>
       <NotificationDisplay />
-        <table className="table table-striped mb-3">
+        <table className="table table-striped table-hover">
           <thead>
             <tr>
               {headers.map((h, i) => (

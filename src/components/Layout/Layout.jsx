@@ -25,7 +25,7 @@ function Layout({ children }) {
           </button>
           <ul className="navbar-nav justify-content-end">
             <li className="nav-item">
-              <Link className="nav-link active" to="/tiposdocumentos">
+              <Link className="nav-link active" to="/tipos-documentos">
                 Tipos de documentos
               </Link>
             </li>

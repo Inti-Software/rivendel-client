@@ -11,7 +11,7 @@ export default function useFormGrid(request, recordsPerPage) {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const response = await request({ currentPage });
+        const response = await request(currentPage);
 
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
