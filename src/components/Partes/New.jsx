@@ -2,7 +2,7 @@ import FormContainer from "../Layout/FormContainer";
 import FormFields from "./FormFields";
 import { useParte } from "./hooks/useParte";
 import { ACTION_CREATE } from "../../utils/constants";
-import { Partes, Patrocinantes, TiposDocumento } from "../../utils/endpoints";
+import { Partes, TiposDocumento } from "../../utils/endpoints";
 import { useEffect, useState } from "react";
 
 const NewParte = () => {
@@ -11,7 +11,7 @@ const NewParte = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await TiposDocumento.findAll()
+      const response = await TiposDocumento.findAll({})
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }

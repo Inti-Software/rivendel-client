@@ -60,7 +60,7 @@ export const TiposDocumento = {
   get: async (id) => {
     return fetch(`http://localhost:3000/tipdocs/${id}`);
   },
-  findAll: async (currentPage) => {
+  findAll: async ({ currentPage }) => {
     let filter = ""
     if (currentPage) {
       filter += `?page=${currentPage}&limit=${RECORDS_PER_PAGE}`
@@ -100,11 +100,12 @@ export const Partes = {
     idTipoDocumento,
     nroDocumento,
     cuil,
+    domicilio,
     idPatrocinante,
     nroWhatsapp,
     localidad,
   }) => {
-    return fetch(`http://localhost:3000/parte`, {
+    return fetch(`http://localhost:3000/partes`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -112,6 +113,7 @@ export const Partes = {
         idTipoDocumento,
         nroDocumento,
         cuil,
+        domicilio,
         idPatrocinante,
         nroWhatsapp,
         localidad,
@@ -121,20 +123,26 @@ export const Partes = {
   update: async ({
     id,
     nombre,
-    nroMatricula,
+    idTipoDocumento,
+    nroDocumento,
+    cuil,
     domicilio,
+    idPatrocinante,
+    nroWhatsapp,
     localidad,
-    nroCasillero,
   }) => {
-    return fetch(`http://localhost:3000/patrocinantes/${id}`, {
+    return fetch(`http://localhost:3000/partes/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         nombre,
-        nroMatricula,
+        idTipoDocumento,
+        nroDocumento,
+        cuil,
         domicilio,
+        idPatrocinante,
+        nroWhatsapp,
         localidad,
-        nroCasillero,
       }),
     });
   },
