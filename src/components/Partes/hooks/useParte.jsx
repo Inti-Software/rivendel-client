@@ -9,7 +9,7 @@ export function useParte(request, accion, getRequest) {
   const [idTipoDocumento, setIdTipoDocumento] = useState(0);
   const [nroDocumento, setNroDocumento] = useState("");
   const [cuil, setCuil] = useState(0);
-  const [patrocinante, setPatrocinante] = useState({id: 0, nombre: "", nroMatricula: ""});
+  const [patrocinante, setPatrocinante] = useState({id: 0, nombre: "", nroMatricula: 0});
   const [nroWhatsapp, setNroWhatsapp] = useState("");
   const [domicilio, setDomicilio] = useState("");
   const [localidad, setLocalidad] = useState("");
@@ -27,10 +27,11 @@ export function useParte(request, accion, getRequest) {
         if (response.ok) {
           const data = await response.json();
           setNombre(data.nombre);
-          setIdTipoDocumento(data.nroMatricula);
-          setNroDocumento(data.domicilio);
-          setCuil(data.nroCasillero);
-          //setIdPatrocinante(data.idPatrocinante);
+          setIdTipoDocumento(data.idTipoDocumento);
+          setNroDocumento(data.nroDocumento);
+          setCuil(data.cuil);
+          setPatrocinante(data.patrocinante);
+          setDomicilio(data.domicilio);
           setNroWhatsapp(data.nroWhatsapp);
           setLocalidad(data.localidad);
         } else {
@@ -48,6 +49,7 @@ export function useParte(request, accion, getRequest) {
     e.preventDefault();
     try {
       const response = await request({
+        id,
         nombre,
         idTipoDocumento,
         nroDocumento,

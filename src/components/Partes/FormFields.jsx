@@ -23,6 +23,7 @@ const FormFields = ({
   tiposDocumento}) => {
 
   const [showSearchPatrocinante, setShowSearchPatrocinante] = useState(false);
+  const [datosPatrocinante, setDatosPatrocinante] = useState("");
 
   const onAcceptSearchPatrocinante = (e, patrocinante) => {
     e.preventDefault();
@@ -31,8 +32,8 @@ const FormFields = ({
   }
   
   useEffect(() => {
-    if (patrocinante.id === 0) return;
-    document.getElementById("patrocinante").value = `${patrocinante.nombre} - ${"Matr. Nº " + patrocinante.nroMatricula}`;
+    if (!patrocinante || patrocinante.id === 0) return;
+    setDatosPatrocinante(`${patrocinante.nombre} - ${"Matr. Nº " + patrocinante.nroMatricula}`);
   }, [patrocinante]);
 
   return (
@@ -72,7 +73,7 @@ const FormFields = ({
           <label htmlFor="patrocinante" className="form-label">Patrocinante</label>
           <div className="row g-3">
             <div className="col-10">
-              <input id="patrocinante" className="form-control bg-dark-subtle" readOnly={true} tabIndex={-1}/>
+              <input id="patrocinante" className="form-control bg-dark-subtle" value={datosPatrocinante} readOnly={true} tabIndex={-1}/>
             </div>
             <div className="col-2">
               <button type="button" className="btn btn-outline-primary me-2" onClick={() => setShowSearchPatrocinante(true)} >Buscar</button>
@@ -85,7 +86,7 @@ const FormFields = ({
         </div>
         <div className="mb-3">
             <button type="submit" className="btn btn-primary me-2">Grabar</button>
-            <Link to="/patrocinantes" className="btn btn-outline-primary">Cancelar</Link>
+            <Link to="/partes" className="btn btn-outline-primary">Cancelar</Link>
         </div>
       </>
   );

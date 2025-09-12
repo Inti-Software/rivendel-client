@@ -65,7 +65,7 @@ const PartesGrid = ({data, currentPage, totalPages, setData, setCurrentPage}) =>
         `${p.tipoDocumento} ${p.nroDocumento}`,
 				p.nombre,
 				p.domicilio,
-				p.patrocinante,
+				`${p.patrocinante.nroMatricula} - ${p.patrocinante.nombre}`,
         <>
           <GridEditButton path={`/partes/edit/${p.id}`} />
           <GridDeleteButton

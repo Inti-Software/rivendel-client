@@ -14,6 +14,7 @@ import NewPatrocinante from "./components/Patrocinantes/New.jsx"
 import EditPatrocinante from "./components/Patrocinantes/Edit.jsx";
 import ListPartes from "./components/Partes/List.jsx";
 import NewParte from "./components/Partes/New.jsx";
+import EditParte from "./components/Partes/Edit.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -30,6 +31,7 @@ createRoot(document.getElementById("root")).render(
             <Route path="/patrocinantes/edit/:id" element={<EditPatrocinante />} />
             <Route path="/partes" element={<ListPartes />} />
             <Route path="/partes/new" element={<NewParte />} />
+            <Route path="/partes/edit/:id" element={<EditParte />} />
           </Routes>
         </Layout>
       </BrowserRouter>
