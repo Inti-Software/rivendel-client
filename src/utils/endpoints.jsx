@@ -147,7 +147,7 @@ export const Partes = {
     });
   },
   delete: async (id) =>
-    fetch(`http://localhost:3000/patrocinantes/${id}`, {
+    fetch(`http://localhost:3000/partes/${id}`, {
       method: "DELETE",
     }),
 };
