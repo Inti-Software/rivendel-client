@@ -1,12 +1,14 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Patrocinantes } from '../../utils/endpoints';
 
 const SearchPatrocinanteDialog = ({ handleAccept, handleCancel }) => {
 	const [searchTerm, setSearchTerm] = useState("");
 	const [data, setData] = useState([]);
+	const message = useRef(null);
 	const selected = useRef({id: 0, nombre: "", nroMatricula: ""});
 
-	const buscar = () => {
+	const buscar = (e) => {
+		e.preventDefault();
 		if (!searchTerm || searchTerm.trim() === "") {
 			alert("Ingrese un término de búsqueda válido.");
 			return;
@@ -20,10 +22,15 @@ const SearchPatrocinanteDialog = ({ handleAccept, handleCancel }) => {
 				}
 				return response.json();
 			})
-			.then(data => setData(data))
+			.then(data => {
+				setData(data)
+				if (data.length === 0) {
+					message.current = "No se encontraron datos.";
+				}
+			})
 			.catch(error => {
 				console.error("Error al buscar patrocinantes:", error);
-				alert("Ocurrió un error al realizar la búsqueda. Por favor, inténtelo de nuevo.");
+				message.current = "Ocurrió un error al realizar la búsqueda. Por favor, inténtelo de nuevo.";
 			});
 	}
 
@@ -42,6 +49,16 @@ const SearchPatrocinanteDialog = ({ handleAccept, handleCancel }) => {
 			selected.current = {id: selectedId, nombre, nroMatricula};
 		}
 	}
+
+	const handleKeyDown = (event) => {
+		if (event.keyCode === 13) {
+			buscar(event);
+		}
+	}
+
+	useEffect(() => {
+		document.getElementById("criterio").focus();
+	}, []);
 		
 	return (
 		<div className={`modal show modal-backdrop-50 dialog-centered`} 
@@ -56,10 +73,11 @@ const SearchPatrocinanteDialog = ({ handleAccept, handleCancel }) => {
 					<div className="modal-body">
 						<div className="row mb-3">
 							<div className="col-10">
-								<input type="text" className="form-control" placeholder="Buscar..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value) } />
+								<input id='criterio' type="text" className="form-control" placeholder="Juan Pérez... " value={searchTerm} onChange={e => setSearchTerm(e.target.value)}
+									onKeyDown={handleKeyDown} />
 							</div>
 							<div className="col">
-								<input type="button" onClick={buscar} value="Buscar" className="btn btn-primary ms-2" />
+								<input type='button' className="btn btn-outline-primary ms-2" value="Buscar" onClick={buscar} />
 							</div>
 						</div>
 						<div className='row mb-3' onClick={onSelectRow}>
@@ -83,13 +101,17 @@ const SearchPatrocinanteDialog = ({ handleAccept, handleCancel }) => {
 									</tbody>
 								</table>
 							) : (
-								<p>No se encontraron patrocinantes.</p>
+								(message.current) &&
+								(<span className="rounded-2 border bg-warning-subtle border-warning text-center text-black w-auto mx-auto"
+										style={{ fontSize: '12px' }}>
+									{message.current}
+								</span>)
 							)}
 						</div>
 					</div>
 					<div className="modal-footer">
 						{data.length > 0 && (
-							<button type="button" className="btn btn-success" onClick={() => handleAccept(selected.current)}>
+							<button type="button" className="btn btn-success" onClick={(e) => handleAccept(e, selected.current)}>
 								Aceptar
 							</button>
 						)}
