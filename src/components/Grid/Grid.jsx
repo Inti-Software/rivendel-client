@@ -17,14 +17,16 @@ const Grid = ({data, headers, row, currentPage, totalPages, setCurrentPage}) => 
     return (
       <>
       <NotificationDisplay />
-        <table className="table table-striped mb-3">
+        <table className="table table-striped table-hover">
+          {headers && (
           <thead>
             <tr>
               {headers.map((h, i) => (
                 <th key={i}>{h}</th>
               ))}
             </tr>
-          </thead>
+          </thead>)
+          }
           <tbody>
             {!data || data.length === 0 ? (
               <tr>

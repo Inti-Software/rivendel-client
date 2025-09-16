@@ -51,16 +51,22 @@ export const Patrocinantes = {
     fetch(`http://localhost:3000/patrocinantes/${id}`, {
       method: "DELETE",
     }),
+  search: async (term) => {
+    return fetch(`http://localhost:3000/patrocinantes/search?term=${term}`);
+  },
 };
 
 export const TiposDocumento = {
   get: async (id) => {
     return fetch(`http://localhost:3000/tipdocs/${id}`);
   },
-  findAll: async (currentPage) =>
-    fetch(
-      `http://localhost:3000/tipdocs?page=${currentPage}&limit=${RECORDS_PER_PAGE}`
-    ),
+  findAll: async ({ currentPage }) => {
+    let filter = ""
+    if (currentPage) {
+      filter += `?page=${currentPage}&limit=${RECORDS_PER_PAGE}`
+    }
+    return fetch(`http://localhost:3000/tipdocs` + filter);
+  },
   create: async ({ sintetico, descripcion }) => {
     return fetch(`http://localhost:3000/tipdocs`, {
       method: "POST",
