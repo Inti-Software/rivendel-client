@@ -80,3 +80,109 @@ export const TiposDocumento = {
       method: "DELETE",
     }),
 };
+
+export const Partes = {
+  get: async (id) => {
+    return fetch(`http://localhost:3000/partes/${id}`);
+  },
+  findAll: async ({ currentPage, recordsPerPage = RECORDS_PER_PAGE }) =>
+    fetch(
+      `http://localhost:3000/partes?page=${currentPage}&limit=${recordsPerPage}`
+    ),
+  create: async ({
+    nombre,
+    idTipoDocumento,
+    nroDocumento,
+    cuil,
+    domicilio,
+    idPatrocinante,
+    nroWhatsapp,
+    localidad,
+  }) => {
+    return fetch(`http://localhost:3000/partes`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        nombre,
+        idTipoDocumento,
+        nroDocumento,
+        cuil,
+        domicilio,
+        idPatrocinante,
+        nroWhatsapp,
+        localidad,
+      }),
+    });
+  },
+  update: async ({
+    id,
+    nombre,
+    idTipoDocumento,
+    nroDocumento,
+    cuil,
+    domicilio,
+    idPatrocinante,
+    nroWhatsapp,
+    localidad,
+  }) => {
+    return fetch(`http://localhost:3000/partes/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        nombre,
+        idTipoDocumento,
+        nroDocumento,
+        cuil,
+        domicilio,
+        idPatrocinante,
+        nroWhatsapp,
+        localidad,
+      }),
+    });
+  },
+  delete: async (id) =>
+    fetch(`http://localhost:3000/partes/${id}`, {
+      method: "DELETE",
+    }),
+};
+
+export const Resoluciones = {
+  get: async (id) => {
+    return fetch(`http://localhost:3000/resoluciones/${id}`);
+  },
+  findAll: async ({ currentPage, recordsPerPage = RECORDS_PER_PAGE }) =>
+    fetch(
+      `http://localhost:3000/resoluciones?page=${currentPage}&limit=${recordsPerPage}`
+    ),
+  create: async ({
+    descripcion,
+    detalle,
+  }) => {
+    return fetch(`http://localhost:3000/resoluciones`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        descripcion,
+        detalle,
+      }),
+    });
+  },
+  update: async ({
+    id,
+    descripcion,
+    detalle,
+  }) => {
+    return fetch(`http://localhost:3000/resoluciones/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        descripcion,
+        detalle,
+      }),
+    });
+  },
+  delete: async (id) =>
+    fetch(`http://localhost:3000/resoluciones/${id}`, {
+      method: "DELETE",
+    }),
+};

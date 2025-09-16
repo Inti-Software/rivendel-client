@@ -26,7 +26,7 @@ const Grid = ({data, headers, row, currentPage, totalPages, setCurrentPage}) => 
             </tr>
           </thead>
           <tbody>
-            {data.length === 0 ? (
+            {!data || data.length === 0 ? (
               <tr>
                 <td colSpan="2" className="text-center">
                   <span className="badge text-secondary bg-body-secondary rounded-2 border border-secondary">
