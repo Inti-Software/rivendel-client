@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useNotification } from "../../contexts/Constants";
 import DeleteDialog from "../Modals/DeleteDialog";
 import { Partes } from "../../utils/endpoints";
+import { Link } from "react-router-dom";
 
 const PartesGrid = ({data, currentPage, totalPages, setData, setCurrentPage}) => {
   const [onDeleteId, setOnDeleteId] = useState(null);
@@ -55,17 +56,22 @@ const PartesGrid = ({data, currentPage, totalPages, setData, setCurrentPage}) =>
       key: p.id,
       columns: [
         <>
-          <div className="row">
-            <div className="col-10 pt-1 pb-1 bg-primary-subtle rounded-2 mb-2">
+          <div className="row bg-primary-subtle rounded-2 d-flex align-items-center">
+            <div className="col-10">
               {p.nombre}
             </div>
             <div className="col d-flex justify-content-end">
-              <GridEditButton path={`/partes/edit/${p.id}`} 
-                style={{"--bs-btn-padding-y": ".25rem", "--bs-btn-padding-x": ".5rem", "--bs-btn-font-size": ".75rem"}}
-              />
+          		<Link to={`/partes/edit/${p.id}`} 
+                  className={"btn btn-outline-secondary ms-2 bg-light my-1 border-secondary"}
+                  style={{ "--bs-btn-font-size": ".75rem", "color": "#555" }}
+              >
+                Editar
+              </Link>
+
               <GridDeleteButton
                 onDelete={(e) => onDeleteRecord(e, p.id, p.nombre, p.cuil)}
-                style={{"--bs-btn-padding-y": ".25rem", "--bs-btn-padding-x": ".5rem", "--bs-btn-font-size": ".75rem"}}
+                style={{ "--bs-btn-font-size": ".75rem", "color": "red" }}
+                className={"bg-light my-1"}
                 />
             </div>
           </div>
