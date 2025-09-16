@@ -16,6 +16,8 @@ import ListPartes from "./components/Partes/List.jsx";
 import NewParte from "./components/Partes/New.jsx";
 import EditParte from "./components/Partes/Edit.jsx";
 import ListResoluciones from "./components/Resoluciones/List.jsx";
+import NewResolucion from "./components/Resoluciones/New.jsx";
+import EditResolucion from "./components/Resoluciones/Edit.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -34,6 +36,8 @@ createRoot(document.getElementById("root")).render(
             <Route path="/partes/new" element={<NewParte />} />
             <Route path="/partes/edit/:id" element={<EditParte />} />
             <Route path="/resoluciones" element={<ListResoluciones />} />
+            <Route path="/resoluciones/new" element={<NewResolucion />} />
+            <Route path="/resoluciones/edit/:id" element={<EditResolucion />} />
           </Routes>
         </Layout>
       </BrowserRouter>

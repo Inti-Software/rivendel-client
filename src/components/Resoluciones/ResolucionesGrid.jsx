@@ -3,7 +3,7 @@ import { GridEditButton, GridDeleteButton } from "../Grid/GridButtons";
 import { useState } from "react";
 import { useNotification } from "../../contexts/Constants";
 import DeleteDialog from "../Modals/DeleteDialog";
-import { TiposDocumento } from "../../utils/endpoints";
+import { Resoluciones } from "../../utils/endpoints";
 
 const ResolucionesGrid = ({data, currentPage, totalPages, setData, setCurrentPage}) => {
 	const [onDeleteId, setOnDeleteId] = useState(null);
@@ -11,23 +11,23 @@ const ResolucionesGrid = ({data, currentPage, totalPages, setData, setCurrentPag
 	const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 	const { showSuccess, showError } = useNotification();
 
-	const headers = ["Descripción", "Detalle", ""];
+	const headers = ["Detalle", "Descripción", ""];
 
-	const onDeleteRecord = (e, id, sintetico) => {
+	const onDeleteRecord = (e, id, descripcion) => {
 		e.preventDefault();
 		setOnDeleteId(id);
 		setShowDeleteDialog(true);
 		setDeleteMessage(
 			<>
-				¿Está seguro de eliminar el tipo de documento
-				<span className="fw-bold text-danger ms-1">{sintetico}</span>?
+				¿Está seguro de eliminar la resolución 
+				<span className="fw-bold text-danger ms-1">{descripcion}</span>?
 			</>
 		);
 	};
 	
 	const handleDelete = async () => {
 		try {
-			const response = await TiposDocumento.delete(onDeleteId);
+			const response = await Resoluciones.delete(onDeleteId);
 			if (!response.ok) {
 				console.log(
 					`HTTP error! status: ${response.status} - ${response.body}`
@@ -44,16 +44,16 @@ const ResolucionesGrid = ({data, currentPage, totalPages, setData, setCurrentPag
 		}
 	};
 
-	const row = (doc) => {
+	const row = (res) => {
 		return {
-			key: doc.id,
+			key: res.id,
 			columns: [
-				doc.sintetico,
-				doc.descripcion,
+				res.descripcion,
+				res.detalle.substring(0, 75) + (res.detalle.length > 75 ? "..." : ""),
 				<>
-					<GridEditButton path={`/tipos-documentos/edit/${doc.id}`} />
+					<GridEditButton path={`/resoluciones/edit/${res.id}`} />
 					<GridDeleteButton
-						onDelete={(e) => onDeleteRecord(e, doc.id, doc.sintetico)}
+						onDelete={(e) => onDeleteRecord(e, res.id, res.descripcion)}
 					/>
 				</>,
 			],
