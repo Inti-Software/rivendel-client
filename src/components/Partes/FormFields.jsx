@@ -60,6 +60,7 @@ const FormFields = ({
         <div className="mb-3">
           <label htmlFor="cuil" className="form-label">CUIL</label>
           <input id="cuil" className="form-control" value={cuil} onChange={(e) => setCuil(e.target.value)} />
+          <span className="form-text d-block text-end">0 si es el mismo que el documento</span>
         </div>
         <div className="mb-3">
           <label htmlFor="domicilio" className="form-label">Domicilio</label>

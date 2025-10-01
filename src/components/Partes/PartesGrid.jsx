@@ -82,7 +82,7 @@ const PartesGrid = ({data, currentPage, totalPages, setData, setCurrentPage}) =>
             </div>
             <div className="col">
               <span className="fw-bold">Cuil: </span>
-              <span>{p.cuil}</span>
+              <span>{(p.cuil === "null")? "": p.cuil}</span>
             </div>
             <div className="col">
               <span className="fw-bold">Nº Whatsapp: </span>
@@ -105,12 +105,20 @@ const PartesGrid = ({data, currentPage, totalPages, setData, setCurrentPage}) =>
             </div>
           </div>
           <div className="row mb-2">
-            <div className="col-4">
-              <span className="fw-bold">Nº Matrícula: </span> {p.patrocinante.nroMatricula}
-            </div>
+            {(p.patrocinante == null) ? (
             <div className="col">
-              <span className="fw-bold">Nombre: </span>{p.patrocinante.nombre}
+              <span className="d-inline-block border rounded border-warning p-1" style={{"fontSize": "0.75em"}}>- Sin patrocinante -</span>
             </div>
+            ):(
+            <>
+              <div className="col-4">
+                <span className="fw-bold">Nº Matrícula: </span> {p.patrocinante?.nroMatricula}
+              </div>
+              <div className="col">
+                <span className="fw-bold">Nombre: </span>{p.patrocinante?.nombre}
+              </div>
+            </>
+            )}
           </div>
         </>
       ],

@@ -5,7 +5,7 @@ function Layout({ children }) {
   return (
     <>
       <nav
-        className="navbar navbar-expand-lg bg-primary bg-body-tertiary"
+        className="navbar navbar-expand-lg bg-body-tertiary"
         data-bs-theme="dark"
       >
         <div className="container-fluid">
