@@ -61,9 +61,9 @@ export const TiposDocumento = {
     return fetch(`http://localhost:3000/tipdocs/${id}`);
   },
   findAll: async ({ currentPage }) => {
-    let filter = ""
+    let filter = "";
     if (currentPage) {
-      filter += `?page=${currentPage}&limit=${RECORDS_PER_PAGE}`
+      filter += `?page=${currentPage}&limit=${RECORDS_PER_PAGE}`;
     }
     return fetch(`http://localhost:3000/tipdocs` + filter);
   },
@@ -160,10 +160,7 @@ export const Resoluciones = {
     fetch(
       `http://localhost:3000/resoluciones?page=${currentPage}&limit=${recordsPerPage}`
     ),
-  create: async ({
-    descripcion,
-    detalle,
-  }) => {
+  create: async ({ descripcion, detalle }) => {
     return fetch(`http://localhost:3000/resoluciones`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -173,11 +170,7 @@ export const Resoluciones = {
       }),
     });
   },
-  update: async ({
-    id,
-    descripcion,
-    detalle,
-  }) => {
+  update: async ({ id, descripcion, detalle }) => {
     return fetch(`http://localhost:3000/resoluciones/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
@@ -189,6 +182,67 @@ export const Resoluciones = {
   },
   delete: async (id) =>
     fetch(`http://localhost:3000/resoluciones/${id}`, {
+      method: "DELETE",
+    }),
+};
+
+export const Reclamos = {
+  get: async (id) => {
+    return fetch(`http://localhost:3000/reclamos/${id}`);
+  },
+  findAll: async ({ currentPage, recordsPerPage = RECORDS_PER_PAGE }) =>
+    fetch(
+      `http://localhost:3000/reclamos?page=${currentPage}&limit=${recordsPerPage}`
+    ),
+  create: async ({
+    rubros,
+    idResolucion,
+    fechaHoraInicio,
+    horaFin,
+    segundaFecha,
+    segFechaHoraInicio,
+    segHoraFin,
+  }) => {
+    return fetch(`http://localhost:3000/reclamos`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        rubros,
+        idResolucion,
+        fechaHoraInicio,
+        horaFin,
+        segundaFecha,
+        segFechaHoraInicio,
+        segHoraFin,
+      }),
+    });
+  },
+  update: async ({
+    id,
+    rubros,
+    idResolucion,
+    fechaHoraInicio,
+    horaFin,
+    segundaFecha,
+    segFechaHoraInicio,
+    segHoraFin,
+  }) => {
+    return fetch(`http://localhost:3000/reclamos/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        rubros,
+        idResolucion,
+        fechaHoraInicio,
+        horaFin,
+        segundaFecha,
+        segFechaHoraInicio,
+        segHoraFin,
+      }),
+    });
+  },
+  delete: async (id) =>
+    fetch(`http://localhost:3000/reclamos/${id}`, {
       method: "DELETE",
     }),
 };
