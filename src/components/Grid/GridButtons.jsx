@@ -14,7 +14,7 @@ const GridEditButton = ({path, style, className}) => {
 const GridDeleteButton = ({onDelete, style, className}) => {
 	return (
 		<a href={"/#"} onClick={onDelete}
-			className={"btn btn-outline-danger ms-2" + (className ? ` ${className}` : "")}
+			className={"btn btn-outline-danger btn-sm ms-2" + (className ? ` ${className}` : "")}
 			style={style || {}}
 			>
 			Eliminar
@@ -22,4 +22,17 @@ const GridDeleteButton = ({onDelete, style, className}) => {
 	);
 }
 
-export { GridEditButton, GridDeleteButton };
+const GridPrintButton = ({path, style, className, onClick}) => {
+	return (
+		<Link to={path || "#"}
+				className={"btn btn-outline-primary btn-sm ms-2" + (className ? ` ${className}` : "")}
+				style={style || {}}
+				onClick={onClick}
+				target="__blank"
+		>
+			Imprimir
+		</Link>
+	);
+}
+
+export { GridEditButton, GridDeleteButton, GridPrintButton };

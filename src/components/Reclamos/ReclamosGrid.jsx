@@ -1,5 +1,5 @@
 import Grid from "../Grid/Grid";
-import { GridEditButton, GridDeleteButton } from "../Grid/GridButtons";
+import { GridEditButton, GridDeleteButton, GridPrintButton } from "../Grid/GridButtons";
 import { useState } from "react";
 import { useNotification } from "../../contexts/Constants";
 import DeleteDialog from "../Modals/DeleteDialog";
@@ -10,16 +10,6 @@ const ReclamosGrid = ({data, currentPage, totalPages, setData, setCurrentPage}) 
   const [deleteMessage, setDeleteMessage] = useState("");
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const { showSuccess, showError } = useNotification();
-
-        // rubros,
-        // idResolucion,
-        // fechaHoraInicio,
-        // horaFin,
-        // segundaFecha,
-        // segFechaHoraInicio,
-        // segHoraFin,
-
-  const headers = ["Fecha", "Fecha", ""];
 
   const onDeleteRecord = (e, id, sintetico) => {
     e.preventDefault();
@@ -52,26 +42,28 @@ const ReclamosGrid = ({data, currentPage, totalPages, setData, setCurrentPage}) 
     }
   };
 
-  const row = (doc) => {
+  const row = (rec) => {
     return {
-      key: doc.id,
+      key: rec.id,
       columns: [
-        doc.sintetico,
-        doc.descripcion,
         <>
-          <GridEditButton path={`/tipos-documentos/edit/${doc.id}`} />
-          <GridDeleteButton
-            onDelete={(e) => onDeleteRecord(e, doc.id, doc.sintetico)}
-          />
-        </>,
+        <h3>{rec.numero}</h3>
+        <>
+          <GridPrintButton path={`/reclamos/reporte/${rec.id}`} />
+          <GridEditButton path={`/tipos-documentos/edit/${rec.id}`} />
+          <GridDeleteButton onDelete={(e) => onDeleteRecord(e, rec.id, rec.sintetico)}
+            />
+        </>
+        </>
       ],
     };
   };
 
-  return (
+  return (    
     <>
+      <div id="pdf"></div>
       <Grid data={data}
-        headers={headers}
+        headers={null}
         row={row}
         currentPage={currentPage}
         totalPages={totalPages}

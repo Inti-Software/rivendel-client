@@ -34,3 +34,8 @@ body {
   align-items: center;
   justify-content: center;
 }
+
+#reporte iframe {
+  height: 100vh !important;
+  width: 100% !important;
+}
