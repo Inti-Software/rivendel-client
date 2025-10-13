@@ -3,7 +3,6 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js'; // Contiene la lógica JS de
 import { createRoot } from "react-dom/client";
 import { StrictMode } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Layout from "./components/Layout/Layout.jsx";
 import App from "./App.jsx";
 import ListTiposDocumentos from "./components/TiposDocumentos/List.jsx";
 import NewTipoDocumento from "./components/TiposDocumentos/New.jsx";
@@ -18,13 +17,21 @@ import EditParte from "./components/Partes/Edit.jsx";
 import ListResoluciones from "./components/Resoluciones/List.jsx";
 import NewResolucion from "./components/Resoluciones/New.jsx";
 import EditResolucion from "./components/Resoluciones/Edit.jsx";
+import ListReclamos from "./components/Reclamos/List.jsx";
+import NewReclamo from "./components/Reclamos/New.jsx";
+import EditReclamo from "./components/Reclamos/Edit.jsx";
+import Reporte from "./components/Reclamos/Reporte.jsx";
+import LayoutRoutes from "./components/Layout/LayoutRoutes.jsx";
 
-createRoot(document.getElementById("root")).render(
+const root = createRoot(document.getElementById("root"))
+root.render(
   <StrictMode>
     <NotificationProvider>
       <BrowserRouter>
-        <Layout>
-          <Routes>
+        <Routes>
+          <Route path="/reclamos/reporte/:id" element={<Reporte root={root} />} />
+
+          <Route element={<LayoutRoutes />}>
             <Route path="/" element={<App />} />
             <Route path="/tipos-documentos" element={<ListTiposDocumentos />} />
             <Route path="/tipos-documentos/new" element={<NewTipoDocumento />} />
@@ -38,8 +45,11 @@ createRoot(document.getElementById("root")).render(
             <Route path="/resoluciones" element={<ListResoluciones />} />
             <Route path="/resoluciones/new" element={<NewResolucion />} />
             <Route path="/resoluciones/edit/:id" element={<EditResolucion />} />
-          </Routes>
-        </Layout>
+            <Route path="/reclamos" element={<ListReclamos />} />
+            <Route path="/reclamos/new" element={<NewReclamo />} />
+            <Route path="/reclamos/edit/:id" element={<EditReclamo />} />
+          </Route>
+        </Routes>
       </BrowserRouter>
     </NotificationProvider>
   </StrictMode>

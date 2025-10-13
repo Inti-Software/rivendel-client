@@ -44,6 +44,11 @@ function Layout({ children }) {
                 Resoluciones
               </Link>
             </li>
+            <li className="nav-item">
+              <Link className="nav-link active" to="/reclamos">
+                Reclamos
+              </Link>
+            </li>
           </ul>
         </div>
       </nav>
