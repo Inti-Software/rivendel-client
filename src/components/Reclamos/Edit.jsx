@@ -1,16 +1,16 @@
 import FormContainer from "../Layout/FormContainer";
 import FormFields from "./FormFields";
 import { ACTION_UPDATE } from "../../utils/constants";
-import { useTipoDocumento } from "./hooks/useTipoDocumento";
-import { TiposDocumento } from "../../utils/endpoints";
+import { useReclamo } from "./hooks/useReclamo";
+import { Reclamos } from "../../utils/endpoints";
 
 const EditTipoDocumento = () => {
-  const {fields, error, handleSubmit} = useTipoDocumento (TiposDocumento.update, 
-    ACTION_UPDATE, TiposDocumento.get);
+  const {fields, error, handleSubmit} = useReclamo (Reclamos.update, 
+    ACTION_UPDATE, Reclamos.get);
 
   return (
     <FormContainer 
-      title="Edición de Tipo de Documento" 
+      title="Edición de Reclamos" 
       error={error} 
       handleSubmit={handleSubmit} 
       body={FormFields(fields)} />

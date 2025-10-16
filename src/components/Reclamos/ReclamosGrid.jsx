@@ -50,7 +50,7 @@ const ReclamosGrid = ({data, currentPage, totalPages, setData, setCurrentPage}) 
         <h3>{rec.numero}</h3>
         <>
           <GridPrintButton path={`/reclamos/reporte/${rec.id}`} />
-          <GridEditButton path={`/tipos-documentos/edit/${rec.id}`} />
+          <GridEditButton path={`/reclamos/edit/${rec.id}`} />
           <GridDeleteButton onDelete={(e) => onDeleteRecord(e, rec.id, rec.sintetico)}
             />
         </>

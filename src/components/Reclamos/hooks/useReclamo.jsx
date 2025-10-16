@@ -4,9 +4,10 @@ import { useNavigate } from "react-router-dom";
 import { ACTION_CREATE } from "../../../utils/constants";
 import { useParams } from "react-router-dom";
 
-export function useTipoDocumento(request, accion, getRequest) {
-  const [sintetico, setSintetico] = useState("");
-  const [descripcion, setDescripcion] = useState("");
+export function useReclamo(request, accion, getRequest) {
+  const [numero, setNumero] = useState(0);
+  const [reclamantes, setReclamantes] = useState([]);
+  const [reclamados, setReclamados] = useState([]);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
   const { showSuccess } = useNotification();
@@ -20,8 +21,9 @@ export function useTipoDocumento(request, accion, getRequest) {
         const response = await getRequest(id);
         if (response.ok) {
           const data = await response.json();
-          setSintetico(data.sintetico);
-          setDescripcion(data.descripcion);
+          setNumero(data.numero);
+          setReclamantes(data.reclamantes || []);
+          setReclamados(data.reclamados || []);
         } else {
           const msg = await response.json();
           setError([msg.code + ": " + msg.message]);
@@ -36,19 +38,21 @@ export function useTipoDocumento(request, accion, getRequest) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await request({id, sintetico, descripcion});
+      const idsReclamantes = reclamantes.map((r) => r.id);
+      const idsReclamados = reclamados.map((r) => r.id);
+      const response = await request({id, numero, reclamantes: idsReclamantes, reclamados: idsReclamados});
       if (response.ok) {
         showSuccess(
-          "El tipo de documento " +
-            sintetico +
+          "El reclamo Nº " + numero +
             ` se ${
               accion === ACTION_CREATE ? "creó" : "actualizó"
             } correctamente.`
         );
-        setSintetico("");
-        setDescripcion("");
+        setNumero(0);
+        setReclamantes([]);
+        setReclamados([]);
         setError(null);
-        navigate("/tipos-documentos");
+        navigate("/reclamos");
       } else {
         const body = await response.json();
         setError(body.message);
@@ -60,7 +64,7 @@ export function useTipoDocumento(request, accion, getRequest) {
   };
 
   return {
-    fields: { sintetico, setSintetico, descripcion, setDescripcion },
+    fields: { numero, setNumero, reclamantes, setReclamantes, reclamados, setReclamados },
     error,
     handleSubmit,
   };

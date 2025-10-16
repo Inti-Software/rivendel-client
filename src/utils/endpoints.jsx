@@ -150,6 +150,9 @@ export const Partes = {
     fetch(`http://localhost:3000/partes/${id}`, {
       method: "DELETE",
     }),
+  search: async ({ q, currentPage, recordsPerPage = RECORDS_PER_PAGE }) => {
+    return fetch(`http://localhost:3000/partes/search?q=${q}&page=${currentPage}&limit=${recordsPerPage}`);
+  }
 };
 
 export const Resoluciones = {
@@ -202,6 +205,8 @@ export const Reclamos = {
     segundaFecha,
     segFechaHoraInicio,
     segHoraFin,
+    reclamantes,
+    reclamados
   }) => {
     return fetch(`http://localhost:3000/reclamos`, {
       method: "POST",
@@ -214,6 +219,8 @@ export const Reclamos = {
         segundaFecha,
         segFechaHoraInicio,
         segHoraFin,
+        reclamantes,
+        reclamados
       }),
     });
   },
@@ -226,6 +233,8 @@ export const Reclamos = {
     segundaFecha,
     segFechaHoraInicio,
     segHoraFin,
+    reclamantes,
+    reclamados
   }) => {
     return fetch(`http://localhost:3000/reclamos/${id}`, {
       method: "PATCH",
@@ -238,6 +247,8 @@ export const Reclamos = {
         segundaFecha,
         segFechaHoraInicio,
         segHoraFin,
+        reclamantes,
+        reclamados
       }),
     });
   },
