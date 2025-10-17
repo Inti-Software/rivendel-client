@@ -2,21 +2,35 @@ import { Document, Page, Text, View, StyleSheet, PDFViewer } from '@react-pdf/re
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Reclamos } from '../../utils/endpoints';
+import ReportData from './DTOs/ReportData';
 
 const styles = StyleSheet.create({
-	page: { padding: 30 },
-	header: { fontSize: 24, marginBottom: 20, textAlign: 'center' },
-	dataItem: { fontSize: 12, marginBottom: 5 },
+	page: { 
+		padding: 30 ,
+		fontSize: 12 
+	},
+	header: { 
+		fontWeight: 'bold',
+		marginBottom: 20, 
+		textAlign: 'center',
+		textDecoration: 'underline'
+	},
+	partes: { 
+		marginBottom: 5,
+	},
 });
 
-const Acta = ({ data }) => (
+const Acta = ({ data = ReportData }) => (
 	<div id='reporte'>
 		<PDFViewer>
 			<Document>
 				<Page size="A4" style={styles.page}>
 					<View>
 						<Text style={styles.header}>{data?.titulo}</Text>
-						<Text style={styles.dataItem}>ID del Reporte: {data?.id}</Text>
+						<Text style={styles.partes}>
+							<Text>Reclamante: </Text>
+							<Text style={{ fontWeight: 'bold' }} >{data?.reclamante}</Text>
+						</Text>
 						<Text style={styles.dataItem}>Datos cargados a las: {new Date().toLocaleTimeString()}</Text>
 					</View>
 				</Page>
@@ -33,12 +47,12 @@ const Reporte = ({ root }) => {
 			const fetchData = async () => {
 				const response = await Reclamos.get(id);
 				if (response.ok) {
-					const r = await response.json();
-					const data = {
-						titulo: `CERTIFICACIÓN DE FRACASO RECLAMO ${r.numero}`,
-						id: id
-					}
-					root.render(<Acta data={data} />)
+					const data = await response.json();
+					// const data = {
+					// 	titulo: `CERTIFICACIÓN DE FRACASO RECLAMO ${r.numero}`,
+					// 	id: id
+					// }
+					root.render(<Acta data={new ReportData(data)} />)
 				} else {
 					const msg = await response.json();
 					root.render(<div>Error: {msg.code} - {msg.message}</div>);
