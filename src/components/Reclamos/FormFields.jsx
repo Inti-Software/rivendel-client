@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import SearchParteDialog from "../Partes/SearchParteDialog";
 
 const FormFields = ({numero, setNumero, reclamantes, setReclamantes,
@@ -10,16 +10,12 @@ const FormFields = ({numero, setNumero, reclamantes, setReclamantes,
     const onAcceptSearchParte = (e, parte) => {
       e.preventDefault();
       if (reclamantes.find(r => r.id === parte.id)) {
-        console.log("El parte ya está agregado como reclamante.");
+        console.log("La parte ya está agregada como reclamante.");
         return;
       }
       setReclamantes([...reclamantes, parte]);
       setShowSearchPartes(false);
     }
-
-    useEffect(() => {
-      console.log(reclamantes);
-    }, [reclamantes]);
   
     return (
         <>

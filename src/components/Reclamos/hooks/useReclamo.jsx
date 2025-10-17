@@ -40,7 +40,8 @@ export function useReclamo(request, accion, getRequest) {
     try {
       const idsReclamantes = reclamantes.map((r) => r.id);
       const idsReclamados = reclamados.map((r) => r.id);
-      const response = await request({id, numero, reclamantes: idsReclamantes, reclamados: idsReclamados});
+      console.log({id, numero: numero, reclamantes: idsReclamantes, reclamados: idsReclamados})
+      const response = await request({id, numero: numero, reclamantes: idsReclamantes, reclamados: idsReclamados});
       if (response.ok) {
         showSuccess(
           "El reclamo Nº " + numero +
