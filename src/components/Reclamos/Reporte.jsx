@@ -31,6 +31,11 @@ const Acta = ({ data = ReportData }) => (
 							<Text>Reclamante: </Text>
 							<Text style={{ fontWeight: 'bold' }} >{data?.reclamante}</Text>
 						</Text>
+						<Text style={styles.partes}>
+							<Text>Reclamados: </Text>
+							<Text style={{ fontWeight: 'bold' }} >{data?.reclamado}</Text>
+						</Text>
+
 						<Text style={styles.dataItem}>Datos cargados a las: {new Date().toLocaleTimeString()}</Text>
 					</View>
 				</Page>

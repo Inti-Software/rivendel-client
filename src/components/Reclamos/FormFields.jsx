@@ -1,19 +1,30 @@
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import SearchParteDialog from "../Partes/SearchParteDialog";
 
 const FormFields = ({numero, setNumero, reclamantes, setReclamantes,
   reclamados, setReclamados
 }) => {
     const [showSearchPartes, setShowSearchPartes] = useState(false);
+    const addingReclamante = useRef(true);
+
+    const addReclamante = (isReclamante) => {
+      addingReclamante.current = isReclamante;
+      setShowSearchPartes(true);
+    }
 
     const onAcceptSearchParte = (e, parte) => {
       e.preventDefault();
-      if (reclamantes.find(r => r.id === parte.id)) {
+      const partes = addingReclamante.current ? reclamados : reclamantes;
+      if (partes.find(r => r.id === parte.id)) {
         console.log("La parte ya está agregada como reclamante.");
         return;
       }
-      setReclamantes([...reclamantes, parte]);
+      if (addingReclamante.current) {
+        setReclamantes([...reclamantes, parte]);
+      } else {
+        setReclamados([...reclamados, parte]);
+      }
       setShowSearchPartes(false);
     }
   
@@ -62,7 +73,7 @@ const FormFields = ({numero, setNumero, reclamantes, setReclamantes,
                   <tr>
                     <td colSpan={2}>
                       <button type="button" className="btn btn-sm btn-outline-secondary"
-                        onClick={() => setShowSearchPartes(true)}>
+                        onClick={() => addReclamante(true)}>
                         Agregar Reclamante
                       </button>
                     </td>
@@ -70,11 +81,49 @@ const FormFields = ({numero, setNumero, reclamantes, setReclamantes,
                 </tfoot>
               </table>
             </div>
+            <div className="mb-3">
+              <table className="table table-sm text-center">
+                <thead>
+                  <tr>
+                    <th colSpan={3} className="fw-bold text-bg-secondary rounded-top-pill">Reclamados</th>
+                  </tr>
+                  <tr>
+                    <th className="text-bg-secondary rounded border-1">CUIL</th>
+                    <th className="text-bg-secondary rounded border-1">Nombre</th>
+                    <th className="text-bg-secondary rounded border-1"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {reclamados.map((p) => (
+                    <tr key={p.id}>
+                      <td>{p.cuil}</td>
+                      <td>{p.nombre}</td>
+                      <td className="text-danger" >
+                        <button type="button" className="btn btn-sm btn-outline-danger"
+                          onClick={() => setReclamados(reclamados.filter(r => r.id !== p.id))}>
+                          -
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <td colSpan={2}>
+                      <button type="button" className="btn btn-sm btn-outline-secondary"
+                        onClick={() => addReclamante(false)}>
+                        Agregar Reclamado
+                      </button>
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>            
           </div>
-          <div className="mb-3">
+          {/* <div className="mb-3">
             <label htmlFor="reclamados" className="form-label">Reclamados</label>
             <input id="reclamados" className="form-control" type="text" value={reclamados} onChange={(e) => setReclamados(e.target.value)} />
-          </div>
+          </div> */}
           <div className="mb-3">
               <button type="submit" className="btn btn-primary me-2">Grabar</button>
               <Link to="/reclamos" className="btn btn-outline-primary">Cancelar</Link>
