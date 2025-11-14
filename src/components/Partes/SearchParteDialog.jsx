@@ -25,7 +25,6 @@ const SearchParteDialog = ({ handleAccept, handleCancel }) => {
 				return response.json();
 			})
 			.then(data => {
-				console.log(data)
 				setData(data)
 				if (data.totalRecords === 0) {
 					message.current = "No se encontraron datos.";
