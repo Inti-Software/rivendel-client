@@ -231,9 +231,6 @@ export const Reclamos = {
     idResolucion,
     fechaHoraInicio,
     horaFin,
-    segundaFecha,
-    segFechaHoraInicio,
-    segHoraFin,
     reclamantes,
     reclamados
   }) => {
@@ -241,14 +238,12 @@ export const Reclamos = {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
+        id,
         numero,
         rubros,
         idResolucion,
         fechaHoraInicio,
         horaFin,
-        segundaFecha,
-        segFechaHoraInicio,
-        segHoraFin,
         reclamantes,
         reclamados
       }),

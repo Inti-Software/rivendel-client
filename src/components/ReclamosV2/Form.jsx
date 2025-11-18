@@ -1,10 +1,11 @@
-import { useReducer, useEffect, use, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useReducer, useEffect, useState } from "react";
+import { useNavigate, Link, useParams } from "react-router-dom";
 import SearchParteDialog from "../Partes/SearchParteDialog";
-import { Resoluciones } from "../../utils/endpoints";
+import { Resoluciones, Reclamos } from "../../utils/endpoints";
 import DataBindedSelect from "../Forms/DataBindedSelect";
+import ValidationErrors from "../Shared/ValidationErrors";
+import dayjs from "dayjs";
 
-// Estado inicial
 const initialState = {
   id: 0,
   numero: 0,
@@ -18,18 +19,18 @@ const initialState = {
 		show: false,
 		esReclamante: true
 	},
+	initializing: true,
   loading: false,
-  errors: {}
+  errors: []
 };
 
-// Reducer
 function formReducer(state, action) {
   switch (action.type) {
     case "SET_FIELD":
       return {
         ...state,
         [action.field]: action.value,
-        errors: { ...state.errors, [action.field]: "" } // limpiar error al escribir
+				errors: []
       };
 
     case "SET_ERRORS":
@@ -39,16 +40,40 @@ function formReducer(state, action) {
       };
 
     case "SUBMIT_START":
-      return { ...state, loading: true };
+      return { 
+				...state, 
+				errors: [],
+				loading: true 
+			};
 
     case "SUBMIT_SUCCESS":
       return initialState;
 
-    case "SUBMIT_FAIL":
-      return { ...state, loading: false };
-
+    case "SUBMIT_FAIL": {
+			const errors = (typeof action.errors === "string") ?
+							[action.errors || "Error en la solicitud"] :
+							action.errors || ["Error en la solicitud"];
+      return { 
+				...state,
+				errors: errors,
+				loading: false 
+			};
+		}
 		case "SEARCH_PARTES":
-			return { ...state, searchPartes: { show: action.show, esReclamante: action.esReclamante } };
+			return { 
+				...state, 
+				searchPartes: { 
+					show: action.show, 
+					esReclamante: action.esReclamante 
+				} 
+			};
+
+		case "INITIAL_LOAD":
+			return { 
+				...state,
+				...action.payload,
+				initializing: false
+			};
 
     default:
       return state;
@@ -58,7 +83,8 @@ function formReducer(state, action) {
 export default function FormUseReducer() {
   const [state, dispatch] = useReducer(formReducer, initialState);
 	const [resoluciones, setResoluciones] = useState([]);
-	const navigate = useNavigate();	
+	const navigate = useNavigate();
+	const { id } = useParams();
 
 	useEffect(() => {
 		const fetchResoluciones = async () => {
@@ -78,16 +104,47 @@ export default function FormUseReducer() {
 		fetchResoluciones();
 	}, []);
 
+	useEffect(() => {
+		if (isNaN(id)) return;
+
+		try {
+			const fetchData = async () => {
+				const response = await Reclamos.get(id);
+				if (response.ok) {
+					const data = await response.json();
+					const fechaHoraInicio = dayjs(data.fechaHoraInicio, "DD/MM/YYYY HH:mm", true).isValid()? 
+						dayjs(data.fechaHoraInicio, "DD/MM/YYYY HH:mm").format("YYYY-MM-DDTHH:mm") : "";
+					dispatch({ type: "INITIAL_LOAD", payload: {
+						id: data.id,
+						numero: data.numero,
+						rubros: data.rubros,
+						idResolucion: isNaN(data.idResolucion)? 0 : parseInt(data.idResolucion),
+						fechaHoraInicio: fechaHoraInicio,
+						horaFin: data.horaFin == null ? "" : data.horaFin,
+						reclamantes: data.reclamantes,
+						reclamados: data.reclamados
+					}});
+				} else {					
+					console.error(await response.json());
+					dispatch({ type: "INITIAL_LOAD", payload: {} });
+				}
+			};
+			fetchData();
+		} catch (err) {
+			console.error(err);
+			dispatch({ type: "INITIAL_LOAD", payload: {} });
+		}
+	}, [id]);
+
   const validate = () => {
-    const errors = {};
-    if (state.numero <= 0) errors.numero = "Ingrese un número de conciliación válido";
-    if (state.idResolucion <= 0) errors.idResolucion = "Seleccione una resolución válida";
-    if (!state.fechaHoraInicio) errors.fechaHoraInicio = "Fecha y hora de inicio requerida";
-    if (state.fechaHoraInicio && isNaN(Date.parse(state.fechaHoraInicio)))
-      errors.fechaHoraInicio = "Ingrese una fecha y hora de inicio válidas";
-    if (!state.horaFin) errors.horaFin = "Hora de fin requerida";
-    if (state.horaFin && isNaN(Date.parse(state.horaFin)))
-      errors.horaFin = "Ingrese una hora de fin válida";
+    const errors = [];
+    if (state.numero <= 0) errors.push("Ingrese un número de conciliación válido");
+    if (!state.fechaHoraInicio) errors.push("Ingrese una fecha y hora de inicio");
+    if (!dayjs(state.fechaHoraInicio, "YYYY-MM-DDTHH:mm", true).isValid())
+      errors.push("Ingrese una fecha y hora de inicio válidas");
+    if (dayjs(state.horaFin, "HH:mm", true).isValid())
+      errors.push("Ingrese una hora de fin válida");
+		if (state.idResolucion <= 0) errors.push("Seleccione una resolución válida");
     return errors;
   };
 
@@ -95,31 +152,41 @@ export default function FormUseReducer() {
     e.preventDefault();
 
     const errors = validate();
-    if (Object.keys(errors).length > 0) {
-      dispatch({ type: "SET_ERRORS", errors });
-      return;
-    }
+		if (errors.length > 0) {
+			dispatch({ type: "SET_ERRORS", errors });
+			return;
+		}
 
     dispatch({ type: "SUBMIT_START" });
 
     try {
-      // Enviar a una API .NET (ejemplo)
-      await fetch("https://localhost:5001/api/usuarios", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: state.name,
-          email: state.email,
-          password: state.password
-        })
-      });
+			const reclamo = {
+				id: state.id, 
+				numero: state.numero, 
+				rubros: state.rubros, 
+				idResolucion: state.idResolucion,
+				fechaHoraInicio: state.fechaHoraInicio, 
+				horaFin: state.horaFin === "" ? null : state.horaFin, 
+				reclamantes: state.reclamantes.map(r => r.id),
+				reclamados: state.reclamados.map(r => r.id)
+			};
 
-      dispatch({ type: "SUBMIT_SUCCESS" });
-			navigate("/reclamos");
-      //alert("Usuario registrado");
+			let result;
+			if (isNaN(id))
+				result = await Reclamos.create(reclamo);
+			else
+				result = await	Reclamos.update(reclamo);
+
+			if (result.ok) {
+				dispatch({ type: "SUBMIT_SUCCESS" });
+				//navigate("/reclamos");
+				//alert("Usuario registrado");
+			} else {				
+				const errorData = await result.json();
+				dispatch({ type: "SUBMIT_FAIL", errors: errorData.message });
+			}
     } catch (err) {
-      //alert("Error con el servidor", err);
-      dispatch({ type: "SUBMIT_FAIL" });
+      dispatch({ type: "SUBMIT_FAIL", errors: [err.message] });
     }
   };
 
@@ -198,6 +265,7 @@ export default function FormUseReducer() {
 				) }
 
 		  <h3 className="mb-3">Formulario de Reclamo</h3>
+			{state.errors.length > 0 && <ValidationErrors errors={state.errors} />}
 			<div className="row">
 				<div className="col-md-2 mb-3">
 					<label htmlFor="numero" className="form-label">Número</label>
@@ -207,12 +275,12 @@ export default function FormUseReducer() {
 				<div className="col-md-3 mb-3">
 					<label htmlFor="fechaHoraInicio" className="form-label">Fecha y Hora de Inicio</label>
 					<input id="fechaHoraInicio" placeholder="AAAA-MM-DD HH:MM" className="form-control text-center" type="datetime-local" value={state.fechaHoraInicio} 
-						onChange={(e) => dispatch({ type: "SET_FIELD", field: "fechaHoraInicio", value: e.target.value })} required />
+						onChange={(e) => dispatch({ type: "SET_FIELD", field: "fechaHoraInicio", value: e.target.value })} />
 				</div>
 				<div className="col-md-1 mb-3">
 					<label htmlFor="horaFin" className="form-label">Hora de Fin</label>
 					<input id="horaFin" placeholder="HH:MM" className="form-control text-center" type="time" value={state.horaFin} 
-						onChange={(e) => dispatch({ type: "SET_FIELD", field: "horaFin", value: e.target.value })} required />
+						onChange={(e) => dispatch({ type: "SET_FIELD", field: "horaFin", value: e.target.value })} />
 				</div>
 				<div className="col-md-5 mb-3">
 					<label htmlFor="idResolucion" className="form-label">Resolución</label>
@@ -234,6 +302,11 @@ export default function FormUseReducer() {
 				</div>
 				{partesTable(true)}
 				{partesTable(false)}
+			</div>
+
+			<div className="mb-3">
+					<button disabled={state.loading} type="submit" className="btn btn-primary me-2">{state.loading? "Grabando...":"Grabar"}</button>
+					<Link to="/partes" className="btn btn-outline-primary">Cancelar</Link>
 			</div>
 
     <pre>{JSON.stringify(state, null, 2)}</pre>
