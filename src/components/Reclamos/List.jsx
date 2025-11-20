@@ -15,7 +15,7 @@ const ListReclamos = () => {
   }
 
   return (
-    <Container title={"Reclamos"} newPath="/reclamos/new">
+    <Container title={"Reclamos"} newPath="/reclamosv2/form">
       {error ? (
         <ErrorMessage message={error} />
       ) : (
