@@ -22,7 +22,7 @@ import NewReclamo from "./components/Reclamos/New.jsx";
 import EditReclamo from "./components/Reclamos/Edit.jsx";
 import Reporte from "./components/Reclamos/Reporte.jsx";
 import LayoutRoutes from "./components/Layout/LayoutRoutes.jsx";
-import FormUseReducer from "./components/ReclamosV2/Form.jsx";
+import Form from "./components/Reclamos/Form.jsx";
 
 const root = createRoot(document.getElementById("root"))
 root.render(
@@ -49,8 +49,8 @@ root.render(
             <Route path="/reclamos" element={<ListReclamos />} />
             <Route path="/reclamos/new" element={<NewReclamo />} />
             <Route path="/reclamos/edit/:id" element={<EditReclamo />} />
-            <Route path="/reclamosv2/form" element={<FormUseReducer />} />
-            <Route path="/reclamosv2/form/:id" element={<FormUseReducer />} />
+            <Route path="/reclamosv2/form" element={<Form />} />
+            <Route path="/reclamosv2/form/:id" element={<Form />} />
           </Route>
         </Routes>
       </BrowserRouter>
