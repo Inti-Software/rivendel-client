@@ -68,7 +68,7 @@ const Reporte = ({ root }) => {
 			root.render(<div>Error: {err.message}</div>);
 		}
 
-	}, [])
+	}, [id])
 }
 
 export default Reporte;

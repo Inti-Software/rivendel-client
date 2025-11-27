@@ -69,7 +69,7 @@ const SearchParteDialog = ({ handleAccept, handleCancel }) => {
 				>
 			<div className="modal-dialog center-vertical w-50">
 				<div className="modal-content">
-					<div className="modal-header">
+					<div className="modal-header bg-success text-white">
 						<h5 className="modal-title">Partes</h5>
 					</div>
 					<div className="modal-body">
