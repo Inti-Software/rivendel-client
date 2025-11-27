@@ -30,7 +30,7 @@ const Grid = ({data, headers, row, currentPage, totalPages, setCurrentPage}) => 
           <tbody>
             {!data || data.length === 0 ? (
               <tr>
-                <td colSpan={headers.length} className="text-center">
+                <td colSpan={headers?.length || 1} className="text-center">
                   <span className="badge text-secondary bg-body-secondary rounded-2 border border-secondary">
                     No hay datos para mostrar.
                   </span>
