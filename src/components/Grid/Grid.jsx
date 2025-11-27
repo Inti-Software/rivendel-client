@@ -30,7 +30,7 @@ const Grid = ({data, headers, row, currentPage, totalPages, setCurrentPage}) => 
           <tbody>
             {!data || data.length === 0 ? (
               <tr>
-                <td colSpan="2" className="text-center">
+                <td colSpan={headers.length} className="text-center">
                   <span className="badge text-secondary bg-body-secondary rounded-2 border border-secondary">
                     No hay datos para mostrar.
                   </span>
@@ -54,18 +54,17 @@ const Grid = ({data, headers, row, currentPage, totalPages, setCurrentPage}) => 
           <button
             className="btn btn-primary"
             onClick={prevPage}
-            disabled={currentPage === 1}
+            disabled={currentPage === 1 || totalPages === 0}
           >
             Anterior
           </button>
           <span>
-            {" "}
-            Página {currentPage} de {totalPages}{" "}
+            {totalPages > 0 && (" Página " + currentPage + " de " + totalPages)}
           </span>
           <button
             className="btn btn-primary"
             onClick={nextPage}
-            disabled={currentPage === totalPages}
+            disabled={currentPage === totalPages || totalPages === 0}
           >
             Siguiente
           </button>
