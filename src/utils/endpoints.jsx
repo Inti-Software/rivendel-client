@@ -198,6 +198,7 @@ export const Reclamos = {
       `http://localhost:3000/reclamos?page=${currentPage}&limit=${recordsPerPage}`
     ),
   create: async ({
+    numero,
     rubros,
     idResolucion,
     fechaHoraInicio,
@@ -212,6 +213,7 @@ export const Reclamos = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
+        numero,
         rubros,
         idResolucion,
         fechaHoraInicio,

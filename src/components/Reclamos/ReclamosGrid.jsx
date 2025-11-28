@@ -81,7 +81,7 @@ const ReclamosGrid = ({data, currentPage, totalPages, setData, setCurrentPage}) 
                         {rec.partes.filter(p => p.rol === RECLAMANTE).map((r) => r.parte.nombre).join(", ")}
                       </span>
                     </div>
-                    <div className="col-5 border border-secondary-subtle rounded p-2 ms-1">
+                    <div className="col-6 border border-secondary-subtle rounded p-2">
                       <h6>Reclamados</h6>
                       <span>
                         {rec.partes.filter(p => p.rol === RECLAMADO).map((r) => r.parte.nombre).join(", ")}

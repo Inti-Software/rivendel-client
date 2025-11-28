@@ -138,7 +138,7 @@ export default function Form() {
 
   const validate = () => {
     const errors = [];
-    if (state.numero <= 0) errors.push("Ingrese un número de conciliación válido");
+    if (state.numero <= 0) errors.push("Ingrese un número de reclamo válido");
     if (!state.fechaHoraInicio) errors.push("Ingrese una fecha y hora de inicio");
     if (!dayjs(state.fechaHoraInicio, "YYYY-MM-DDTHH:mm", true).isValid())
       errors.push("Ingrese una fecha y hora de inicio válidas");
