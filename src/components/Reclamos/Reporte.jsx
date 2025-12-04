@@ -44,8 +44,8 @@ const styles = StyleSheet.create({
 	firmas: {
 		fontSize: "8pt",
 		fontFamily: "Helvetica",
+		textAlign: 'center',		
     width: '100%',
-		textAlign: 'center',
   },
   filaFirmas: {
     flexDirection: 'row', // Organiza los elementos en fila (horizontal)
@@ -135,15 +135,10 @@ const lineaFirma = (label1, label2) => (
 
 const panelFirmas = () => (
 	<View style={styles.firmas}>
-
 		({lineaFirma("Firma Reclamante", "Firma Reclamado")})
-
 		({lineaFirma("Aclaración Reclamante", "Aclaración Reclamado")})
-
-		({lineaFirma("Tipo y Nro. Documento Reclamante", "Tipo y Nro. Documento Reclamado")})
-		
+		({lineaFirma("Tipo y Nro. Documento Reclamante", "Tipo y Nro. Documento Reclamado")})		
 		({lineaFirma("Firma Letrado Reclamante", "Firma Letrado Reclamado")})
-
 	</View>
 )
 
