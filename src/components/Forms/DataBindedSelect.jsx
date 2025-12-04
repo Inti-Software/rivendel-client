@@ -1,5 +1,5 @@
 export default function DataBindedSelect({ data, selectedValue, setSelectedValue }) {
-	if (!selectedValue && data.length > 0) {
+	if (data?.length > 0 && (!selectedValue || !data.some(d => d.value === selectedValue))) {
 		selectedValue = data[0].value
 	}
   return (
