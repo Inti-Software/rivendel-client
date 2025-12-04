@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { DELETE, EDIT, PRINT } from "../../utils/Icons";
 
 const GridEditButton = ({path, style, className}) => {
 	return (
@@ -6,7 +7,7 @@ const GridEditButton = ({path, style, className}) => {
 				className={"btn btn-outline-secondary btn-sm ms-2" + (className ? ` ${className}` : "")}
 				style={style || {}}
 		>
-			Editar
+			{EDIT}
 		</Link>
 	);
 }
@@ -17,7 +18,7 @@ const GridDeleteButton = ({onDelete, style, className}) => {
 			className={"btn btn-outline-danger btn-sm ms-2" + (className ? ` ${className}` : "")}
 			style={style || {}}
 			>
-			Eliminar
+			{DELETE}
 		</a>
 	);
 }
@@ -30,7 +31,7 @@ const GridPrintButton = ({path, style, className, onClick}) => {
 				onClick={onClick}
 				target="__blank"
 		>
-			Imprimir
+			{PRINT}
 		</Link>
 	);
 }

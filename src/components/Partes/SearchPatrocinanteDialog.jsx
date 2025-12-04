@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Patrocinantes } from '../../utils/endpoints';
+import { SEARCH } from '../../utils/Icons';
 
 const SearchPatrocinanteDialog = ({ handleAccept, handleCancel }) => {
 	const [searchTerm, setSearchTerm] = useState("");
@@ -77,7 +78,9 @@ const SearchPatrocinanteDialog = ({ handleAccept, handleCancel }) => {
 									onKeyDown={handleKeyDown} />
 							</div>
 							<div className="col">
-								<input type='button' className="btn btn-outline-primary ms-2" value="Buscar" onClick={buscar} />
+								<button type="button" className="btn btn-outline-primary ms-2" onClick={buscar}>
+									{SEARCH}
+								</button>
 							</div>
 						</div>
 						<div className='row mb-3' onClick={onSelectRow}>

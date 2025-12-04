@@ -1,5 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import "./Layout.css";
+import { DEAL } from "../../utils/Icons";
 
 const NavLink = ({relativeUrl, text}) => {
   const location = useLocation()
@@ -27,7 +28,8 @@ function Layout({ children }) {
       <nav className="navbar navbar-expand-lg bg-dark border-bottom border-body" data-bs-theme="dark">
         <div className="container-fluid">
           <a className="navbar-brand" href="#">
-            Conciliaciones
+            {DEAL}
+            <span className="ms-2">Conciliaciones</span>
           </a>
           <button
             className="navbar-toggler"

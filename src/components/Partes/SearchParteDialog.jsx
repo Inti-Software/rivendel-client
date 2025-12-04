@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Partes } from '../../utils/endpoints';
+import { PRINT, SEARCH } from '../../utils/Icons';
 
 const SearchParteDialog = ({ handleAccept, handleCancel }) => {
 	const [searchTerm, setSearchTerm] = useState("");
@@ -79,7 +80,9 @@ const SearchParteDialog = ({ handleAccept, handleCancel }) => {
 									onKeyDown={handleKeyDown} />
 							</div>
 							<div className="col-2">
-								<input type='button' className="btn btn-outline-primary form-control" value="Buscar" onClick={buscar} />
+								<button type="button" className="btn btn-outline-primary form-control" onClick={buscar}>
+									{SEARCH}
+								</button>
 							</div>
 						</div>
 						<div className='row mb-3' onClick={onSelectRow}>
