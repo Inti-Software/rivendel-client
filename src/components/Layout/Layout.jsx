@@ -1,13 +1,29 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import "./Layout.css";
 
+const NavLink = ({relativeUrl, text}) => {
+  const location = useLocation()
+  const pn = location.pathname
+  const classes = 'nav-link' + (pn.includes(relativeUrl)? ' active': '');
+
+  return (
+    <Link className={classes} to={relativeUrl} aria-current="page">
+      {text}
+    </Link>
+  );
+}
+
 function Layout({ children }) {
+  const items = [
+    { relativeUrl: '/tipos-documentos', text: 'Tipos de documentos' },
+    { relativeUrl: '/patrocinantes', text: 'Patrocinantes' },
+    { relativeUrl: '/resoluciones', text: 'Resoluciones' },
+    { relativeUrl: '/reclamos', text: 'Reclamos' }
+  ]
+
   return (
     <>
-      <nav
-        className="navbar navbar-expand-lg bg-body-tertiary"
-        data-bs-theme="dark"
-      >
+      <nav className="navbar navbar-expand-lg bg-dark border-bottom border-body" data-bs-theme="dark">
         <div className="container-fluid">
           <a className="navbar-brand" href="#">
             Conciliaciones
@@ -16,46 +32,28 @@ function Layout({ children }) {
             className="navbar-toggler"
             type="button"
             data-bs-toggle="collapse"
-            data-bs-target="#navbarNav"
-            aria-controls="navbarNav"
+            data-bs-target="#navbarNav" // <<--
+            aria-controls="navbarNav" // <<--
             aria-expanded="false"
             aria-label="Toggle navigation"
           >
             <span className="navbar-toggler-icon"></span>
           </button>
-          <ul className="navbar-nav justify-content-end">
-            <li className="nav-item">
-              <Link className="nav-link active" to="/tipos-documentos">
-                Tipos de documentos
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link active" to="/patrocinantes">
-                Patrocinantes
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link active" to="/partes">
-                Partes
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link active" to="/resoluciones">
-                Resoluciones
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link active" to="/reclamos">
-                Reclamos
-              </Link>
-            </li>
-          </ul>
+          <div className="collapse navbar-collapse" id="navbarNav">
+            <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
+              {items.map((item, k) => (
+                <li className="nav-item" key={k}>
+                  <NavLink relativeUrl={item.relativeUrl} text={item.text} />
+                </li>
+              )) }
+            </ul>
+          </div>
         </div>
       </nav>
 
       <main className="container py-4">{children}</main>
 
-      <footer className="bg-light text-center py-3 mt-auto footer">
+      <footer className="text-center py-3 mt-auto footer">
         <p className="text-center text-body-secondary">© 2025 Inti Software</p>
       </footer>
     </>
