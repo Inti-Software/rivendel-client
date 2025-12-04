@@ -61,12 +61,10 @@ const PartesGrid = ({data, currentPage, totalPages, setData, setCurrentPage}) =>
               {p.nombre}
             </div>
             <div className="col d-flex justify-content-end">
-          		<Link to={`/partes/edit/${p.id}`} 
-                  className={"btn btn-outline-secondary ms-2 bg-light my-1 border-secondary"}
-                  style={{ "--bs-btn-font-size": ".75rem", "color": "#555" }}
-              >
-                Editar
-              </Link>
+              <GridEditButton path={`/partes/edit/${p.id}`} 
+                style={{ "--bs-btn-font-size": ".75rem", "color": "#555" }}
+                className={"btn btn-outline-secondary ms-2 bg-light my-1 border-secondary"}
+              />
 
               <GridDeleteButton
                 onDelete={(e) => onDeleteRecord(e, p.id, p.nombre, p.cuil)}
