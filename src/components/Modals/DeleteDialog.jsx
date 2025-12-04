@@ -5,20 +5,17 @@
          >
       <div className="modal-dialog center-vertical">
         <div className="modal-content">
-          <div className="modal-header">
-            <h5 className="modal-title">Confirmar eliminación</h5>
-            {/* <button type="button" className="btn-close" onClick={() => setShowModal(false)}></button> */}
-          </div>
           <div className="modal-body">
+            <h6 className="modal-title mb-1">Confirmar eliminación</h6>
             <p>{deleteMessage}</p>
-          </div>
-          <div className="modal-footer">
-            <button type="button" className="btn btn-danger" onClick={handleDelete}>
-              Eliminar
-            </button>
-            <button type="button" className="btn btn-secondary" onClick={handleCancel}>
-              Cancelar
-            </button>
+            <div className="buttons">
+              <button type="button" className="btn btn-sm btn-danger" onClick={handleDelete}>
+                Eliminar
+              </button>
+              <button type="button" className="btn btn-sm btn-secondary" onClick={handleCancel}>
+                Cancelar
+              </button>
+            </div>
           </div>
         </div>
       </div>

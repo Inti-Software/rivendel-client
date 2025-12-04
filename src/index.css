@@ -10,12 +10,10 @@ body {
   background-color: #ff0 !important;
   color: #000 !important;
 }
-
 .text-bg-none {
   background-color: transparent !important;
   columns: transparent !important;
 }
-
 .modal-backdrop-50 {
   --bs-backdrop-zindex: 1050;
   --bs-backdrop-bg: rgb(0,0,0,0.5);
@@ -28,13 +26,16 @@ body {
   height: 100vh;
   background-color: var(--bs-backdrop-bg);
 }
-
 .center-vertical {
   display: flex;
   align-items: center;
   justify-content: center;
 }
-
+.modal-dialog .buttons {
+  display: flex;
+  justify-content: end;
+  gap: 5px;
+}
 #reporte iframe {
   height: 100vh !important;
   width: 100% !important;
