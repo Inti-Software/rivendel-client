@@ -5,6 +5,7 @@ import { Resoluciones, Reclamos } from "../../utils/endpoints";
 import DataBindedSelect from "../Forms/DataBindedSelect";
 import ValidationErrors from "../Shared/ValidationErrors";
 import dayjs from "dayjs";
+import { useNotification } from "../../contexts/Constants";
 
 const initialState = {
   id: 0,
@@ -21,7 +22,8 @@ const initialState = {
 	},
 	initializing: true,
   loading: false,
-  errors: []
+  errors: [],
+	isUpdate: false
 };
 
 function formReducer(state, action) {
@@ -72,7 +74,8 @@ function formReducer(state, action) {
 			return { 
 				...state,
 				...action.payload,
-				initializing: false
+				initializing: false,
+				isUpdate: action.payload.nombre !== undefined
 			};
 
     default:
@@ -85,6 +88,7 @@ export default function Form() {
 	const [resoluciones, setResoluciones] = useState([]);
 	const navigate = useNavigate();
 	const { id } = useParams();
+	const { showSuccess } = useNotification();
 
 	useEffect(() => {
 		const fetchResoluciones = async () => {
@@ -194,6 +198,8 @@ const handleSubmit = async (e) => {
 			result = await	Reclamos.update(reclamo);
 
 		if (result.ok) {
+      showSuccess("El reclamo Nº " + state.numero + 
+				` se ${state.isUpdate ? "creó" : "actualizó"} correctamente.`);
 			dispatch({ type: "SUBMIT_SUCCESS" });
 			navigate("/reclamos");
 		} else {				
