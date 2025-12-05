@@ -1,4 +1,4 @@
-import Grid from "../Grid/Grid";
+import CustomGrid from "../Grid/Grid";
 import { GridEditButton, GridDeleteButton, GridPrintButton } from "../Grid/GridButtons";
 import { useState } from "react";
 import { useNotification } from "../../contexts/Constants";
@@ -8,7 +8,7 @@ import dayjs from "dayjs";
 import es from "dayjs/locale/es";
 import { RECLAMADO, RECLAMANTE } from "../../utils/constants";
 
-const ReclamosGrid = ({data, currentPage, totalPages, setData, setCurrentPage}) => {
+export default function Grid({data, currentPage, totalPages, setData, setCurrentPage}) {
   const [onDeleteId, setOnDeleteId] = useState(null);
   const [deleteMessage, setDeleteMessage] = useState("");
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
@@ -92,7 +92,7 @@ const ReclamosGrid = ({data, currentPage, totalPages, setData, setCurrentPage}) 
                 <div className="col-1 d-flex align-items-center">
                   <div className="row">
                     <div className="col mb-1">
-                      <GridEditButton path={`/reclamosv2/form/${rec.id}`} className={"w-100"} />
+                      <GridEditButton path={`/reclamos/form/${rec.id}`} className={"w-100"} />
                     </div>
                     <div className="col mb-1">
                       <GridPrintButton path={`/reclamos/reporte/${rec.id}`} className={"w-100"} />
@@ -114,7 +114,7 @@ const ReclamosGrid = ({data, currentPage, totalPages, setData, setCurrentPage}) 
   return (    
     <>
       <div id="pdf"></div>
-      <Grid data={data}
+      <CustomGrid data={data}
         headers={null}
         row={row}
         currentPage={currentPage}
@@ -131,5 +131,3 @@ const ReclamosGrid = ({data, currentPage, totalPages, setData, setCurrentPage}) 
     </>
   );
 };
-
-export default ReclamosGrid;

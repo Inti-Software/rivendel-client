@@ -4,7 +4,7 @@ import Spinner from "../Shared/Spinner";
 import useFormGrid from "../../hooks/useFormGrid";
 import { Reclamos } from "../../utils/endpoints";
 import { RECORDS_PER_PAGE } from "../../utils/constants";
-import ReclamosGrid from "./ReclamosGrid";
+import Grid from "./Grid";
 
 const ListReclamos = () => {
   const { loading, data, error, currentPage, totalPages, setData,
@@ -15,12 +15,12 @@ const ListReclamos = () => {
   }
 
   return (
-    <Container title={"Reclamos"} newPath="/reclamosv2/form">
+    <Container title={"Reclamos"} newPath="/reclamos/form">
       {error ? (
         <ErrorMessage message={error} />
       ) : (
         <>
-        <ReclamosGrid
+        <Grid
           data={data}
           currentPage={currentPage}
           totalPages={totalPages}

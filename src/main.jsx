@@ -16,8 +16,6 @@ import ListResoluciones from "./components/Resoluciones/List.jsx";
 import NewResolucion from "./components/Resoluciones/New.jsx";
 import EditResolucion from "./components/Resoluciones/Edit.jsx";
 import ListReclamos from "./components/Reclamos/List.jsx";
-import NewReclamo from "./components/Reclamos/New.jsx";
-import EditReclamo from "./components/Reclamos/Edit.jsx";
 import Reporte from "./components/Reclamos/Reporte.jsx";
 import LayoutRoutes from "./components/Layout/LayoutRoutes.jsx";
 import ReclamosForm  from "./components/Reclamos/Form.jsx";
@@ -46,10 +44,8 @@ root.render(
             <Route path="/resoluciones/new" element={<NewResolucion />} />
             <Route path="/resoluciones/edit/:id" element={<EditResolucion />} />
             <Route path="/reclamos" element={<ListReclamos />} />
-            <Route path="/reclamos/new" element={<NewReclamo />} />
-            <Route path="/reclamos/edit/:id" element={<EditReclamo />} />
-            <Route path="/reclamosv2/form" element={<ReclamosForm />} />
-            <Route path="/reclamosv2/form/:id" element={<ReclamosForm />} />
+            <Route path="/reclamos/form" element={<ReclamosForm />} />
+            <Route path="/reclamos/form/:id" element={<ReclamosForm />} />
           </Route>
         </Routes>
       </BrowserRouter>
