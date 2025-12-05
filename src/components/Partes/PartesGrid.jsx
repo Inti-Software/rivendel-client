@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useNotification } from "../../contexts/Constants";
 import DeleteDialog from "../Modals/DeleteDialog";
 import { Partes } from "../../utils/endpoints";
-import { Link } from "react-router-dom";
+import { NO_ESPECIFICADO } from "../../utils/constants";
 
 const PartesGrid = ({data, currentPage, totalPages, setData, setCurrentPage}) => {
   const [onDeleteId, setOnDeleteId] = useState(null);
@@ -51,6 +51,16 @@ const PartesGrid = ({data, currentPage, totalPages, setData, setCurrentPage}) =>
     }
   };
 
+  const getDomicilio = (p) => {
+    let s = NO_ESPECIFICADO
+    if (p?.domicilio !== "")
+      s = p?.domicilio;
+    if (p?.localidad !== "")
+      s += ", " + p?.localidad
+
+    return s;
+  }
+
   const row = (p) => {
     return {
       key: p.id,
@@ -62,14 +72,14 @@ const PartesGrid = ({data, currentPage, totalPages, setData, setCurrentPage}) =>
             </div>
             <div className="col d-flex justify-content-end">
               <GridEditButton path={`/partes/edit/${p.id}`} 
-                style={{ "--bs-btn-font-size": ".75rem", "color": "#555" }}
-                className={"btn btn-outline-secondary ms-2 bg-light my-1 border-secondary"}
+                style={{ "--bs-btn-font-size": ".75rem" }}
+                className={"btn btn-outline-secondary my-1"}
               />
 
               <GridDeleteButton
                 onDelete={(e) => onDeleteRecord(e, p.id, p.nombre, p.cuil)}
-                style={{ "--bs-btn-font-size": ".75rem", "color": "red" }}
-                className={"bg-light my-1"}
+                style={{ "--bs-btn-font-size": ".75rem" }}
+                className="my-1"
                 />
             </div>
           </div>
@@ -99,7 +109,7 @@ const PartesGrid = ({data, currentPage, totalPages, setData, setCurrentPage}) =>
           </div>
           <div className="row mb-2 border-bottom border-primary-subtle mt-3">
             <div className="col">
-              <span className="fw-bold text-secondary">Patrocinante</span><br/>
+              <span className="text-info-emphasis">Patrocinante</span><br/>
             </div>
           </div>
           <div className="row mb-2">
@@ -109,11 +119,14 @@ const PartesGrid = ({data, currentPage, totalPages, setData, setCurrentPage}) =>
             </div>
             ):(
             <>
-              <div className="col-4">
+              <div className="col-2">
                 <span className="fw-bold">Nº Matrícula: </span> {p.patrocinante?.nroMatricula}
               </div>
-              <div className="col">
+              <div className="col-4">
                 <span className="fw-bold">Nombre: </span>{p.patrocinante?.nombre}
+              </div>
+              <div className="col">
+                <span className="fw-bold">Domicilio: </span>{getDomicilio(p.patrocinante)}
               </div>
             </>
             )}
