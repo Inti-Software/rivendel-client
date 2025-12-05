@@ -9,8 +9,6 @@ import NewTipoDocumento from "./components/TiposDocumentos/New.jsx";
 import { NotificationProvider } from "./contexts/NotificationContext.jsx";
 import EditTipoDocumento from "./components/TiposDocumentos/Edit.jsx";
 import ListPatrocinantes from "./components/Patrocinantes/List.jsx";
-import NewPatrocinante from "./components/Patrocinantes/New.jsx"
-import EditPatrocinante from "./components/Patrocinantes/Edit.jsx";
 import ListPartes from "./components/Partes/List.jsx";
 import NewParte from "./components/Partes/New.jsx";
 import EditParte from "./components/Partes/Edit.jsx";
@@ -22,7 +20,8 @@ import NewReclamo from "./components/Reclamos/New.jsx";
 import EditReclamo from "./components/Reclamos/Edit.jsx";
 import Reporte from "./components/Reclamos/Reporte.jsx";
 import LayoutRoutes from "./components/Layout/LayoutRoutes.jsx";
-import Form from "./components/Reclamos/Form.jsx";
+import ReclamosForm  from "./components/Reclamos/Form.jsx";
+import PatrocinantesForm from "./components/Patrocinantes/Form.jsx";
 
 const root = createRoot(document.getElementById("root"))
 root.render(
@@ -38,8 +37,8 @@ root.render(
             <Route path="/tipos-documentos/new" element={<NewTipoDocumento />} />
             <Route path="/tipos-documentos/edit/:id" element={<EditTipoDocumento />} />
             <Route path="/patrocinantes" element={<ListPatrocinantes />} />
-            <Route path="/patrocinantes/new" element={<NewPatrocinante />} />
-            <Route path="/patrocinantes/edit/:id" element={<EditPatrocinante />} />
+            <Route path="/patrocinantes/new" element={<PatrocinantesForm />} />
+            <Route path="/patrocinantes/edit/:id" element={<PatrocinantesForm />} />
             <Route path="/partes" element={<ListPartes />} />
             <Route path="/partes/new" element={<NewParte />} />
             <Route path="/partes/edit/:id" element={<EditParte />} />
@@ -49,8 +48,8 @@ root.render(
             <Route path="/reclamos" element={<ListReclamos />} />
             <Route path="/reclamos/new" element={<NewReclamo />} />
             <Route path="/reclamos/edit/:id" element={<EditReclamo />} />
-            <Route path="/reclamosv2/form" element={<Form />} />
-            <Route path="/reclamosv2/form/:id" element={<Form />} />
+            <Route path="/reclamosv2/form" element={<ReclamosForm />} />
+            <Route path="/reclamosv2/form/:id" element={<ReclamosForm />} />
           </Route>
         </Routes>
       </BrowserRouter>

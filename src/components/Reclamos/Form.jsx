@@ -148,23 +148,19 @@ export default function Form() {
     return errors;
   };
 
-	const combinarHoraConFecha = function (horaStr, fechaBase = dayjs()) {
-  // 1. Validar y parsear la hora
-  // La cadena 'hh:mm' debe ser "14:30" o similar
-  const [horas, minutos] = horaStr.split(':').map(Number);
+	const combinarHoraConFecha = function (horaStr, fechaBase = dayjs()) {  
+  const [horas, minutos] = horaStr.split(':').map(Number); // "14:30"
 
   if (isNaN(horas) || isNaN(minutos)) {
     throw new Error("Formato de hora inválido. Debe ser 'hh:mm'.");
   }
 
-  // 2. Manipular la fecha base (por defecto es hoy)
   let fechaConHora = fechaBase
-    .hour(horas)     // Establece las horas
-    .minute(minutos) // Establece los minutos
-    .second(0)       // Opcional: Reinicia los segundos a 0
-    .millisecond(0); // Opcional: Reinicia los milisegundos a 0
+    .hour(horas)
+    .minute(minutos)
+    .second(0)
+    .millisecond(0);
 
-  // 3. Formatear el resultado final (ejemplo de formato de salida)
   return fechaConHora.format('YYYY-MM-DDTHH:mm:ss');
 }
 
@@ -199,8 +195,7 @@ const handleSubmit = async (e) => {
 
 		if (result.ok) {
 			dispatch({ type: "SUBMIT_SUCCESS" });
-			//navigate("/reclamos");
-			//alert("Usuario registrado");
+			navigate("/reclamos");
 		} else {				
 			const errorData = await result.json();
 			dispatch({ type: "SUBMIT_FAIL", errors: errorData.message });
