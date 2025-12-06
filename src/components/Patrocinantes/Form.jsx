@@ -59,7 +59,7 @@ function formReducer(state, action) {
 				...state,
 				...action.payload,
 				initializing: false,
-				isUpdate: action.payload.nombre !== undefined
+				isUpdate: action.payload.id !== undefined
 			};
 
     default:
@@ -137,7 +137,7 @@ export default function Form() {
 
 			if (result.ok) {
 				showSuccess(
-					`El patrocinante ${state.nombre} se ${state.isUpdate ? "creó" : "actualizó"} correctamente.`
+					`El patrocinante ${state.nombre} se ${state.isUpdate ? "actualizó" : "creó"} correctamente.`
 				);
 				dispatch({ type: "SUBMIT_SUCCESS" });
 				navigate("/patrocinantes");
@@ -187,7 +187,7 @@ export default function Form() {
 				
 				<div className="mb-3 d-flex justify-content-end border-top pt-2 border-primary-subtle">
 						<button disabled={state.loading} type="submit" className="btn btn-primary me-2">{state.loading? "Grabando...":"Grabar"}</button>
-						<Link to="/partes" className="btn btn-outline-primary">Cancelar</Link>
+						<Link to="/patrocinantes" className="btn btn-outline-primary">Cancelar</Link>
 				</div>
 
 				<pre>{JSON.stringify(state, null, 2)}</pre>

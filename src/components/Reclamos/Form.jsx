@@ -75,7 +75,7 @@ function formReducer(state, action) {
 				...state,
 				...action.payload,
 				initializing: false,
-				isUpdate: action.payload.nombre !== undefined
+				isUpdate: action.payload.id !== undefined
 			};
 
     default:
@@ -199,7 +199,7 @@ const handleSubmit = async (e) => {
 
 		if (result.ok) {
       showSuccess("El reclamo Nº " + state.numero + 
-				` se ${state.isUpdate ? "creó" : "actualizó"} correctamente.`);
+				` se ${state.isUpdate ? "actualizó" : "creó"} correctamente.`);
 			dispatch({ type: "SUBMIT_SUCCESS" });
 			navigate("/reclamos");
 		} else {				
@@ -327,7 +327,7 @@ const handleSubmit = async (e) => {
 
 			<div className="mb-3 d-flex justify-content-end border-top pt-2 border-primary-subtle">
 					<button disabled={state.loading} type="submit" className="btn btn-primary me-2">{state.loading? "Grabando...":"Grabar"}</button>
-					<Link to="/partes" className="btn btn-outline-primary">Cancelar</Link>
+					<Link to="/reclamos" className="btn btn-outline-primary">Cancelar</Link>
 			</div>
 
     <pre>{JSON.stringify(state, null, 2)}</pre>

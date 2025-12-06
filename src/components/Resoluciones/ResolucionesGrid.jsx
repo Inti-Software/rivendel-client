@@ -1,11 +1,11 @@
-import Grid from "../Grid/Grid";
+import CustomGrid from "../Grid/Grid";
 import { GridEditButton, GridDeleteButton } from "../Grid/GridButtons";
 import { useState } from "react";
 import { useNotification } from "../../contexts/Constants";
 import DeleteDialog from "../Modals/DeleteDialog";
 import { Resoluciones } from "../../utils/endpoints";
 
-const ResolucionesGrid = ({data, currentPage, totalPages, setData, setCurrentPage}) => {
+export default function Grid({data, currentPage, totalPages, setData, setCurrentPage}) {
 	const [onDeleteId, setOnDeleteId] = useState(null);
 	const [deleteMessage, setDeleteMessage] = useState("");
 	const [showDeleteDialog, setShowDeleteDialog] = useState(false);
@@ -62,7 +62,7 @@ const ResolucionesGrid = ({data, currentPage, totalPages, setData, setCurrentPag
 
 	return (
 		<>
-			<Grid data={data}
+			<CustomGrid data={data}
 				headers={headers}
 				row={row}
 				currentPage={currentPage}
@@ -79,5 +79,3 @@ const ResolucionesGrid = ({data, currentPage, totalPages, setData, setCurrentPag
 		</>
 	);
 };
-
-export default ResolucionesGrid;

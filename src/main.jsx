@@ -13,8 +13,9 @@ import ListPartes from "./components/Partes/List.jsx";
 import NewParte from "./components/Partes/New.jsx";
 import EditParte from "./components/Partes/Edit.jsx";
 import ListResoluciones from "./components/Resoluciones/List.jsx";
-import NewResolucion from "./components/Resoluciones/New.jsx";
-import EditResolucion from "./components/Resoluciones/Edit.jsx";
+// import NewResolucion from "./components/Resoluciones/New.jsx";
+// import EditResolucion from "./components/Resoluciones/Edit.jsx";
+import ResolucionesForm from "./components/Resoluciones/Form.jsx";
 import ListReclamos from "./components/Reclamos/List.jsx";
 import Reporte from "./components/Reclamos/Reporte.jsx";
 import LayoutRoutes from "./components/Layout/LayoutRoutes.jsx";
@@ -41,8 +42,8 @@ root.render(
             <Route path="/partes/new" element={<NewParte />} />
             <Route path="/partes/edit/:id" element={<EditParte />} />
             <Route path="/resoluciones" element={<ListResoluciones />} />
-            <Route path="/resoluciones/new" element={<NewResolucion />} />
-            <Route path="/resoluciones/edit/:id" element={<EditResolucion />} />
+            <Route path="/resoluciones/new" element={<ResolucionesForm />} />
+            <Route path="/resoluciones/edit/:id" element={<ResolucionesForm />} />
             <Route path="/reclamos" element={<ListReclamos />} />
             <Route path="/reclamos/form" element={<ReclamosForm />} />
             <Route path="/reclamos/form/:id" element={<ReclamosForm />} />
