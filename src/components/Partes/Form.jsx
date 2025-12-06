@@ -13,13 +13,17 @@ const initialState = {
   idTipoDocumento: 0,
   nroDocumento: "",
   cuil: "",
-  idPatrocinante: 0,
-	patrocinante: "",
+	patrocinante: {
+		id: 0,
+		nroMatricula: "",
+		nombre: ""
+	},
   nroWhatsapp: "",
   localidad: "",
   domicilio: "",
   initializing: true,
   loading: false,
+	searchPatrocinante: false,
   errors: [],
 	isUpdate: false
 };
@@ -60,6 +64,12 @@ function formReducer(state, action) {
 			};
 		}
 
+		case "SEARCH_PARTES":
+			return { 
+				...state, 
+				searchPatrocinante: action.show
+			};
+
 		case "INITIAL_LOAD":
 			return { 
 				...state,
@@ -78,7 +88,6 @@ export default function Form() {
 	const navigate = useNavigate();
 	const { id } = useParams();
 	const { showSuccess } = useNotification();
-	const [showSearchPatrocinante, setShowSearchPatrocinante] = useState(false);
 	const [tiposDocumento, setTiposDocumento] = useState([]);
 
   useEffect(() => {
@@ -170,82 +179,95 @@ export default function Form() {
 		}
 	};
 
+	const showSearchPatrocinante = (show) => {
+		dispatch({ type: "SET_FIELD", field: "searchPatrocinante", value: show })
+	}
+
   const onAcceptSearchPatrocinante = (e, patrocinante) => {
     e.preventDefault();
-		state.idPatrocinante = parseInt(patrocinante.id);
-		state.patrocinante = `${patrocinante.nroMatricula} - ${patrocinante.nombre}`
-    setShowSearchPatrocinante(false);
+		dispatch({ type: "SET_FIELD", field: "patrocinante", value: patrocinante })
+		showSearchPatrocinante(false)
   }
   
 	const setField = (e) => {
-		console.log(e.target.id, e.target.value)
 		dispatch({ type: "SET_FIELD", field: e.target.id, value: e.target.value})
 	}
 
+	const getPatrocinante = (p) => {
+		if (p.nroMatricula?.trim() !== "" && p.nombre?.trim() !== "") {
+			 return	`${p.nroMatricula} - ${p.nombre}`
+		}
+
+		return ""
+	}
+
 	return (
-		<form onSubmit={handleSubmit} style={{ padding: 20 }}>
-		  <h3 className="mb-3">{isNaN(id)? "Nuevo " : "Edición de "} Reclamo</h3>
-			{state.errors.length > 0 && <ValidationErrors errors={state.errors} />}
-			
-			{showSearchPatrocinante && (
-          <SearchPatrocinanteDialog handleAccept={onAcceptSearchPatrocinante} 
-            handleCancel={() => setShowSearchPatrocinante(false)} />
-          ) }
-        <div className="mb-3">
-          <label htmlFor="nombre" className="form-label">Nombre</label>
-          <input id="nombre" className="form-control" type="text" value={state.nombre} onChange={setField} required />
-        </div>
-        <div className="mb-3">
-            <label htmlFor="nroDocumento" className="form-label">Documento</label>
-          <div className="row g-3">
-            <div className="col">
-              <DataBindedSelect id={"idTipoDocumento"} data={tiposDocumento} selectedValue={state.idTipoDocumento} 
+		<div className="w-50 m-auto">
+			<form onSubmit={handleSubmit} style={{ padding: 20 }}>
+				<h3 className="mb-3">{isNaN(id)? "Nueva " : "Edición de "} Parte</h3>
+				{state.errors.length > 0 && <ValidationErrors errors={state.errors} />}
+				
+				{state.searchPatrocinante && (
+						<SearchPatrocinanteDialog handleAccept={onAcceptSearchPatrocinante} 
+							handleCancel={() => showSearchPatrocinante(false) } />
+						) }
+				<div className="mb-3">
+					<label htmlFor="nombre" className="form-label">Nombre</label>
+					<input id="nombre" className="form-control" type="text" value={state.nombre} onChange={setField} required />
+				</div>
+				<div className="mb-3">
+						<label htmlFor="nroDocumento" className="form-label">Documento</label>
+					<div className="row g-3">
+						<div className="col">
+							<DataBindedSelect id={"idTipoDocumento"} data={tiposDocumento} selectedValue={state.idTipoDocumento} 
 								setSelectedValue={(v) => dispatch({ type: "SET_FIELD", field: "idTipoDocumento", value: parseInt(v) }) } />
-            </div>
-            <div className="col">
-              <input id="nroDocumento" type="number" className="form-control" value={state.nroDocumento} onChange={setField} />
-            </div>
-          </div>
-        </div>
-        <div className="mb-3">
-          <label htmlFor="cuil" className="form-label">CUIL</label>
-          <input id="cuil" className="form-control" value={state.cuil} onChange={setField} />
-          <span className="form-text d-block text-end">0 si es el mismo que el documento</span>
-        </div>
-        <div className="mb-3">
-          <label htmlFor="domicilio" className="form-label">Domicilio</label>
-          <input id="domicilio" className="form-control" value={state.domicilio} onChange={setField} />
-        </div>
-        <div className="mb-3">
-          <label htmlFor="localidad" className="form-label">Localidad</label>
-          <input id="localidad" className="form-control" value={state.localidad} onChange={setField} />
-        </div>
-        <div className="mb-3">
-          <label htmlFor="patrocinante" className="form-label">Patrocinante</label>
-          <div className="row g-3">
-            <div className="col-10">
-              <input id="patrocinante" className="form-control bg-dark-subtle" value={state.patrocinante} readOnly={true} tabIndex={-1}/>
-            </div>
-            <div className="col-2">
-              <button type="button" className="btn btn-outline-primary me-2" onClick={() => setShowSearchPatrocinante(true)} >
-								{SEARCH} Buscar
+						</div>
+						<div className="col">
+							<input id="nroDocumento" type="number" className="form-control" value={state.nroDocumento} onChange={setField} />
+						</div>
+					</div>
+				</div>
+				<div className="mb-3">
+					<label htmlFor="cuil" className="form-label">CUIL</label>
+					<input id="cuil" className="form-control" value={state.cuil} onChange={setField} />
+					<span className="form-text d-block text-end">0 si es el mismo que el documento</span>
+				</div>
+				<div className="mb-3">
+					<label htmlFor="domicilio" className="form-label">Domicilio</label>
+					<input id="domicilio" className="form-control" value={state.domicilio} onChange={setField} />
+				</div>
+				<div className="mb-3">
+					<label htmlFor="localidad" className="form-label">Localidad</label>
+					<input id="localidad" className="form-control" value={state.localidad} onChange={setField} />
+				</div>
+				<div className="mb-3">
+					<label htmlFor="patrocinante" className="form-label">Patrocinante</label>
+					<div className="row g-3">
+						<div className="col-10">
+							<input id="patrocinante" className="form-control bg-dark-subtle" 
+								value={getPatrocinante(state.patrocinante)}
+								readOnly={true} tabIndex={-1}/>
+						</div>
+						<div className="col-2">
+							<button type="button" className="btn btn-outline-primary me-2" onClick={() => showSearchPatrocinante(true)} >
+								{SEARCH}
 							</button>							
-            </div>
-          </div>
-        </div>
-        <div className="mb-3">
-          <label htmlFor="nroWhatsapp" className="form-label">Nº WhatsApp</label>
-          <input id="nroWhatsapp" type="number" className="form-control" value={state.nroWhatsapp} onChange={setField} />
-        </div>
+						</div>
+					</div>
+				</div>
+				<div className="mb-3">
+					<label htmlFor="nroWhatsapp" className="form-label">Nº WhatsApp</label>
+					<input id="nroWhatsapp" type="number" className="form-control" value={state.nroWhatsapp} onChange={setField} />
+				</div>
 
 				<div className="mb-3 d-flex justify-content-end border-top pt-2 border-primary-subtle">
 						<button disabled={state.loading} type="submit" className="btn btn-primary me-2">{state.loading? "Grabando...":"Grabar"}</button>
 						<Link to="/resoluciones" className="btn btn-outline-primary">Cancelar</Link>
 				</div>
 
-
 				<pre>{JSON.stringify(state, null, 2)}</pre>
 
-		</form>
+			</form>
+	</div>				
 	);
 }
