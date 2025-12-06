@@ -285,8 +285,6 @@ export default function Form() {
 						<Link to="/resoluciones" className="btn btn-outline-primary">Cancelar</Link>
 				</div>
 
-				<pre>{JSON.stringify(state, null, 2)}</pre>
-
 			</form>
 	</div>				
 	);
