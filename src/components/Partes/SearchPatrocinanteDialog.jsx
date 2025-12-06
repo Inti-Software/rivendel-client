@@ -38,9 +38,9 @@ const SearchPatrocinanteDialog = ({ handleAccept, handleCancel }) => {
 	const onSelectRow = (event) => {
 		const row = event.target.closest("tr");
 		if (row) {
-			const selectedId = row.cells[0].id;
+			const selectedId = parseInt(row.cells[0].id);
 			const nombre = row.cells[1].innerText;
-			const nroMatricula = row.cells[2].innerText;
+			const nroMatricula = parseInt(row.cells[2].innerText);
 			row.parentNode.querySelectorAll("td").forEach(td => {
 				td.className = ""
 			});
