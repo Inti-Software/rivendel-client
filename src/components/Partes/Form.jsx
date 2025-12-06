@@ -15,7 +15,7 @@ const initialState = {
   cuil: "",
 	patrocinante: {
 		id: 0,
-		nroMatricula: "",
+		nroMatricula: 0,
 		nombre: ""
 	},
   nroWhatsapp: "",
@@ -113,13 +113,23 @@ export default function Form() {
 
 		try {
 			const fetchData = async () => {
-				const response = await Resoluciones.get(id);
+				const response = await Partes.get(id);
 				if (response.ok) {
 					const data = await response.json();
 					dispatch({ type: "INITIAL_LOAD", payload: {
 						id: data.id,
-						descripcion: data.descripcion,
-						detalle: data.detalle
+						nombre: data.nombre,
+						idTipoDocumento: data.idTipoDocumento,
+						nroDocumento: data.nroDocumento,
+						cuil: data.cuil,
+						patrocinante: {
+							id: data.patrocinante.id,
+							nombre: data.patrocinante.nombre,
+							nroMatricula: data.patrocinante.nroMatricula
+						},
+						nroWhatsapp: data.nroWhatsapp,
+						localidad: data.localidad,
+						domicilio: data.domicilio,
 					}});
 				} else {					
 					console.error(await response.json());
@@ -204,7 +214,7 @@ export default function Form() {
 	}
 
 	const getPatrocinante = (p) => {
-		if (p.nroMatricula?.trim() !== "" && p.nombre?.trim() !== "") {
+		if (p.nroMatricula > 0 && p.nombre?.trim() !== "") {
 			 return	`${p.nroMatricula} - ${p.nombre}`
 		}
 
