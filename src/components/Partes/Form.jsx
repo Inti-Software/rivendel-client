@@ -4,6 +4,8 @@ import ValidationErrors from "../Shared/ValidationErrors";
 import { useNotification } from "../../contexts/Constants";
 import { Resoluciones, TiposDocumento } from "../../utils/endpoints";
 import DataBindedSelect from "../Forms/DataBindedSelect";
+import { SEARCH } from "../../utils/Icons";
+import SearchPatrocinanteDialog from './SearchPatrocinanteDialog'
 
 const initialState = {
   id: 0,
@@ -12,6 +14,7 @@ const initialState = {
   nroDocumento: "",
   cuil: "",
   idPatrocinante: 0,
+	patrocinante: "",
   nroWhatsapp: "",
   localidad: "",
   domicilio: "",
@@ -167,9 +170,10 @@ export default function Form() {
 		}
 	};
 
-  const onAcceptSearchPatrocinante = (e /*, patrocinante*/) => {
+  const onAcceptSearchPatrocinante = (e, patrocinante) => {
     e.preventDefault();
-    //setPatrocinante(patrocinante);
+		state.idPatrocinante = parseInt(patrocinante.id);
+		state.patrocinante = `${patrocinante.nroMatricula} - ${patrocinante.nombre}`
     setShowSearchPatrocinante(false);
   }
   
@@ -220,10 +224,12 @@ export default function Form() {
           <label htmlFor="patrocinante" className="form-label">Patrocinante</label>
           <div className="row g-3">
             <div className="col-10">
-              {/* <input id="patrocinante" className="form-control bg-dark-subtle" value={datosPatrocinante} readOnly={true} tabIndex={-1}/> */}
+              <input id="patrocinante" className="form-control bg-dark-subtle" value={state.patrocinante} readOnly={true} tabIndex={-1}/>
             </div>
             <div className="col-2">
-              <button type="button" className="btn btn-outline-primary me-2" onClick={() => setShowSearchPatrocinante(true)} >Buscar</button>
+              <button type="button" className="btn btn-outline-primary me-2" onClick={() => setShowSearchPatrocinante(true)} >
+								{SEARCH} Buscar
+							</button>							
             </div>
           </div>
         </div>
