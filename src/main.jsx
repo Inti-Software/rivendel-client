@@ -10,17 +10,14 @@ import { NotificationProvider } from "./contexts/NotificationContext.jsx";
 import EditTipoDocumento from "./components/TiposDocumentos/Edit.jsx";
 import ListPatrocinantes from "./components/Patrocinantes/List.jsx";
 import ListPartes from "./components/Partes/List.jsx";
-import NewParte from "./components/Partes/New.jsx";
-import EditParte from "./components/Partes/Edit.jsx";
 import ListResoluciones from "./components/Resoluciones/List.jsx";
-// import NewResolucion from "./components/Resoluciones/New.jsx";
-// import EditResolucion from "./components/Resoluciones/Edit.jsx";
 import ResolucionesForm from "./components/Resoluciones/Form.jsx";
 import ListReclamos from "./components/Reclamos/List.jsx";
 import Reporte from "./components/Reclamos/Reporte.jsx";
 import LayoutRoutes from "./components/Layout/LayoutRoutes.jsx";
 import ReclamosForm  from "./components/Reclamos/Form.jsx";
 import PatrocinantesForm from "./components/Patrocinantes/Form.jsx";
+import PartesForm from "./components/Partes/Form.jsx";
 
 const root = createRoot(document.getElementById("root"))
 root.render(
@@ -38,9 +35,11 @@ root.render(
             <Route path="/patrocinantes" element={<ListPatrocinantes />} />
             <Route path="/patrocinantes/new" element={<PatrocinantesForm />} />
             <Route path="/patrocinantes/edit/:id" element={<PatrocinantesForm />} />
+            
             <Route path="/partes" element={<ListPartes />} />
-            <Route path="/partes/new" element={<NewParte />} />
-            <Route path="/partes/edit/:id" element={<EditParte />} />
+            <Route path="/partes/new" element={<PartesForm />} />
+            <Route path="/partes/edit/:id" element={<PartesForm />} />
+
             <Route path="/resoluciones" element={<ListResoluciones />} />
             <Route path="/resoluciones/new" element={<ResolucionesForm />} />
             <Route path="/resoluciones/edit/:id" element={<ResolucionesForm />} />
