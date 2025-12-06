@@ -60,25 +60,25 @@ export const TiposDocumento = {
   get: async (id) => {
     return fetch(`http://localhost:3000/tipdocs/${id}`);
   },
-  findAll: async ({ currentPage }) => {
-    let filter = "";
-    if (currentPage) {
-      filter += `?page=${currentPage}&limit=${RECORDS_PER_PAGE}`;
-    }
-    return fetch(`http://localhost:3000/tipdocs` + filter);
+  findAll: async () => {
+    return fetch(`http://localhost:3000/tipdocs`);
   },
   create: async ({ sintetico, descripcion }) => {
     return fetch(`http://localhost:3000/tipdocs`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ sintetico, descripcion }),
+      body: JSON.stringify({ 
+        sintetico, 
+        descripcion }),
     });
   },
   update: async ({ id, sintetico, descripcion }) => {
     return fetch(`http://localhost:3000/tipdocs/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ sintetico, descripcion }),
+      body: JSON.stringify({ 
+        sintetico, 
+        descripcion }),
     });
   },
   delete: async (id) =>

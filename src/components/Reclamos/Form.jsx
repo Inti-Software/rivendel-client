@@ -166,50 +166,50 @@ export default function Form() {
     .millisecond(0);
 
   return fechaConHora.format('YYYY-MM-DDTHH:mm:ss');
-}
-
-const handleSubmit = async (e) => {
-	e.preventDefault();
-
-	const errors = validate();
-	if (errors.length > 0) {
-		dispatch({ type: "SET_ERRORS", errors });
-		return;
 	}
 
-	dispatch({ type: "SUBMIT_START" });
+	const handleSubmit = async (e) => {
+		e.preventDefault();
 
-	try {
-		const reclamo = {
-			id: state.id, 
-			numero: state.numero, 
-			rubros: state.rubros, 
-			idResolucion: state.idResolucion,
-			fechaHoraInicio: state.fechaHoraInicio, 
-			horaFin: state.horaFin === "" ? null : combinarHoraConFecha(state.horaFin, dayjs(state.fechaHoraInicio)),
-			reclamantes: state.reclamantes.map(r => r.id),
-			reclamados: state.reclamados.map(r => r.id)
-		};
-
-		let result;
-		if (isNaN(id))
-			result = await Reclamos.create(reclamo);
-		else
-			result = await	Reclamos.update(reclamo);
-
-		if (result.ok) {
-      showSuccess("El reclamo Nº " + state.numero + 
-				` se ${state.isUpdate ? "actualizó" : "creó"} correctamente.`);
-			dispatch({ type: "SUBMIT_SUCCESS" });
-			navigate("/reclamos");
-		} else {				
-			const errorData = await result.json();
-			dispatch({ type: "SUBMIT_FAIL", errors: errorData.message });
+		const errors = validate();
+		if (errors.length > 0) {
+			dispatch({ type: "SET_ERRORS", errors });
+			return;
 		}
-	} catch (err) {
-		dispatch({ type: "SUBMIT_FAIL", errors: [err.message] });
-	}
-};
+
+		dispatch({ type: "SUBMIT_START" });
+
+		try {
+			const reclamo = {
+				id: state.id, 
+				numero: state.numero, 
+				rubros: state.rubros, 
+				idResolucion: state.idResolucion,
+				fechaHoraInicio: state.fechaHoraInicio, 
+				horaFin: state.horaFin === "" ? null : combinarHoraConFecha(state.horaFin, dayjs(state.fechaHoraInicio)),
+				reclamantes: state.reclamantes.map(r => r.id),
+				reclamados: state.reclamados.map(r => r.id)
+			};
+
+			let result;
+			if (isNaN(id))
+				result = await Reclamos.create(reclamo);
+			else
+				result = await	Reclamos.update(reclamo);
+
+			if (result.ok) {
+				showSuccess("El reclamo Nº " + state.numero + 
+					` se ${state.isUpdate ? "actualizó" : "creó"} correctamente.`);
+				dispatch({ type: "SUBMIT_SUCCESS" });
+				navigate("/reclamos");
+			} else {				
+				const errorData = await result.json();
+				dispatch({ type: "SUBMIT_FAIL", errors: errorData.message });
+			}
+		} catch (err) {
+			dispatch({ type: "SUBMIT_FAIL", errors: [err.message] });
+		}
+	};
 
 	const addParte = (isReclamante) => {
 		dispatch({ type: "SEARCH_PARTES", show: true, esReclamante: isReclamante })
