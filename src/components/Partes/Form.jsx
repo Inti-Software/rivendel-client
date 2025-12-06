@@ -2,7 +2,7 @@ import { useReducer, useEffect, useState } from "react";
 import { useNavigate, Link, useParams } from "react-router-dom";
 import ValidationErrors from "../Shared/ValidationErrors";
 import { useNotification } from "../../contexts/Constants";
-import { Resoluciones, TiposDocumento } from "../../utils/endpoints";
+import { Partes, Resoluciones, TiposDocumento } from "../../utils/endpoints";
 import DataBindedSelect from "../Forms/DataBindedSelect";
 import { SEARCH } from "../../utils/Icons";
 import SearchPatrocinanteDialog from './SearchPatrocinanteDialog'
@@ -133,10 +133,16 @@ export default function Form() {
 		}
 	}, [id]);
 
+	const esEnteroValido = (s) => {
+		const nro = Number(s)
+		return s?.trim() !== "" && !isNaN(nro) && Number.isInteger(nro)
+	}
+
 	const validate = () => {
 		const errors = [];
-		if (state.descripcion.trim() === "") errors.push("Ingrese la descripción.");
-		if (state.detalle.trim() === "") errors.push("Ingrese un detalle.")
+		if (state.nombre.trim() === "") errors.push("Ingrese un nombre.");
+		if (!esEnteroValido(state.nroDocumento)) errors.push("Ingrese un número de documento válido.")
+		if (!esEnteroValido(state.cuil)) errors.push("Ingrese un cuil válido (sin espacios ni guiones).")
 		return errors;
 	};
 
@@ -152,24 +158,28 @@ export default function Form() {
 		dispatch({ type: "SUBMIT_START" });
 
 		try {
-			const patrocinante = {
-				id: state.id, 
-				descripcion: state.descripcion,
-				detalle: state.detalle
+			const parte = {
+				id: state.id,
+				nombre: state.nombre,
+				idTipoDocumento: state.idTipoDocumento,
+				nroDocumento: state.nroDocumento,
+				cuil: state.cuil,
+				domicilio: state.domicilio,
+				localidad: state.localidad,
+				idPatrocinante: state.patrocinante.id,
+				nroWhatsapp: state.nroWhatsapp,
 			};
 
 			let result;
 			if (isNaN(id))
-				result = await Resoluciones.create(patrocinante);
+				result = await Partes.create(parte);
 			else
-				result = await	Resoluciones.update(patrocinante);
+				result = await	Partes.update(parte);
 
 			if (result.ok) {
-				const descripcion = state.descripcion.substring(0, 25) +
-						(state.descripcion.length > 25 ? "..." : "");
-				showSuccess(`La resolución ${descripcion} se ${state.isUpdate ? "actualizó" : "creó"} correctamente.`);
+				showSuccess(`La parte ${state.nombre} se ${state.isUpdate ? "actualizó" : "creó"} correctamente.`);				
 				dispatch({ type: "SUBMIT_SUCCESS" });
-				navigate("/resoluciones");
+				navigate("/partes");
 			} else {				
 				const errorData = await result.json();
 				dispatch({ type: "SUBMIT_FAIL", errors: errorData.message });
