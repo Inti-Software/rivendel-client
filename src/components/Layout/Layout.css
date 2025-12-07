@@ -13,9 +13,10 @@ main {
   font-size: small;
 }
 
-li.nav-item a.active {
+li.nav-item a.active span.active {
   border-bottom: 1px solid #fff;
-  padding-bottom: 0px;
+  margin: 0px 5px;
+  display: block;
 }
 
 li.nav-item a.nav-link:hover {

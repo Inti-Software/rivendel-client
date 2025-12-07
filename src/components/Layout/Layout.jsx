@@ -9,7 +9,8 @@ const NavLink = ({relativeUrl, text}) => {
 
   return (
     <Link className={classes} to={relativeUrl} aria-current="page">
-      {text}
+      <span>{text}</span>      
+      <span className="active"></span>
     </Link>
   );
 }
