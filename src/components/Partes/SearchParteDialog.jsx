@@ -1,40 +1,81 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useReducer } from 'react';
 import { Partes } from '../../utils/endpoints';
 import { SEARCH } from '../../utils/Icons';
 import { NO_ESPECIFICADO } from '../../utils/constants';
 
+const initialState = {
+	term: "",
+	data: [],
+	selected: {
+		id: 0,
+		cuil: "",
+		nombre: ""
+	},
+	done: false,
+	error: "",
+	loading: false
+}
+
+function formReducer(state, action) {
+  switch (action.type) {
+    case "SET_FIELD":
+      return {
+        ...state,
+        [action.field]: action.value,
+				error: ""
+      };
+
+    case "SEARCH_START":
+      return { 
+				...state, 
+				error: "",
+				loading: true 
+			};
+
+    case "SEARCH_SUCCESS": 
+      return {
+				...initialState, 
+				term: action.term,
+				data: action.data,
+				done: true
+			};
+
+    case "SEARCH_FAIL": {
+      return { 
+				...state,
+				error: action.error,
+				loading: false,
+				done: true
+			};
+		}
+
+    default:
+      return state;
+  }
+}
+
 const SearchParteDialog = ({ handleAccept, handleCancel }) => {
-	const [searchTerm, setSearchTerm] = useState("");
-	const [data, setData] = useState([]);
-	const message = useRef(null);
-	const selected = useRef({id: 0, cuil: "", nombre: ""});
+	const [state, dispatch] = useReducer(formReducer, initialState);
 
 	const buscar = (e) => {
 		e.preventDefault();
-		if (!searchTerm || searchTerm.trim() === "") {
+		if (state.term.trim() === "") {
 			alert("Ingrese un término de búsqueda válido.");
 			return;
 		}
 
-		const q = searchTerm.trim()
-
 		Partes
-			.search({q, currentPage: 1, recordsPerPage: 10 })
+			.search({ q: state.term.trim(), currentPage: 1, recordsPerPage: 100 })
 			.then(response => {
 				if (!response.ok) {
 					throw new Error(`HTTP error! status: ${response.status}`);
 				}
 				return response.json();
 			})
-			.then(data => {
-				setData(data)
-				if (data.totalRecords === 0) {
-					message.current = "No se encontraron datos.";
-				}
-			})
+			.then(data => { dispatch({ type: "SEARCH_SUCCESS", data: data.data }) })
 			.catch(error => {
 				console.error("Error al buscar partes:", error);
-				message.current = "Ocurrió un error al realizar la búsqueda. Por favor, inténtelo de nuevo.";
+				dispatch({ type: "SEARCH_FAIL", error: "Ocurrió un error al realizar la búsqueda. Por favor, inténtelo de nuevo." })
 			});
 	}
 
@@ -52,7 +93,7 @@ const SearchParteDialog = ({ handleAccept, handleCancel }) => {
 		const id = td.id;
 		const cuil = row.querySelector('[aria-label="cuil"]').innerHTML;
 		const nombre = row.querySelector('[aria-label="nombre"]').innerHTML;
-		selected.current = {id, cuil, nombre};
+		dispatch({ type: "SET_FIELD", field: "selected", value: { id, cuil, nombre } });
 	}
 
 	const handleKeyDown = (event) => {
@@ -75,6 +116,18 @@ const SearchParteDialog = ({ handleAccept, handleCancel }) => {
     return s;
   }
 
+	const getClassName = () => {
+		const warning = "bg-warning-subtle border-warning";
+		const error = "bg-danger-subtle border-danger";
+		return (state.error.trim() !== "")? error : warning;
+	}
+
+	const getMessage = () => {
+		const msg = "No hay datos para mostrar."
+		return (state.error.trim() !== "")? state.error : msg;
+	}
+
+
 	return (
 		<div className={`modal show modal-backdrop-50 dialog-centered`} 
 				style={{display: 'flex'}}
@@ -89,7 +142,8 @@ const SearchParteDialog = ({ handleAccept, handleCancel }) => {
 						<div className="row mb-3">
 							<div className="col-11">
 								<input id='criterio' type="text" className="form-control" placeholder="Nombre o CUIL " 
-									value={searchTerm} onChange={e => setSearchTerm(e.target.value)} onKeyDown={handleKeyDown} />
+									value={state.term} onChange={e => dispatch({ type: "SET_FIELD", field: "term", value: e.target.value })} 
+									onKeyDown={handleKeyDown} />
 							</div>
 							<div className="col-1">
 								<button type="button" className="btn btn-outline-primary form-control" onClick={buscar}>
@@ -98,10 +152,10 @@ const SearchParteDialog = ({ handleAccept, handleCancel }) => {
 							</div>
 						</div>
 						<div style={{ maxHeight: "400px", overflowY: "scroll" }} onClick={onSelectRow} className='d-flex'>
-							{data.data?.length > 0 ? (
+							{state.data?.length > 0 ? (
 								<table className="table table-sm table-hover">
 									<tbody>
-									{ data.data?.map((p) => (
+									{ state.data?.map((p) => (
 										<tr>
 											<td id={p.id} key={p.id} className='pt-2 pb-2 border-bottom border-secondary rounded-1'>
 												<div className='row bg-secondary-subtle border border-secondary mx-0 rounded-1'>
@@ -142,20 +196,19 @@ const SearchParteDialog = ({ handleAccept, handleCancel }) => {
 									</tbody>
 								</table>
 							) : (
-								(message.current) &&
-								(<span className="rounded-2 border bg-warning-subtle border-warning text-center text-black w-auto mx-auto"
+								state.done &&
+								(<span className={"rounded-2 border text-center text-black w-auto mx-auto border-2 p-1" + getClassName() }
 										style={{ fontSize: '12px' }}>
-									{message.current}
+									{ getMessage() }
 								</span>)
 							)}
 						</div>
 					</div>
 					<div className="modal-footer">
-						{data.data?.length > 0 && (
-							<button type="button" className="btn btn-success" onClick={(e) => handleAccept(e, selected.current)}>
-								Aceptar
-							</button>
-						)}
+						<button type="button" className="btn btn-success" onClick={(e) => handleAccept(e, state.selected)}
+							disabled={(state.data.length > 0 && !state.loading)? "" : "disabled"}>
+							Aceptar
+						</button>
 						<button type="button" className="btn btn-outline-secondary" onClick={handleCancel}>
 							Cancelar
 						</button>

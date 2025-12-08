@@ -34,6 +34,7 @@ function formReducer(state, action) {
     case "SEARCH_SUCCESS": 
       return {
 				...initialState, 
+				term: action.term,
 				data: action.data,
 				done: true
 			};
@@ -64,19 +65,18 @@ const SearchPatrocinanteDialog = ({ handleAccept, handleCancel }) => {
 
 		dispatch({ type: "SEARCH_START" })
 		Patrocinantes
-			.search(state.term)
+			.search(state.term.trim())
 			.then(response => {
 				if (!response.ok) {
 					throw new Error(`HTTP error! status: ${response.status}`);
 				}
 				return response.json();
 			})
-			.then(data => {				
-				dispatch({ type: "SEARCH_SUCCESS", data: data })
-			})
+			.then(data => { dispatch({ type: "SEARCH_SUCCESS", data: data }) })
 			.catch(error => {
 				console.error("Error al buscar patrocinantes:", error);
-				dispatch({ type: "SEARCH_FAIL", error: "Ocurrió un error al realizar la búsqueda. Por favor, inténtelo de nuevo." })
+				dispatch({ type: "SEARCH_FAIL", error: "Ocurrió un error al realizar la búsqueda. " + 
+					"Por favor, inténtelo de nuevo." })
 			});
 	}
 
@@ -89,11 +89,8 @@ const SearchPatrocinanteDialog = ({ handleAccept, handleCancel }) => {
 			row.parentNode.querySelectorAll("td").forEach(td => {
 				td.className = ""
 			});
-			row.querySelectorAll("td").forEach(td => {
-				td.className = "bg-warning-subtle"
-			});
-			dispatch({ type: "SET_FIELD", field: "selected", 
-				value: {id: selectedId, nombre, nroMatricula} })
+			row.querySelectorAll("td").forEach(td => { td.className = "bg-warning-subtle"	});
+			dispatch({ type: "SET_FIELD", field: "selected", value: {id: selectedId, nombre, nroMatricula} })
 		}
 	}
 
@@ -159,8 +156,8 @@ const SearchPatrocinanteDialog = ({ handleAccept, handleCancel }) => {
 								</tbody>
 							</table>
 						) : (
-							(state.done && 
-							<span className={"rounded-2 border text-center text-black w-auto mx-auto border-2 p-1 " + getClassName()}
+							state.done && 
+							(<span className={"rounded-2 border text-center text-black w-auto mx-auto border-2 p-1 " + getClassName()}
 								style={{ fontSize: '12px' }}> { getMessage() } </span>
 							)
 						)}
