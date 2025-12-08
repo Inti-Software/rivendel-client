@@ -40,18 +40,19 @@ const SearchParteDialog = ({ handleAccept, handleCancel }) => {
 
 	const onSelectRow = (event) => {
 		const row = event.target.closest("tr");
-		if (row) {
-			const selectedId = row.cells[0].id;
-			//const cuil = row.cells[1].innerText;
-			//const nombre = row.cells[2].innerText;
-			row.parentNode.querySelectorAll("td").forEach(td => {
-				td.className = ""
-			});
-			row.querySelectorAll("td").forEach(td => {
-				td.className = "bg-warning-subtle"
-			});
-			selected.current = {id: selectedId, cuil, nombre};
+		const selectedRow = row.parentNode.querySelector('.bg-warning-subtle')
+		
+		if (selectedRow) {
+			selectedRow.className = ''
 		}
+		
+		const td = row.querySelector("td");
+		td.className = "bg-warning-subtle"
+
+		const id = td.id;
+		const cuil = row.querySelector('[aria-label="cuil"]').innerHTML;
+		const nombre = row.querySelector('[aria-label="nombre"]').innerHTML;
+		selected.current = {id, cuil, nombre};
 	}
 
 	const handleKeyDown = (event) => {
@@ -87,8 +88,8 @@ const SearchParteDialog = ({ handleAccept, handleCancel }) => {
 					<div className="modal-body">
 						<div className="row mb-3">
 							<div className="col-11">
-								<input id='criterio' type="text" className="form-control" placeholder="Nombre o CUIL " value={searchTerm} onChange={e => setSearchTerm(e.target.value)}
-									onKeyDown={handleKeyDown} />
+								<input id='criterio' type="text" className="form-control" placeholder="Nombre o CUIL " 
+									value={searchTerm} onChange={e => setSearchTerm(e.target.value)} onKeyDown={handleKeyDown} />
 							</div>
 							<div className="col-1">
 								<button type="button" className="btn btn-outline-primary form-control" onClick={buscar}>
@@ -102,13 +103,15 @@ const SearchParteDialog = ({ handleAccept, handleCancel }) => {
 									<tbody>
 									{ data.data?.map((p) => (
 										<tr>
-											<td key={p.id} className='pt-2 pb-2 border-bottom border-secondary rounded-1'>
+											<td id={p.id} key={p.id} className='pt-2 pb-2 border-bottom border-secondary rounded-1'>
 												<div className='row bg-secondary-subtle border border-secondary mx-0 rounded-1'>
 													<div className='col-3'>
-														<span className="fw-bold">CUIL: </span>{p.cuil === 0? p.nroDocumento : p.cuil} 
+														<span className="fw-bold">CUIL: </span>
+														<span aria-label='cuil'>{p.cuil === 0? p.nroDocumento : p.cuil}</span>
 													</div>
 													<div className='col-9'>
-														<span className="fw-bold">Nombre: </span>{p.nombre}
+														<span className="fw-bold">Nombre: </span>
+														<span aria-label='nombre'>{p.nombre}</span>
 													</div>
 												</div>
 												<div>
