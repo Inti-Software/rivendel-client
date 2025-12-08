@@ -52,7 +52,7 @@ export const Patrocinantes = {
       method: "DELETE",
     }),
   search: async (term) => {
-    return fetch(`http://localhost:3000/patrocinantes/search?term=${term}`);
+    return fetch(`http://localhost:3000/patrocinantes/search?q=${term}`);
   },
 };
 

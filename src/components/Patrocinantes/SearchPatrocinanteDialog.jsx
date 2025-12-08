@@ -62,35 +62,33 @@ const SearchPatrocinanteDialog = ({ handleAccept, handleCancel }) => {
 	}, []);
 		
 	return (
-		<div className={`modal show modal-backdrop-50 dialog-centered`} 
-				style={{display: 'flex'}}
-				tabIndex="-1"
-				>
-			<div className="modal-dialog center-vertical">
-				<div className="modal-content">
-					<div className="modal-header">
+		<div className={`modal show modal-backdrop-50 dialog-centered d-flex`} tabIndex="-1">
+			<div className="modal-dialog center-vertical min-vw-100">
+				<div className="modal-content w-50">
+					<div className="modal-header bg-success text-white">
 						<h5 className="modal-title">Patrocinantes</h5>
 					</div>
 					<div className="modal-body">
 						<div className="row mb-3">
-							<div className="col-10">
-								<input id='criterio' type="text" className="form-control" placeholder="Juan Pérez... " value={searchTerm} onChange={e => setSearchTerm(e.target.value)}
-									onKeyDown={handleKeyDown} />
+							<div className="col-11">
+								<input id='criterio' type="text" className="form-control" placeholder="Juan Pérez... " 
+									value={searchTerm} onChange={e => setSearchTerm(e.target.value)} onKeyDown={handleKeyDown} />
 							</div>
-							<div className="col">
-								<button type="button" className="btn btn-outline-primary ms-2" onClick={buscar}>
+							<div className="col-1">
+								<button type="button" className="btn btn-outline-primary" onClick={buscar}>
 									{SEARCH}
 								</button>
 							</div>
 						</div>
-						<div className='row mb-3' onClick={onSelectRow}>
-							{data.length > 0 ? (
+						<div style={{ maxHeight: "200px", overflowY: "scroll" }} onClick={onSelectRow}>
+						{data.length > 0 ? (
 								<table className="table table-striped table-sm mx-1 table-hover">
 									<thead>
 										<tr>
 											<th></th>
 											<th scope='col'>Nombre</th>
 											<th scope='col'>Matrícula</th>
+											<th scope='col'>Casillero</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -99,19 +97,20 @@ const SearchPatrocinanteDialog = ({ handleAccept, handleCancel }) => {
 												<td id={p.id}></td>
 												<td>{p.nombre}</td>
 												<td>{p.nroMatricula}</td>
+												<td>{p.nroCasillero}</td>
 											</tr>
 										))}
 									</tbody>
 								</table>
-							) : (
-								(message.current) &&
-								(<span className="rounded-2 border bg-warning-subtle border-warning text-center text-black w-auto mx-auto"
-										style={{ fontSize: '12px' }}>
-									{message.current}
-								</span>)
-							)}
+						) : (
+							(message.current) &&
+							(<span className="rounded-2 border bg-warning-subtle border-warning text-center text-black w-auto mx-auto"
+								style={{ fontSize: '12px' }}>
+								{message.current}
+							</span>)
+						)}
 						</div>
-					</div>
+						</div>
 					<div className="modal-footer">
 						{data.length > 0 && (
 							<button type="button" className="btn btn-success" onClick={(e) => handleAccept(e, selected.current)}>

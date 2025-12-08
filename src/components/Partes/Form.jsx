@@ -5,7 +5,7 @@ import { useNotification } from "../../contexts/Constants";
 import { Partes, Resoluciones, TiposDocumento } from "../../utils/endpoints";
 import DataBindedSelect from "../Forms/DataBindedSelect";
 import { SEARCH } from "../../utils/Icons";
-import SearchPatrocinanteDialog from './SearchPatrocinanteDialog'
+import SearchPatrocinanteDialog from "../Patrocinantes/SearchPatrocinanteDialog";
 
 const initialState = {
   id: 0,
