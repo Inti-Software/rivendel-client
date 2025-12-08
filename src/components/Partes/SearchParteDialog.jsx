@@ -1,6 +1,7 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Partes } from '../../utils/endpoints';
-import { PRINT, SEARCH } from '../../utils/Icons';
+import { SEARCH } from '../../utils/Icons';
+import { NO_ESPECIFICADO } from '../../utils/constants';
 
 const SearchParteDialog = ({ handleAccept, handleCancel }) => {
 	const [searchTerm, setSearchTerm] = useState("");
@@ -41,8 +42,8 @@ const SearchParteDialog = ({ handleAccept, handleCancel }) => {
 		const row = event.target.closest("tr");
 		if (row) {
 			const selectedId = row.cells[0].id;
-			const cuil = row.cells[1].innerText;
-			const nombre = row.cells[2].innerText;
+			//const cuil = row.cells[1].innerText;
+			//const nombre = row.cells[2].innerText;
 			row.parentNode.querySelectorAll("td").forEach(td => {
 				td.className = ""
 			});
@@ -63,46 +64,78 @@ const SearchParteDialog = ({ handleAccept, handleCancel }) => {
 		document.getElementById("criterio").focus();
 	}, []);
 		
+  const getDomicilio = (p) => {
+    let s = NO_ESPECIFICADO
+    if (p?.domicilio !== "")
+      s = p?.domicilio;
+    if (p?.localidad !== "")
+      s += ", " + p?.localidad
+
+    return s;
+  }
+
 	return (
 		<div className={`modal show modal-backdrop-50 dialog-centered`} 
 				style={{display: 'flex'}}
 				tabIndex="-1"
 				>
-			<div className="modal-dialog center-vertical w-50">
-				<div className="modal-content">
+			<div className="modal-dialog center-vertical min-vw-100">
+				<div className="modal-content w-50">
 					<div className="modal-header bg-success text-white">
 						<h5 className="modal-title">Partes</h5>
 					</div>
 					<div className="modal-body">
 						<div className="row mb-3">
-							<div className="col-10">
-								<input id='criterio' type="text" className="form-control text-end" placeholder="Nombre o CUIL " value={searchTerm} onChange={e => setSearchTerm(e.target.value)}
+							<div className="col-11">
+								<input id='criterio' type="text" className="form-control" placeholder="Nombre o CUIL " value={searchTerm} onChange={e => setSearchTerm(e.target.value)}
 									onKeyDown={handleKeyDown} />
 							</div>
-							<div className="col-2">
+							<div className="col-1">
 								<button type="button" className="btn btn-outline-primary form-control" onClick={buscar}>
 									{SEARCH}
 								</button>
 							</div>
 						</div>
-						<div className='row mb-3' onClick={onSelectRow}>
+						<div style={{ maxHeight: "400px", overflowY: "scroll" }} onClick={onSelectRow} className='d-flex'>
 							{data.data?.length > 0 ? (
-								<table className="table table-striped table-sm mx-1 table-hover">
-									<thead>
-										<tr>
-											<th></th>
-											<th scope='col'>CUIL</th>
-											<th scope='col'>Nombre</th>
-										</tr>
-									</thead>
+								<table className="table table-sm table-hover">
 									<tbody>
-										{data.data?.map((p) => (
-											<tr key={p.id}>
-												<td id={p.id}></td>
-												<td>{p.cuil}</td>
-												<td>{p.nombre}</td>
-											</tr>
-										))}
+									{ data.data?.map((p) => (
+										<tr>
+											<td key={p.id} className='pt-2 pb-2 border-bottom border-secondary rounded-1'>
+												<div className='row bg-secondary-subtle border border-secondary mx-0 rounded-1'>
+													<div className='col-3'>
+														<span className="fw-bold">CUIL: </span>{p.cuil === 0? p.nroDocumento : p.cuil} 
+													</div>
+													<div className='col-9'>
+														<span className="fw-bold">Nombre: </span>{p.nombre}
+													</div>
+												</div>
+												<div>
+													<span className="text-info-emphasis d-flex border-bottom border-success-subtle">Patrocinante</span>
+													<div className="row">
+														{(p.patrocinante == null) ? (
+														<div className="col">
+															<span className="d-inline-block border rounded border-warning p-1" style={{"fontSize": "0.75em"}}>- Sin patrocinante -</span>
+														</div>
+														):(
+														<>
+															<div className="col-2">
+																<span className="fw-bold">Nº Matr.: </span> {p.patrocinante?.nroMatricula}
+															</div>
+															<div className="col-4">
+																<span className="fw-bold">Nombre: </span>{p.patrocinante?.nombre}
+															</div>
+															<div className="col-6">
+																<span className="fw-bold">Domicilio: </span>{getDomicilio(p.patrocinante)}
+															</div>
+														</>
+														)}
+													</div>
+												</div>
+											</td>
+										</tr> 
+									))}
 									</tbody>
 								</table>
 							) : (
