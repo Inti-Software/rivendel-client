@@ -1,6 +1,7 @@
 import { useEffect, useReducer } from 'react';
 import { Patrocinantes } from '../../utils/endpoints';
 import { SEARCH } from '../../utils/Icons';
+import useDebounce from '../../hooks/useDebounce';
 
 const initialState = {
 	term: "",
@@ -34,7 +35,7 @@ function formReducer(state, action) {
     case "SEARCH_SUCCESS": 
       return {
 				...initialState, 
-				term: action.term,
+				term: state.term,
 				data: action.data,
 				done: true
 			};
@@ -55,29 +56,11 @@ function formReducer(state, action) {
 
 const SearchPatrocinanteDialog = ({ handleAccept, handleCancel }) => {
 	const [state, dispatch] = useReducer(formReducer, initialState);
+	const debouncedValue = useDebounce(state.term, 300)
 
-	const buscar = (e) => {
+	const handleBuscar = (e) => {
 		e.preventDefault();
-		if (state.term.trim() === "") {
-			alert("Ingrese un término de búsqueda válido.");
-			return;
-		}
-
-		dispatch({ type: "SEARCH_START" })
-		Patrocinantes
-			.search(state.term.trim())
-			.then(response => {
-				if (!response.ok) {
-					throw new Error(`HTTP error! status: ${response.status}`);
-				}
-				return response.json();
-			})
-			.then(data => { dispatch({ type: "SEARCH_SUCCESS", data: data }) })
-			.catch(error => {
-				console.error("Error al buscar patrocinantes:", error);
-				dispatch({ type: "SEARCH_FAIL", error: "Ocurrió un error al realizar la búsqueda. " + 
-					"Por favor, inténtelo de nuevo." })
-			});
+		buscar();
 	}
 
 	const onSelectRow = (event) => {
@@ -94,15 +77,45 @@ const SearchPatrocinanteDialog = ({ handleAccept, handleCancel }) => {
 		}
 	}
 
-	const handleKeyDown = (event) => {
-		if (event.keyCode === 13) {
-			buscar(event);
-		}
-	}
-
 	useEffect(() => {
 		document.getElementById("criterio").focus();
 	}, []);
+
+	const handleKeyDown = (event) => {
+		if (event.keyCode === 13) {
+			buscar();
+		}
+		if (event.keyCode === 27) {
+			handleCancel(event)
+		}
+	}
+
+
+	const buscar = () => {
+		if (debouncedValue.trim().length < 3) {
+			return;
+		}
+
+		dispatch({ type: "SEARCH_START" })
+		Patrocinantes
+			.search(debouncedValue.trim())
+			.then(response => {
+				if (!response.ok) {
+					throw new Error(`HTTP error! status: ${response.status}`);
+				}
+				return response.json();
+			})
+			.then(data => { dispatch({ type: "SEARCH_SUCCESS", data: data }) })
+			.catch(error => {
+				console.error("Error al buscar patrocinantes:", error);
+				dispatch({ type: "SEARCH_FAIL", error: "Ocurrió un error al realizar la búsqueda. " + 
+					"Por favor, inténtelo de nuevo." })
+			});
+	}
+
+	useEffect(() => {
+		state.term ? buscar() : dispatch({ type: "SET_FIELD", field: "term", value: "" })
+	}, [debouncedValue])
 
 	const getClassName = () => {
 		const warning = "bg-warning-subtle border-warning";
@@ -115,8 +128,8 @@ const SearchPatrocinanteDialog = ({ handleAccept, handleCancel }) => {
 		return (state.error.trim() !== "")? state.error : msg;
 	}
 
-	const handleChange = (e) => {
-		dispatch({ type: "SET_FIELD", field: "term", value: e.target.value })
+	const handleChange = ( { target } ) => {
+		dispatch({ type: "SET_FIELD", field: "term", value: target.value })
 		dispatch({ type: "SET_FIELD", field: "done", value: false })
 		dispatch({ type: "SET_FIELD", field: "data", value: [] })
 	}	
@@ -132,11 +145,10 @@ const SearchPatrocinanteDialog = ({ handleAccept, handleCancel }) => {
 						<div className="row mb-3">
 							<div className="col-11">
 								<input id='criterio' type="text" className="form-control" placeholder="Juan Pérez... " 
-									value={state.term} onChange={ handleChange } 
-									onKeyDown={handleKeyDown} />
+									value={state.term} onChange={ handleChange } onKeyDown={handleKeyDown} />
 							</div>
 							<div className="col-1">
-								<button type="button" className="btn btn-outline-primary" onClick={buscar}>
+								<button type="button" className="btn btn-outline-primary" onClick={handleBuscar}>
 									{SEARCH}
 								</button>
 							</div>

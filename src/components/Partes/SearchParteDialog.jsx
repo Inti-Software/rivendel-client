@@ -2,6 +2,7 @@ import { useEffect, useReducer } from 'react';
 import { Partes } from '../../utils/endpoints';
 import { SEARCH } from '../../utils/Icons';
 import { NO_ESPECIFICADO } from '../../utils/constants';
+import useDebounce from '../../hooks/useDebounce';
 
 const initialState = {
 	term: "",
@@ -35,7 +36,7 @@ function formReducer(state, action) {
     case "SEARCH_SUCCESS": 
       return {
 				...initialState, 
-				term: action.term,
+				term: state.term,
 				data: action.data,
 				done: true
 			};
@@ -56,16 +57,15 @@ function formReducer(state, action) {
 
 const SearchParteDialog = ({ handleAccept, handleCancel }) => {
 	const [state, dispatch] = useReducer(formReducer, initialState);
+	const debouncedValue = useDebounce(state.term, 300)
 
-	const buscar = (e) => {
-		e.preventDefault();
-		if (state.term.trim() === "") {
-			alert("Ingrese un término de búsqueda válido.");
+	const buscar = () => {
+		if (debouncedValue.trim().length < 3) {			
 			return;
 		}
 
 		Partes
-			.search({ q: state.term.trim(), currentPage: 1, recordsPerPage: 100 })
+			.search({ q: debouncedValue.trim(), currentPage: 1, recordsPerPage: 100 })
 			.then(response => {
 				if (!response.ok) {
 					throw new Error(`HTTP error! status: ${response.status}`);
@@ -78,6 +78,10 @@ const SearchParteDialog = ({ handleAccept, handleCancel }) => {
 				dispatch({ type: "SEARCH_FAIL", error: "Ocurrió un error al realizar la búsqueda. Por favor, inténtelo de nuevo." })
 			});
 	}
+
+	useEffect(() => {
+		state.term ? buscar() : dispatch({ type: "SET_FIELD", field: "term", value: "" })
+	}, [debouncedValue])
 
 	const onSelectRow = (event) => {
 		const row = event.target.closest("tr");
@@ -98,7 +102,10 @@ const SearchParteDialog = ({ handleAccept, handleCancel }) => {
 
 	const handleKeyDown = (event) => {
 		if (event.keyCode === 13) {
-			buscar(event);
+			buscar();
+		}
+		if (event.keyCode === 27) {
+			handleCancel(event)
 		}
 	}
 
@@ -147,8 +154,7 @@ const SearchParteDialog = ({ handleAccept, handleCancel }) => {
 						<div className="row mb-3">
 							<div className="col-11">
 								<input id='criterio' type="text" className="form-control" placeholder="Nombre o CUIL " 
-									value={state.term} onChange={ handleChange } 
-									onKeyDown={handleKeyDown} />
+									value={state.term} onChange={ handleChange } onKeyDown={handleKeyDown} />
 							</div>
 							<div className="col-1">
 								<button type="button" className="btn btn-outline-primary form-control" onClick={buscar}>
