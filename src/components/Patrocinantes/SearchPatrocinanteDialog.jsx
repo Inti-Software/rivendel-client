@@ -42,7 +42,8 @@ function formReducer(state, action) {
       return { 
 				...state,
 				error: action.error,
-				loading: false 
+				loading: false,
+				done: true
 			};
 		}
 
@@ -70,8 +71,7 @@ const SearchPatrocinanteDialog = ({ handleAccept, handleCancel }) => {
 				}
 				return response.json();
 			})
-			.then(data => {
-				console.log(data)
+			.then(data => {				
 				dispatch({ type: "SEARCH_SUCCESS", data: data })
 			})
 			.catch(error => {
@@ -160,7 +160,7 @@ const SearchPatrocinanteDialog = ({ handleAccept, handleCancel }) => {
 							</table>
 						) : (
 							(state.done && 
-							<span className={"rounded-2 border text-center text-black w-auto mx-auto " + getClassName()}
+							<span className={"rounded-2 border text-center text-black w-auto mx-auto border-2 p-1 " + getClassName()}
 								style={{ fontSize: '12px' }}> { getMessage() } </span>
 							)
 						)}
