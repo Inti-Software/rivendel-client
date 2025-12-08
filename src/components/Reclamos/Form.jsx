@@ -268,7 +268,7 @@ export default function Form() {
 								<td colSpan={2}>
 									<button type="button" className="btn btn-sm btn-outline-secondary"
 										onClick={() => addParte(esReclamante)}>
-										Agregar {title.slice(0, -1)}
+										Agregar parte
 									</button>
 								</td>
 							</tr>
