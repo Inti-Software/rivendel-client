@@ -80,12 +80,11 @@ const SearchPatrocinanteDialog = ({ handleAccept, handleCancel }) => {
 								</button>
 							</div>
 						</div>
-						<div style={{ maxHeight: "200px", overflowY: "scroll" }} onClick={onSelectRow}>
+						<div style={{ maxHeight: "200px", overflowY: "scroll" }} onClick={onSelectRow} className='d-flex'>
 						{data.length > 0 ? (
 								<table className="table table-striped table-sm mx-1 table-hover">
 									<thead>
 										<tr>
-											<th></th>
 											<th scope='col'>Nombre</th>
 											<th scope='col'>Matrícula</th>
 											<th scope='col'>Casillero</th>
@@ -94,7 +93,6 @@ const SearchPatrocinanteDialog = ({ handleAccept, handleCancel }) => {
 									<tbody>
 										{data.map((p) => (
 											<tr key={p.id}>
-												<td id={p.id}></td>
 												<td>{p.nombre}</td>
 												<td>{p.nroMatricula}</td>
 												<td>{p.nroCasillero}</td>
