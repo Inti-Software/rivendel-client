@@ -1,22 +1,69 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useReducer } from 'react';
 import { Patrocinantes } from '../../utils/endpoints';
 import { SEARCH } from '../../utils/Icons';
 
+const initialState = {
+	term: "",
+	data: [],
+	selected: {
+		id: 0,
+		nombre: "",
+		nroMatricula: ""
+	},
+	done: false,
+	error: "",
+	loading: false
+}
+
+function formReducer(state, action) {
+  switch (action.type) {
+    case "SET_FIELD":
+      return {
+        ...state,
+        [action.field]: action.value,
+				error: ""
+      };
+
+    case "SEARCH_START":
+      return { 
+				...state, 
+				error: "",
+				loading: true 
+			};
+
+    case "SEARCH_SUCCESS": 
+      return {
+				...initialState, 
+				data: action.data,
+				done: true
+			};
+
+    case "SEARCH_FAIL": {
+      return { 
+				...state,
+				error: action.error,
+				loading: false 
+			};
+		}
+
+    default:
+      return state;
+  }
+}
+
 const SearchPatrocinanteDialog = ({ handleAccept, handleCancel }) => {
-	const [searchTerm, setSearchTerm] = useState("");
-	const [data, setData] = useState([]);
-	const message = useRef(null);
-	const selected = useRef({id: 0, nombre: "", nroMatricula: ""});
+	const [state, dispatch] = useReducer(formReducer, initialState);
 
 	const buscar = (e) => {
 		e.preventDefault();
-		if (!searchTerm || searchTerm.trim() === "") {
+		if (state.term.trim() === "") {
 			alert("Ingrese un término de búsqueda válido.");
 			return;
 		}
 
+		dispatch({ type: "SEARCH_START" })
 		Patrocinantes
-			.search(searchTerm)
+			.search(state.term)
 			.then(response => {
 				if (!response.ok) {
 					throw new Error(`HTTP error! status: ${response.status}`);
@@ -24,14 +71,12 @@ const SearchPatrocinanteDialog = ({ handleAccept, handleCancel }) => {
 				return response.json();
 			})
 			.then(data => {
-				setData(data)
-				if (data.length === 0) {
-					message.current = "No se encontraron datos.";
-				}
+				console.log(data)
+				dispatch({ type: "SEARCH_SUCCESS", data: data })
 			})
 			.catch(error => {
 				console.error("Error al buscar patrocinantes:", error);
-				message.current = "Ocurrió un error al realizar la búsqueda. Por favor, inténtelo de nuevo.";
+				dispatch({ type: "SEARCH_FAIL", error: "Ocurrió un error al realizar la búsqueda. Por favor, inténtelo de nuevo." })
 			});
 	}
 
@@ -47,7 +92,8 @@ const SearchPatrocinanteDialog = ({ handleAccept, handleCancel }) => {
 			row.querySelectorAll("td").forEach(td => {
 				td.className = "bg-warning-subtle"
 			});
-			selected.current = {id: selectedId, nombre, nroMatricula};
+			dispatch({ type: "SET_FIELD", field: "selected", 
+				value: {id: selectedId, nombre, nroMatricula} })
 		}
 	}
 
@@ -60,6 +106,17 @@ const SearchPatrocinanteDialog = ({ handleAccept, handleCancel }) => {
 	useEffect(() => {
 		document.getElementById("criterio").focus();
 	}, []);
+
+	const getClassName = () => {
+		const warning = "bg-warning-subtle border-warning";
+		const error = "bg-danger-subtle border-danger";
+		return (state.error.trim() !== "")? error : warning;
+	}
+
+	const getMessage = () => {
+		const msg = "No hay datos para mostrar."
+		return (state.error.trim() !== "")? state.error : msg;
+	}
 		
 	return (
 		<div className={`modal show modal-backdrop-50 dialog-centered d-flex`} tabIndex="-1">
@@ -72,7 +129,8 @@ const SearchPatrocinanteDialog = ({ handleAccept, handleCancel }) => {
 						<div className="row mb-3">
 							<div className="col-11">
 								<input id='criterio' type="text" className="form-control" placeholder="Juan Pérez... " 
-									value={searchTerm} onChange={e => setSearchTerm(e.target.value)} onKeyDown={handleKeyDown} />
+									value={state.term} onChange={e => dispatch({ type: "SET_FIELD", field: "term", value: e.target.value })} 
+									onKeyDown={handleKeyDown} />
 							</div>
 							<div className="col-1">
 								<button type="button" className="btn btn-outline-primary" onClick={buscar}>
@@ -81,40 +139,38 @@ const SearchPatrocinanteDialog = ({ handleAccept, handleCancel }) => {
 							</div>
 						</div>
 						<div style={{ maxHeight: "200px", overflowY: "scroll" }} onClick={onSelectRow} className='d-flex'>
-						{data.length > 0 ? (
-								<table className="table table-striped table-sm mx-1 table-hover">
-									<thead>
-										<tr>
-											<th scope='col'>Nombre</th>
-											<th scope='col'>Matrícula</th>
-											<th scope='col'>Casillero</th>
+						{state.data.length > 0 ? (
+							<table className="table table-striped table-sm mx-1 table-hover">
+								<thead>
+									<tr>
+										<th scope='col'>Nombre</th>
+										<th scope='col'>Matrícula</th>
+										<th scope='col'>Casillero</th>
+									</tr>
+								</thead>
+								<tbody>
+									{state.data.map((p) => (
+										<tr key={p.id} id={p.id}>
+											<td>{p.nombre}</td>
+											<td>{p.nroMatricula}</td>
+											<td>{p.nroCasillero}</td>
 										</tr>
-									</thead>
-									<tbody>
-										{data.map((p) => (
-											<tr key={p.id} id={p.id}>
-												<td>{p.nombre}</td>
-												<td>{p.nroMatricula}</td>
-												<td>{p.nroCasillero}</td>
-											</tr>
-										))}
-									</tbody>
-								</table>
+									))}
+								</tbody>
+							</table>
 						) : (
-							(message.current) &&
-							(<span className="rounded-2 border bg-warning-subtle border-warning text-center text-black w-auto mx-auto"
-								style={{ fontSize: '12px' }}>
-								{message.current}
-							</span>)
+							(state.done && 
+							<span className={"rounded-2 border text-center text-black w-auto mx-auto " + getClassName()}
+								style={{ fontSize: '12px' }}> { getMessage() } </span>
+							)
 						)}
 						</div>
-						</div>
+					</div>
 					<div className="modal-footer">
-						{data.length > 0 && (
-							<button type="button" className="btn btn-success" onClick={(e) => handleAccept(e, selected.current)}>
-								Aceptar
-							</button>
-						)}
+						<button type="button" className="btn btn-success" onClick={(e) => handleAccept(e, state.selected)}
+							disabled={(state.data.length > 0 && !state.loading)? "" : "disabled"}>
+							Aceptar
+						</button>
 						<button type="button" className="btn btn-outline-secondary" onClick={handleCancel}>
 							Cancelar
 						</button>
@@ -122,7 +178,8 @@ const SearchPatrocinanteDialog = ({ handleAccept, handleCancel }) => {
 				</div>
 			</div>
 		</div>
+
 	)
 };
 
-	export default SearchPatrocinanteDialog;
+export default SearchPatrocinanteDialog;
