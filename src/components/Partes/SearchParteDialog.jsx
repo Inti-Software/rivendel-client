@@ -127,6 +127,11 @@ const SearchParteDialog = ({ handleAccept, handleCancel }) => {
 		return (state.error.trim() !== "")? state.error : msg;
 	}
 
+	const handleChange = (e) => {
+		dispatch({ type: "SET_FIELD", field: "term", value: e.target.value })
+		dispatch({ type: "SET_FIELD", field: "done", value: false })
+		dispatch({ type: "SET_FIELD", field: "data", value: [] })
+	}
 
 	return (
 		<div className={`modal show modal-backdrop-50 dialog-centered`} 
@@ -142,7 +147,7 @@ const SearchParteDialog = ({ handleAccept, handleCancel }) => {
 						<div className="row mb-3">
 							<div className="col-11">
 								<input id='criterio' type="text" className="form-control" placeholder="Nombre o CUIL " 
-									value={state.term} onChange={e => dispatch({ type: "SET_FIELD", field: "term", value: e.target.value })} 
+									value={state.term} onChange={ handleChange } 
 									onKeyDown={handleKeyDown} />
 							</div>
 							<div className="col-1">
@@ -197,7 +202,7 @@ const SearchParteDialog = ({ handleAccept, handleCancel }) => {
 								</table>
 							) : (
 								state.done &&
-								(<span className={"rounded-2 border text-center text-black w-auto mx-auto border-2 p-1" + getClassName() }
+								(<span className={"rounded-2 border text-center text-black mx-auto border-2 p-1 " + getClassName() }
 										style={{ fontSize: '12px' }}>
 									{ getMessage() }
 								</span>)

@@ -114,6 +114,12 @@ const SearchPatrocinanteDialog = ({ handleAccept, handleCancel }) => {
 		const msg = "No hay datos para mostrar."
 		return (state.error.trim() !== "")? state.error : msg;
 	}
+
+	const handleChange = (e) => {
+		dispatch({ type: "SET_FIELD", field: "term", value: e.target.value })
+		dispatch({ type: "SET_FIELD", field: "done", value: false })
+		dispatch({ type: "SET_FIELD", field: "data", value: [] })
+	}	
 		
 	return (
 		<div className={`modal show modal-backdrop-50 dialog-centered d-flex`} tabIndex="-1">
@@ -126,7 +132,7 @@ const SearchPatrocinanteDialog = ({ handleAccept, handleCancel }) => {
 						<div className="row mb-3">
 							<div className="col-11">
 								<input id='criterio' type="text" className="form-control" placeholder="Juan Pérez... " 
-									value={state.term} onChange={e => dispatch({ type: "SET_FIELD", field: "term", value: e.target.value })} 
+									value={state.term} onChange={ handleChange } 
 									onKeyDown={handleKeyDown} />
 							</div>
 							<div className="col-1">
