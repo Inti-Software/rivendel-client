@@ -153,7 +153,7 @@ const SearchParteDialog = ({ title, handleAccept, handleCancel }) => {
 					<div className="modal-body">
 						<div className="row mb-3">
 							<div className="col-11">
-								<input id='criterio' type="text" className="form-control" placeholder="Nombre o CUIL " 
+								<input id='criterio' type="text" className="form-control" placeholder="Nombre o CUIL" autoComplete='off'
 									value={state.term} onChange={ handleChange } onKeyDown={handleKeyDown} />
 							</div>
 							<div className="col-1">
@@ -164,41 +164,44 @@ const SearchParteDialog = ({ title, handleAccept, handleCancel }) => {
 						</div>
 						<div style={{ maxHeight: "400px", overflowY: "scroll" }} onClick={onSelectRow} className='d-flex'>
 							{state.data?.length > 0 ? (
-								<table className="table table-sm table-hover">
+								<table className="w-100">
 									<tbody>
 									{ state.data?.map((p) => (
 										<tr>
-											<td id={p.id} key={p.id} className='pt-2 pb-2 border-bottom border-secondary rounded-1'>
-												<div className='row bg-secondary-subtle border border-secondary mx-0 rounded-1'>
-													<div className='col-3'>
-														<span className="fw-bold">CUIL: </span>
-														<span aria-label='cuil'>{p.cuil === 0? p.nroDocumento : p.cuil}</span>
-													</div>
-													<div className='col-9'>
-														<span className="fw-bold">Nombre: </span>
-														<span aria-label='nombre'>{p.nombre}</span>
-													</div>
-												</div>
-												<div>
-													<span className="text-info-emphasis d-flex border-bottom border-success-subtle">Patrocinante</span>
-													<div className="row">
-														{(p.patrocinante == null) ? (
-														<div className="col">
-															<span className="d-inline-block border rounded border-warning p-1" style={{"fontSize": "0.75em"}}>- Sin patrocinante -</span>
+											<td id={p.id} key={p.id}>
+												<div className='bg-secondary-subtle border border-secondary mx-0 rounded-1 p-2 mb-1'>
+													<div className='row'>
+														<div className='col-3'>
+															<span className="fw-bold">CUIL: </span>
+															<span aria-label='cuil'>{p.cuil === "0"? p.nroDocumento : p.cuil}</span>
 														</div>
-														):(
-														<>
-															<div className="col-2">
-																<span className="fw-bold">Nº Matr.: </span> {p.patrocinante?.nroMatricula}
+														<div className='col-9'>
+															<span className="fw-bold">Nombre: </span>
+															<span aria-label='nombre'>{p.nombre}</span>
+														</div>
+													</div>
+													<div>
+														<span className="text-secondary d-flex border-bottom border-secondary-subtle">Patrocinante</span>
+														<div className="row">
+															{(p.patrocinante == null) ? (
+															<div className="col-12 d-flex p-2">
+																<span className="border rounded border-warning bg-warning-subtle m-auto p-1" 
+																	style={{"fontSize": "0.75em"}}>No hay datos para mostrar.</span>
 															</div>
-															<div className="col-4">
-																<span className="fw-bold">Nombre: </span>{p.patrocinante?.nombre}
-															</div>
-															<div className="col-6">
-																<span className="fw-bold">Domicilio: </span>{getDomicilio(p.patrocinante)}
-															</div>
-														</>
-														)}
+															):(
+															<>
+																<div className="col-2">
+																	<span className="fw-bold">Nº Matr.: </span> {p.patrocinante?.nroMatricula}
+																</div>
+																<div className="col-4">
+																	<span className="fw-bold">Nombre: </span>{p.patrocinante?.nombre}
+																</div>
+																<div className="col-6">
+																	<span className="fw-bold">Domicilio: </span>{getDomicilio(p.patrocinante)}
+																</div>
+															</>
+															)}
+														</div>
 													</div>
 												</div>
 											</td>

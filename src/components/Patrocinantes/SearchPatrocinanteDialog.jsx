@@ -145,7 +145,7 @@ const SearchPatrocinanteDialog = ({ handleAccept, handleCancel }) => {
 						<div className="row mb-3">
 							<div className="col-11">
 								<input id='criterio' type="text" className="form-control" placeholder="Juan Pérez... " 
-									value={state.term} onChange={ handleChange } onKeyDown={handleKeyDown} />
+									autoComplete='off' value={state.term} onChange={ handleChange } onKeyDown={handleKeyDown} />
 							</div>
 							<div className="col-1">
 								<button type="button" className="btn btn-outline-primary" onClick={handleBuscar}>
@@ -175,7 +175,7 @@ const SearchPatrocinanteDialog = ({ handleAccept, handleCancel }) => {
 							</table>
 						) : (
 							state.done && 
-							(<span className={"rounded-2 border text-center text-black w-auto mx-auto border-2 p-1 " + getClassName()}
+							(<span className={"rounded-2 border text-center text-black w-auto mx-auto border-1 p-1 " + getClassName()}
 								style={{ fontSize: '12px' }}> { getMessage() } </span>
 							)
 						)}
