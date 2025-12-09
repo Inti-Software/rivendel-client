@@ -39,3 +39,10 @@ body {
   height: 100vh !important;
   width: 100% !important;
 }
+#agregar-parte {
+  font-size: 14px;
+}
+#agregar-parte:hover {
+  background-color: #ccc;
+  color: #000 !important;
+}

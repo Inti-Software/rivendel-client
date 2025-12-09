@@ -55,7 +55,7 @@ function formReducer(state, action) {
   }
 }
 
-const SearchParteDialog = ({ handleAccept, handleCancel }) => {
+const SearchParteDialog = ({ title, handleAccept, handleCancel }) => {
 	const [state, dispatch] = useReducer(formReducer, initialState);
 	const debouncedValue = useDebounce(state.term, 300)
 
@@ -148,7 +148,7 @@ const SearchParteDialog = ({ handleAccept, handleCancel }) => {
 			<div className="modal-dialog center-vertical min-vw-100">
 				<div className="modal-content w-50">
 					<div className="modal-header bg-success text-white">
-						<h5 className="modal-title">Partes</h5>
+						<h5 className="modal-title">{title}</h5>
 					</div>
 					<div className="modal-body">
 						<div className="row mb-3">

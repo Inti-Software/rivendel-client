@@ -6,6 +6,7 @@ import DataBindedSelect from "../Forms/DataBindedSelect";
 import ValidationErrors from "../Shared/ValidationErrors";
 import dayjs from "dayjs";
 import { useNotification } from "../../contexts/Constants";
+import { PLUSCIRCLE } from "../../utils/Icons";
 
 const initialState = {
   id: 0,
@@ -238,11 +239,17 @@ export default function Form() {
 		const title = esReclamante ? "Reclamantes" : "Reclamados";
 		return (
 				<div className="mb-3">
+					<div className="border-1 border-bottom border-secondary text-primary mb-1 h6 d-flex">
+						<div className="pt-2">
+							<span className="pe-2">{title}</span>							
+							<span>|</span>
+							<span className="p-2 rounded text-secondary" id="agregar-parte" onClick={() => addParte(esReclamante)}>
+								{PLUSCIRCLE(12, 12)} Añadir
+							</span>
+						</div>
+					</div>
 					<table className="table table-sm text-center">
 						<thead>
-							<tr>
-								<th colSpan={3} className="fw-bold text-bg-secondary">{title}</th>
-							</tr>
 							<tr>
 								<th className="text-bg-secondary border-1">CUIL</th>
 								<th className="text-bg-secondary border-1">Nombre</th>
@@ -263,16 +270,6 @@ export default function Form() {
 								</tr>
 							))}
 						</tbody>
-						<tfoot>
-							<tr>
-								<td colSpan={2}>
-									<button type="button" className="btn btn-sm btn-outline-secondary"
-										onClick={() => addParte(esReclamante)}>
-										Agregar parte
-									</button>
-								</td>
-							</tr>
-						</tfoot>
 					</table>
 				</div>
 		);
@@ -281,7 +278,7 @@ export default function Form() {
   return (
     <form onSubmit={handleSubmit} style={{ padding: 20 }}>
 			{state.searchPartes.show && (
-				<SearchParteDialog handleAccept={onAcceptSearchParte} 
+				<SearchParteDialog title={state.searchPartes.esReclamante?"Agregar reclamante":"Agregar reclamado"} handleAccept={onAcceptSearchParte} 
 					handleCancel={() => dispatch({ type: "SEARCH_PARTES", show: false })} />
 				) }
 
