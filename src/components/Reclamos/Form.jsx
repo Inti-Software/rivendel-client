@@ -1,12 +1,13 @@
 import { useReducer, useEffect, useState } from "react";
 import { useNavigate, Link, useParams } from "react-router-dom";
 import SearchParteDialog from "../Partes/SearchParteDialog";
-import { Resoluciones, Reclamos } from "../../utils/endpoints";
+import { Resoluciones, Reclamos, Partes } from "../../utils/endpoints";
 import DataBindedSelect from "../Forms/DataBindedSelect";
 import ValidationErrors from "../Shared/ValidationErrors";
 import dayjs from "dayjs";
 import { useNotification } from "../../contexts/Constants";
-import { PLUSCIRCLE } from "../../utils/Icons";
+import { DELETE, PLUSCIRCLE } from "../../utils/Icons";
+import { NO_ESPECIFICADO } from "../../utils/constants";
 
 const initialState = {
   id: 0,
@@ -223,15 +224,45 @@ export default function Form() {
 		dispatch({ type: "SET_FIELD", field: f, value: v });
 	}
 
+	const getParte = (id) => {
+		try {
+			const fetch = async () => {
+				const response = await Partes.get(id);
+				if (response.ok) {
+					const data = await response.json();
+					return data;
+				}
+			}
+			return fetch();
+		} catch (error) {
+			console.log(error);
+			return null;
+		}
+	}
+
 	const onAcceptSearchParte = (e, parte) => {
 		e.preventDefault();
 		const partes = state.searchPartes.esReclamante ? state.reclamantes : state.reclamados;
 		if (!partes.find(r => r.id === parte.id)) {
 			const f = state.searchPartes.esReclamante ? "reclamantes" : "reclamados";
-			const v = [...partes, parte];
-			dispatch({ type: "SET_FIELD", field: f, value: v });
+			getParte(parte.id).then(p => {
+				if (p) {
+					const v = [...partes, p];
+					dispatch({ type: "SET_FIELD", field: f, value: v });
+				}
+			})
 		}
 		dispatch({ type: "SEARCH_PARTES", show: false});
+	}
+
+	const getDomicilio = (p) => {
+		let s = NO_ESPECIFICADO
+		if (p?.domicilio !== "")
+			s = p?.domicilio;
+		if (p?.localidad !== "")
+			s += ", " + p?.localidad
+
+		return s;
 	}
 
 	const partesTable = (esReclamante) => {
@@ -248,24 +279,53 @@ export default function Form() {
 							</span>
 						</div>
 					</div>
-					<table className="table table-sm text-center">
-						<thead>
-							<tr>
-								<th className="text-bg-secondary border-1">CUIL</th>
-								<th className="text-bg-secondary border-1">Nombre</th>
-								<th className="text-bg-secondary border-1"></th>
-							</tr>
-						</thead>
+					<table className="w-100">
 						<tbody>
 							{partes.map((p) => (
 								<tr key={p.id}>
-									<td>{p.cuil}</td>
-									<td>{p.nombre}</td>
-									<td className="text-danger" >
-										<button type="button" className="btn btn-sm btn-outline-danger"
-											onClick={() => removeParte(p.id, esReclamante)}>
-											-
-										</button>
+									<td id={p.id} key={p.id}>
+										<div className="bg-secondary-subtle mb-1 border border-secondary mx-0 rounded-1 px-2">
+											<div className='row'>
+												<div className="col-6">
+													<span className="me-1 fw-bold">Parte:</span>{p.cuil === 0? p.nroDocumento : p.cuil} - {p.nombre}
+												</div>
+												<div className="col-6">
+													<span className="me-1 fw-bold">Domicilio:</span> {p.domicilio}
+												</div>
+											</div>
+											<div>
+												<span className="text-secondary d-flex border-bottom border-secondary-subtle">Patrocinante</span>
+												<div className="row">
+													{(p.patrocinante == null) ? (
+													<div className="col-12 d-flex p-2">
+														<span className="border rounded border-warning bg-warning-subtle m-auto p-1" 
+															style={{"fontSize": "0.75em"}}>No hay datos para mostrar.</span>
+														<button type="button" className="btn btn-sm btn-outline-danger"
+															onClick={() => removeParte(p.id, esReclamante)}>{DELETE}
+														</button>
+													</div>
+													):(
+													<>
+														<div className="col-2">
+															<span className="fw-bold">Nº Matr.: </span> {p.patrocinante?.nroMatricula}
+														</div>
+														<div className="col-4">
+															<span className="fw-bold">Nombre: </span>{p.patrocinante?.nombre}
+														</div>
+														<div className="col-6">
+															<span className="fw-bold">Domicilio: </span> 
+															{getDomicilio(p.patrocinante)}
+														</div>
+														<div className="d-flex justify-content-end">
+															<button type="button" className="btn btn-sm btn-outline-danger mb-1"
+															onClick={() => removeParte(p.id, esReclamante)}>{DELETE}
+														</button>
+														</div>
+													</>
+													)}
+												</div>
+											</div>
+										</div>
 									</td>
 								</tr>
 							))}
@@ -323,7 +383,7 @@ export default function Form() {
 			</div>
 
 			<div className="mb-3 d-flex justify-content-end border-top pt-2 border-primary-subtle">
-					<button disabled={state.loading} type="submit" className="btn btn-primary me-2">{state.loading? "Grabando...":"Grabar"}</button>
+					<button disabled={state.loading || state.searchPartes.show } type="submit" className="btn btn-primary me-2">{state.loading? "Grabando...":"Grabar"}</button>
 					<Link to="/reclamos" className="btn btn-outline-primary">Cancelar</Link>
 			</div>
 
