@@ -85,19 +85,8 @@ const SearchParteDialog = ({ title, handleAccept, handleCancel }) => {
 
 	const onSelectRow = (event) => {
 		const row = event.target.closest("tr");
-		const selectedRow = row.parentNode.querySelector('.bg-warning-subtle')
-		
-		if (selectedRow) {
-			selectedRow.className = ''
-		}
-		
 		const td = row.querySelector("td");
-		td.className = "bg-warning-subtle"
-
-		const id = td.id;
-		const cuil = row.querySelector('[aria-label="cuil"]').innerHTML;
-		const nombre = row.querySelector('[aria-label="nombre"]').innerHTML;
-		dispatch({ type: "SET_FIELD", field: "selected", value: { id, cuil, nombre } });
+		dispatch({ type: "SET_FIELD", field: "selected", value: { id: parseInt(td.id) } });
 	}
 
 	const handleKeyDown = (event) => {
@@ -167,9 +156,9 @@ const SearchParteDialog = ({ title, handleAccept, handleCancel }) => {
 								<table className="w-100">
 									<tbody>
 									{ state.data?.map((p) => (
-										<tr>
-											<td id={p.id} key={p.id}>
-												<div className='bg-secondary-subtle border border-secondary mx-0 rounded-1 p-2 mb-1'>
+										<tr key={p.id}>
+											<td id={p.id}>
+												<div className={'border border-secondary mx-0 rounded-1 p-2 mb-1 ' + ((p.id === state.selected.id)? 'bg-warning-subtle' : 'bg-secondary-subtle') }>
 													<div className='row'>
 														<div className='col-3'>
 															<span className="fw-bold">CUIL: </span>

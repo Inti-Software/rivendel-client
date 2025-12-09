@@ -287,7 +287,7 @@ export default function Form() {
 										<div className="bg-secondary-subtle mb-1 border border-secondary mx-0 rounded-1 px-2">
 											<div className='row'>
 												<div className="col-6">
-													<span className="me-1 fw-bold">Parte:</span>{p.cuil === 0? p.nroDocumento : p.cuil} - {p.nombre}
+													<span className="me-1 fw-bold">Parte:</span>{p.cuil === "0"? p.nroDocumento : p.cuil} - {p.nombre}
 												</div>
 												<div className="col-6">
 													<span className="me-1 fw-bold">Domicilio:</span> {p.domicilio}
