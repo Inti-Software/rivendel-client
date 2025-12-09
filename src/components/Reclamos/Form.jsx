@@ -370,7 +370,7 @@ export default function Form() {
 			<div className="mb-3">
 				<label htmlFor="rubros" className="form-label">Rubros</label>
 				<textarea className="form-control" id="rubros" rows="5" placeholder="Objetos del reclamo/rubros y períodos..."
-					onChange={(e) => dispatch({ type: "SET_FIELD", field: "rubros", value: e.target.value })}>					
+					value={state.rubros} onChange={(e) => dispatch({ type: "SET_FIELD", field: "rubros", value: e.target.value })}>
 				</textarea>
 			</div>
 
