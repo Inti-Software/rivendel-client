@@ -265,6 +265,35 @@ export default function Form() {
 		return s;
 	}
 
+	const habilitarWhatsapp = (e) => {
+		const input = e.target.parentNode.nextSibling;
+		if (e.target.checked) {
+			input.disabled = "";
+			input.style.backgroundColor = "#fff";
+			input.focus();
+		} else {
+			input.disabled = "disabled";
+			input.style.backgroundColor = "#aaa";
+			input.value = "";
+		}
+	}
+
+	const actualizarNroWhatsapp = (nro, parteId, esParte, esReclamante) => {
+		const partes = esReclamante ? state.reclamantes : state.reclamados;
+		const f = esReclamante ? "reclamantes" : "reclamados";
+		const v = partes.map(p => {
+			if (p.id === parteId) {
+				if (esParte) {
+					return { ...p, nroWhatsappParte: nro };
+				} else {
+					return { ...p, nroWhatsappPatrocinante: nro };
+				}
+			}
+			return p;
+		});
+		dispatch({ type: "SET_FIELD", field: f, value: v });
+	}
+
 	const partesTable = (esReclamante) => {
 		const partes = esReclamante ? state.reclamantes : state.reclamados;
 		const title = esReclamante ? "Reclamantes" : "Reclamados";
@@ -316,13 +345,25 @@ export default function Form() {
 															<span className="fw-bold">Domicilio: </span> 
 															{getDomicilio(p.patrocinante)}
 														</div>
-														<div className="d-flex justify-content-end">
-															<button type="button" className="btn btn-sm btn-outline-danger mb-1"
-															onClick={() => removeParte(p.id, esReclamante)}>{DELETE}
-														</button>
-														</div>
 													</>
 													)}
+												</div>
+												<div className="row">
+													<div className="col-5">
+														<label className="me-2"><input type="checkbox" defaultChecked={false} onChange={(e) => habilitarWhatsapp(e)} /> Audiencia online</label>
+														<input type="number" className="form-control-inline form-control-sm mt-1 mb-1 border-0" disabled="disabled" 
+															placeholder="Número de Whatsapp" style={{ backgroundColor: "#aaa" }} onChange={e => actualizarNroWhatsapp(e.target.value, p.id, true, esReclamante)} />
+													</div>
+													<div className="col-5">
+														<label className="me-2"><input type="checkbox" defaultChecked={false} onChange={(e) => habilitarWhatsapp(e)} /> Patrocinio online</label>
+														<input type="number" className="form-control-inline form-control-sm mt-1 mb-1 border-0" disabled="disabled" 
+															placeholder="Número de Whatsapp" style={{ backgroundColor: "#aaa" }} onChange={e => actualizarNroWhatsapp(e.target.value, p.id, false, esReclamante)} />
+													</div>														
+													<div className="col-1">
+														<button type="button" className="btn btn-sm btn-outline-danger mb-1"
+															onClick={() => removeParte(p.id, esReclamante)}>{DELETE}
+														</button>
+													</div>
 												</div>
 											</div>
 										</div>
