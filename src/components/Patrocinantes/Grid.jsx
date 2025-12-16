@@ -1,12 +1,11 @@
-import Grid from "../Grid/Grid";
+import CustomGrid from "../Grid/Grid";
 import { GridEditButton, GridDeleteButton } from "../Grid/GridButtons";
 import { useState } from "react";
 import { useNotification } from "../../contexts/Constants";
 import DeleteDialog from "../Modals/DeleteDialog";
 import { Patrocinantes } from "../../utils/endpoints";
 
-
-const PatrocinantesGrid = ({data, currentPage, totalPages, setData, setCurrentPage}) => {
+const Grid = ({data, currentPage, totalPages, setData, setCurrentPage}) => {
 	const [onDeleteId, setOnDeleteId] = useState(null);
 	const [deleteMessage, setDeleteMessage] = useState("");
 	const [showDeleteDialog, setShowDeleteDialog] = useState(false);
@@ -66,7 +65,7 @@ const PatrocinantesGrid = ({data, currentPage, totalPages, setData, setCurrentPa
 
 	return (
 		<>
-			<Grid headers={headers}
+			<CustomGrid headers={headers}
 				row={row}
 				data={data}
 				currentPage={currentPage}
@@ -85,4 +84,4 @@ const PatrocinantesGrid = ({data, currentPage, totalPages, setData, setCurrentPa
 
 }
 
-export default PatrocinantesGrid;
+export default Grid;

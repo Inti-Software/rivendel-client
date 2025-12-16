@@ -1,4 +1,4 @@
-import Grid from "../Grid/Grid";
+import CustomGrid from "../Grid/Grid";
 import { GridEditButton, GridDeleteButton } from "../Grid/GridButtons";
 import { useState } from "react";
 import { useNotification } from "../../contexts/Constants";
@@ -6,7 +6,7 @@ import DeleteDialog from "../Modals/DeleteDialog";
 import { Partes } from "../../utils/endpoints";
 import { NO_ESPECIFICADO } from "../../utils/constants";
 
-const PartesGrid = ({data, currentPage, totalPages, setData, setCurrentPage}) => {
+const Grid = ({data, currentPage, totalPages, setData, setCurrentPage}) => {
   const [onDeleteId, setOnDeleteId] = useState(null);
   const [deleteMessage, setDeleteMessage] = useState("");
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
@@ -139,7 +139,7 @@ const PartesGrid = ({data, currentPage, totalPages, setData, setCurrentPage}) =>
 
   return (
     <>
-      <Grid data={data}
+      <CustomGrid data={data}
         headers={null}
         row={row}
         currentPage={currentPage}
@@ -157,4 +157,4 @@ const PartesGrid = ({data, currentPage, totalPages, setData, setCurrentPage}) =>
   );
 };
 
-export default PartesGrid;
+export default Grid;

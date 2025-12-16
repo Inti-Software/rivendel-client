@@ -19,7 +19,7 @@ const ListPatrocinantes = () => {
       {error ? (
         <ErrorMessage message={error} />
       ) : (
-        <PatrocinantesGrid
+        <Grid
           data={data}
           currentPage={currentPage}
           totalPages={totalPages}
