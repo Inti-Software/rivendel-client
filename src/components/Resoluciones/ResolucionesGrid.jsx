@@ -53,6 +53,7 @@ export default function Grid({data, currentPage, totalPages, setData, setCurrent
 				<>
 					<GridEditButton path={`/resoluciones/edit/${res.id}`} />
 					<GridDeleteButton
+						path={`/resoluciones/delete/${res.id}`}
 						onDelete={(e) => onDeleteRecord(e, res.id, res.descripcion)}
 					/>
 				</>,

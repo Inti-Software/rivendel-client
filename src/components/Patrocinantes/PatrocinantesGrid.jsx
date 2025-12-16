@@ -56,7 +56,9 @@ const PatrocinantesGrid = ({data, currentPage, totalPages, setData, setCurrentPa
 				pat.nroCasillero,
 				<>
 					<GridEditButton path={`/patrocinantes/edit/${pat.id}`} />
-					<GridDeleteButton onDelete={(e) => onDeleteRecord(e, pat.id, `${pat.nroMatricula} - ${pat.nombre}`)} />
+					<GridDeleteButton 
+            path={`/patrocinantes/delete/${pat.id}`}
+            onDelete={(e) => onDeleteRecord(e, pat.id, `${pat.nroMatricula} - ${pat.nombre}`)} />
 				</>
 			],
 		};

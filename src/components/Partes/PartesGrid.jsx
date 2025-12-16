@@ -77,6 +77,7 @@ const PartesGrid = ({data, currentPage, totalPages, setData, setCurrentPage}) =>
               />
 
               <GridDeleteButton
+                path={`/partes/delete/${p.id}`}
                 onDelete={(e) => onDeleteRecord(e, p.id, p.nombre, p.cuil)}
                 style={{ "--bs-btn-font-size": ".75rem" }}
                 className="my-1"
