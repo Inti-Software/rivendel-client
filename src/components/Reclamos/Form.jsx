@@ -131,14 +131,12 @@ export default function Form() {
 						reclamados: data.reclamados
 					}});
 				} else {					
-					console.error(await response.json());
 					dispatch({ type: "INITIAL_LOAD", payload: {} });
 				}
 			};
 			fetchData();
 		} catch (err) {
-			console.error(err);
-			dispatch({ type: "INITIAL_LOAD", payload: {} });
+			dispatch({ type: "INITIAL_LOAD", payload: { errors: [err.message]} });
 		}
 	}, [id]);
 
@@ -181,6 +179,14 @@ export default function Form() {
 
 		dispatch({ type: "SUBMIT_START" });
 
+		const parteToParteDTO = (p) => {
+			return {
+				idParte: p.id,
+				nroWhatsappParte: p.nroWhatsappParte || null,
+				nroWhatsappPatrocinante: p.nroWhatsappPatrocinante || null
+			};
+		}
+
 		try {
 			const reclamo = {
 				id: state.id, 
@@ -189,8 +195,8 @@ export default function Form() {
 				idResolucion: state.idResolucion,
 				fechaHoraInicio: state.fechaHoraInicio, 
 				horaFin: state.horaFin === "" ? null : combinarHoraConFecha(state.horaFin, dayjs(state.fechaHoraInicio)),
-				reclamantes: state.reclamantes.map(r => r.id),
-				reclamados: state.reclamados.map(r => r.id)
+				reclamantes: state.reclamantes.map(parteToParteDTO),
+				reclamados: state.reclamados.map(parteToParteDTO)
 			};
 
 			let result;
@@ -224,19 +230,20 @@ export default function Form() {
 		dispatch({ type: "SET_FIELD", field: f, value: v });
 	}
 
-	const getParte = (id) => {
+	const getParte = async (id, field, partes) => {
 		try {
 			const fetch = async () => {
 				const response = await Partes.get(id);
-				if (response.ok) {
-					const data = await response.json();
-					return data;
-				}
+				if (!response.ok) {
+					throw new Error(`Error al obtener los datos de la parte seleccionada: ${response.status} - ${response.statusText}`);
+				}				
+				const data = await response.json();
+				const v = [...partes, data];
+				dispatch({ type: "SET_FIELD", field: field, value: v });
 			}
-			return fetch();
+			await fetch();
 		} catch (error) {
-			console.log(error);
-			return null;
+			dispatch({ type: "SET_ERRORS", errors: [error.message] });
 		}
 	}
 
@@ -245,12 +252,7 @@ export default function Form() {
 		const partes = state.searchPartes.esReclamante ? state.reclamantes : state.reclamados;
 		if (!partes.find(r => r.id === parte.id)) {
 			const f = state.searchPartes.esReclamante ? "reclamantes" : "reclamados";
-			getParte(parte.id).then(p => {
-				if (p) {
-					const v = [...partes, p];
-					dispatch({ type: "SET_FIELD", field: f, value: v });
-				}
-			})
+			getParte(parte.id, f, partes);
 		}
 		dispatch({ type: "SEARCH_PARTES", show: false});
 	}
@@ -292,6 +294,30 @@ export default function Form() {
 			return p;
 		});
 		dispatch({ type: "SET_FIELD", field: f, value: v });
+	}
+
+	const inputNroWhatsapp = (parte, esPatrocinante, esReclamante) => {
+		const nroWhatsapp = esPatrocinante ? parte.patrocinante.nroWhatsapp : parte.nroWhatsapp;		
+		const hasValue = nroWhatsapp && nroWhatsapp.trim() !== "";
+		const disabled = hasValue? "" : "disabled";
+		const style = hasValue? { backgroundColor: "#fff" } : { backgroundColor: "#aaa" };
+		return (
+			<div className={esPatrocinante ? "col-6" : "col-5"}>
+				<label className="me-2">
+						<input 	type="checkbox" 
+										defaultChecked={hasValue}
+										onChange={(e) => habilitarWhatsapp(e)} 
+						/> Audiencia online
+				</label>
+				<input 	type="number" 
+								className="form-control-inline form-control-sm mt-1 mb-1 border-0" 
+								disabled={disabled}
+								placeholder="Número de Whatsapp" 
+								style={style}
+								value={nroWhatsapp || undefined}
+								onChange={e => actualizarNroWhatsapp(e.target.value, parte.id, true, esReclamante)} />
+			</div>
+		)
 	}
 
 	const partesTable = (esReclamante) => {
@@ -349,17 +375,9 @@ export default function Form() {
 													)}
 												</div>
 												<div className="row">
-													<div className="col-5">
-														<label className="me-2"><input type="checkbox" defaultChecked={false} onChange={(e) => habilitarWhatsapp(e)} /> Audiencia online</label>
-														<input type="number" className="form-control-inline form-control-sm mt-1 mb-1 border-0" disabled="disabled" 
-															placeholder="Número de Whatsapp" style={{ backgroundColor: "#aaa" }} onChange={e => actualizarNroWhatsapp(e.target.value, p.id, true, esReclamante)} />
-													</div>
-													<div className="col-5">
-														<label className="me-2"><input type="checkbox" defaultChecked={false} onChange={(e) => habilitarWhatsapp(e)} /> Patrocinio online</label>
-														<input type="number" className="form-control-inline form-control-sm mt-1 mb-1 border-0" disabled="disabled" 
-															placeholder="Número de Whatsapp" style={{ backgroundColor: "#aaa" }} onChange={e => actualizarNroWhatsapp(e.target.value, p.id, false, esReclamante)} />
-													</div>														
-													<div className="col-1">
+													{inputNroWhatsapp(p, false, esReclamante)}
+													{inputNroWhatsapp(p, true, esReclamante)}
+													<div className="col-1 d-flex justify-content-end align-items-end">
 														<button type="button" className="btn btn-sm btn-outline-danger mb-1"
 															onClick={() => removeParte(p.id, esReclamante)}>{DELETE}
 														</button>
