@@ -1,7 +1,7 @@
 import ErrorMessage from "../Shared/ErrorMessage";
 import Spinner from "../Shared/Spinner";
 import Container from "../Forms/Container";
-import PatrocinantesGrid from "./PatrocinantesGrid";
+import Grid from "./Grid";
 import useFormGrid from "../../hooks/useFormGrid";
 import { Patrocinantes } from "../../utils/endpoints";
 import { RECORDS_PER_PAGE } from "../../utils/constants";
