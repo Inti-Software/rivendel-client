@@ -315,7 +315,7 @@ export default function Form() {
 								placeholder="Número de Whatsapp" 
 								style={style}
 								value={nroWhatsapp || undefined}
-								onChange={e => actualizarNroWhatsapp(e.target.value, parte.id, true, esReclamante)} />
+								onChange={e => actualizarNroWhatsapp(e.target.value, parte.id, !esPatrocinante, esReclamante)} />
 			</div>
 		)
 	}
