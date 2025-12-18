@@ -85,25 +85,19 @@ const Grid = ({data, currentPage, totalPages, setData, setCurrentPage}) => {
             </div>
           </div>
           <div className="row mb-2 h6 pt-2">
-            <div className="col">
+            <div className="col-3">
               <span className="fw-bold">Documento: </span>
               <span>{p.tipoDocumento} {p.nroDocumento}</span>
             </div>
-            <div className="col">
+            <div className="col-2">
               <span className="fw-bold">Cuil: </span>
               <span>{(p.cuil === "null")? "": p.cuil}</span>
             </div>
-            <div className="col">
-              <span className="fw-bold">Nº Whatsapp: </span>
-              <span>{p.nrowhatsapp}</span>
-            </div>
-          </div>
-          <div className="row mb-2">
-            <div className="col">
+            <div className="col-4">
               <span className="fw-bold">Domicilio: </span>
               <span>{p.domicilio}</span>
             </div>
-            <div className="col">
+            <div className="col-3">
               <span className="fw-bold">Localidad: </span>
               <span>{p.localidad}</span>
             </div>
@@ -116,7 +110,7 @@ const Grid = ({data, currentPage, totalPages, setData, setCurrentPage}) => {
           <div className="row mb-2">
             {(p.patrocinante == null) ? (
             <div className="col">
-              <span className="d-inline-block border rounded border-warning p-1" style={{"fontSize": "0.75em"}}>- Sin patrocinante -</span>
+              <span className="d-flex justify-content-center m-auto bg-warning-subtle border rounded border-warning" style={{"fontSize": "0.75em", width: "125px"}}>- Sin patrocinante -</span>
             </div>
             ):(
             <>
