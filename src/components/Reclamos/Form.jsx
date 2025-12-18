@@ -297,7 +297,7 @@ export default function Form() {
 	}
 
 	const inputNroWhatsapp = (parte, esPatrocinante, esReclamante) => {
-		const nroWhatsapp = esPatrocinante ? parte.patrocinante.nroWhatsapp : parte.nroWhatsapp;		
+		const nroWhatsapp = esPatrocinante ? parte.nroWhatsappPatrocinante : parte.nroWhatsappParte;
 		const hasValue = nroWhatsapp && nroWhatsapp.trim() !== "";
 		const disabled = hasValue? "" : "disabled";
 		const style = hasValue? { backgroundColor: "#fff" } : { backgroundColor: "#aaa" };
