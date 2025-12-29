@@ -8,7 +8,7 @@ import { RECORDS_PER_PAGE } from "../../utils/constants";
 
 const ListPatrocinantes = () => {
   const { loading, data, error, currentPage, totalPages, setData, 
-    setCurrentPage } = useFormGrid(Patrocinantes.findAll, RECORDS_PER_PAGE)
+    setCurrentPage } = useFormGrid(Patrocinantes.findAll, 50)
 
   if (loading) {
     return <Spinner/>
