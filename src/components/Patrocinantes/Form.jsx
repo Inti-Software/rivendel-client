@@ -11,7 +11,6 @@ const initialState = {
   domicilio: "",
   localidad: "",
   nroCasillero: 0,
-  nroWhatsapp: "",
   initializing: true,
   loading: false,
   errors: [],
@@ -179,12 +178,7 @@ export default function Form() {
 				<div className="mb-3">
 					<label htmlFor="nroCasillero" className="form-label">Nº Casillero</label>
 					<input id="nroCasillero" type="number" className="form-control" value={state.nroCasillero} onChange={setField} />
-				</div>
-				<div className="mb-3">
-					<label htmlFor="nroWhatsapp" className="form-label">Nº Whatsapp</label>
-					<input id="nroWhatsapp" className="form-control" value={state.nroWhatsapp} onChange={setField} />
-				</div>
-				
+				</div>				
 				<div className="mb-3 d-flex justify-content-end border-top pt-2 border-primary-subtle">
 						<button disabled={state.loading} type="submit" className="btn btn-primary me-2">{state.loading? "Grabando...":"Grabar"}</button>
 						<Link to="/patrocinantes" className="btn btn-outline-primary">Cancelar</Link>

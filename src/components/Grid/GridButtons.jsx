@@ -12,9 +12,9 @@ const GridEditButton = ({path, style, className}) => {
 	);
 }
 
-const GridDeleteButton = ({onDelete, style, className}) => {
+const GridDeleteButton = ({path, style, className, onDelete}) => {
 	return (
-		<a href={"/#"} onClick={onDelete}
+		<a href={path || "/#"} onClick={onDelete}
 			className={"btn btn-outline-danger btn-sm ms-2" + (className ? ` ${className}` : "")}
 			style={style || {}}
 			>

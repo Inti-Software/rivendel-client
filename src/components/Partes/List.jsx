@@ -4,7 +4,7 @@ import Container from "../Forms/Container";
 import useFormGrid from "../../hooks/useFormGrid";
 import { Partes } from "../../utils/endpoints";
 import { RECORDS_PER_PAGE } from "../../utils/constants";
-import PartesGrid from "./PartesGrid";
+import Grid from "./Grid";
 
 const ListPartes = () => {
 	const { loading, data, error, currentPage, totalPages, setData, 
@@ -20,7 +20,7 @@ const ListPartes = () => {
 			{error ? (
 				<ErrorMessage message={error} />
 			) : (
-				<PartesGrid
+				<Grid
 					data={data}
 					currentPage={currentPage}
 					totalPages={totalPages}

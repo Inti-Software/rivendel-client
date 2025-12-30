@@ -1,7 +1,7 @@
 import ErrorMessage from "../Shared/ErrorMessage";
 import Container from "../Forms/Container";
 import Spinner from "../Shared/Spinner";
-import TipoDocumentoGrid from "./TipoDocumentoGrid";
+import Grid from "./Grid";
 import useFormGrid from "../../hooks/useFormGrid";
 import { TiposDocumento } from "../../utils/endpoints";
 import { RECORDS_PER_PAGE } from "../../utils/constants";
@@ -14,13 +14,15 @@ const ListTiposDocumentos = () => {
     return <Spinner />;
   }
 
+  console.log(data);
+
   return (
     <Container title={"Tipos de Documentos"} newPath="/tipos-documentos/new">
       {error ? (
         <ErrorMessage message={error} />
       ) : (
         <>
-        <TipoDocumentoGrid
+        <Grid
           data={data}
           currentPage={currentPage}
           totalPages={totalPages}

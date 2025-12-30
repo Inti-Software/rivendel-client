@@ -1,14 +1,14 @@
 import ErrorMessage from "../Shared/ErrorMessage";
 import Spinner from "../Shared/Spinner";
 import Container from "../Forms/Container";
-import PatrocinantesGrid from "./PatrocinantesGrid";
+import Grid from "./Grid";
 import useFormGrid from "../../hooks/useFormGrid";
 import { Patrocinantes } from "../../utils/endpoints";
 import { RECORDS_PER_PAGE } from "../../utils/constants";
 
 const ListPatrocinantes = () => {
   const { loading, data, error, currentPage, totalPages, setData, 
-    setCurrentPage } = useFormGrid(Patrocinantes.findAll, RECORDS_PER_PAGE)
+    setCurrentPage } = useFormGrid(Patrocinantes.findAll, 50)
 
   if (loading) {
     return <Spinner/>
@@ -19,7 +19,7 @@ const ListPatrocinantes = () => {
       {error ? (
         <ErrorMessage message={error} />
       ) : (
-        <PatrocinantesGrid
+        <Grid
           data={data}
           currentPage={currentPage}
           totalPages={totalPages}

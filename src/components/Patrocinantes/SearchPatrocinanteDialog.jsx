@@ -144,7 +144,7 @@ const SearchPatrocinanteDialog = ({ handleAccept, handleCancel }) => {
 					<div className="modal-body">
 						<div className="row mb-3">
 							<div className="col-11">
-								<input id='criterio' type="text" className="form-control" placeholder="Juan Pérez... " 
+								<input id='criterio' type="text" className="form-control" placeholder="Nombre o Nro. de Matrícula" 
 									autoComplete='off' value={state.term} onChange={ handleChange } onKeyDown={handleKeyDown} />
 							</div>
 							<div className="col-1">

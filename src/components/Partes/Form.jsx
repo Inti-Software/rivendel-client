@@ -2,7 +2,7 @@ import { useReducer, useEffect, useState } from "react";
 import { useNavigate, Link, useParams } from "react-router-dom";
 import ValidationErrors from "../Shared/ValidationErrors";
 import { useNotification } from "../../contexts/Constants";
-import { Partes, Resoluciones, TiposDocumento } from "../../utils/endpoints";
+import { Partes, TiposDocumento } from "../../utils/endpoints";
 import DataBindedSelect from "../Forms/DataBindedSelect";
 import { SEARCH } from "../../utils/Icons";
 import SearchPatrocinanteDialog from "../Patrocinantes/SearchPatrocinanteDialog";
@@ -18,7 +18,6 @@ const initialState = {
 		nroMatricula: 0,
 		nombre: ""
 	},
-  nroWhatsapp: "",
   localidad: "",
   domicilio: "",
   initializing: true,
@@ -123,11 +122,10 @@ export default function Form() {
 						nroDocumento: data.nroDocumento,
 						cuil: data.cuil,
 						patrocinante: {
-							id: data.patrocinante.id,
-							nombre: data.patrocinante.nombre,
-							nroMatricula: data.patrocinante.nroMatricula
+							id: data.patrocinante?.id || 0,
+							nombre: data.patrocinante?.nombre || "",
+							nroMatricula: data.patrocinante?.nroMatricula || 0
 						},
-						nroWhatsapp: data.nroWhatsapp,
 						localidad: data.localidad,
 						domicilio: data.domicilio,
 					}});
@@ -177,7 +175,6 @@ export default function Form() {
 				domicilio: state.domicilio,
 				localidad: state.localidad,
 				idPatrocinante: state.patrocinante.id,
-				nroWhatsapp: state.nroWhatsapp,
 			};
 
 			let result;
@@ -275,11 +272,6 @@ export default function Form() {
 						</div>
 					</div>
 				</div>
-				<div className="mb-3">
-					<label htmlFor="nroWhatsapp" className="form-label">Nº WhatsApp</label>
-					<input id="nroWhatsapp" type="number" className="form-control" value={state.nroWhatsapp} onChange={setField} />
-				</div>
-
 				<div className="mb-3 d-flex justify-content-end border-top pt-2 border-primary-subtle">
 						<button disabled={state.loading || state.searchPatrocinante} type="submit" className="btn btn-primary me-2">{state.loading? "Grabando...":"Grabar"}</button>
 						<Link to="/resoluciones" className="btn btn-outline-primary">Cancelar</Link>

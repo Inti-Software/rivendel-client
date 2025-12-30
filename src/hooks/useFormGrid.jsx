@@ -11,7 +11,7 @@ export default function useFormGrid(request, recordsPerPage) {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const response = await request({ currentPage });
+        const response = await request({ currentPage, recordsPerPage: recordsPerPage });
 
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -22,7 +22,7 @@ export default function useFormGrid(request, recordsPerPage) {
         const totalRecords = fetchedData.totalRecords;
         setTotalPages(Math.ceil(totalRecords / recordsPerPage));
 
-        setData(fetchedData.data);
+        setData(fetchedData.data || fetchedData);
         setError(null);
       } catch (error) {
         setError(error.message);
@@ -32,7 +32,7 @@ export default function useFormGrid(request, recordsPerPage) {
       }
     };
     fetchData();
-  }, [currentPage]);
+  }, [currentPage, recordsPerPage, request]);
 
   return { loading, data, error, currentPage, totalPages, setData, setCurrentPage };
 }

@@ -3,7 +3,7 @@ import { GridEditButton, GridDeleteButton, GridPrintButton } from "../Grid/GridB
 import { useState } from "react";
 import { useNotification } from "../../contexts/Constants";
 import DeleteDialog from "../Modals/DeleteDialog";
-import { TiposDocumento } from "../../utils/endpoints";
+import { Reclamos } from "../../utils/endpoints";
 import dayjs from "dayjs";
 import es from "dayjs/locale/es";
 import { RECLAMADO, RECLAMANTE } from "../../utils/constants";
@@ -15,25 +15,22 @@ export default function Grid({data, currentPage, totalPages, setData, setCurrent
   const { showSuccess, showError } = useNotification();
   dayjs.locale(es);
 
-  const onDeleteRecord = (e, id, sintetico) => {
+  const onDeleteRecord = (e, id, numero) => {
     e.preventDefault();
     setOnDeleteId(id);
     setShowDeleteDialog(true);
     setDeleteMessage(
       <>
-        ¿Está seguro de eliminar el tipo de documento
-        <span className="fw-bold text-danger ms-1">{sintetico}</span>?
+        ¿Está seguro de eliminar el reclamo Nº 
+        <span className="fw-bold text-danger ms-1">{numero}</span>?
       </>
     );
   };
   
   const handleDelete = async () => {
     try {
-      const response = await TiposDocumento.delete(onDeleteId);
+      const response = await Reclamos.delete(onDeleteId);
       if (!response.ok) {
-        console.log(
-          `HTTP error! status: ${response.status} - ${response.body}`
-        );
         throw new Error(
           "Se produjo un error al intentar eliminar el registro."
         );
@@ -98,7 +95,7 @@ export default function Grid({data, currentPage, totalPages, setData, setCurrent
                       <GridPrintButton path={`/reclamos/reporte/${rec.id}`} className={"w-100"} />
                     </div>
                     <div className="col">
-                      <GridDeleteButton onDelete={(e) => onDeleteRecord(e, rec.id, rec.sintetico)}  className={"w-100"}/>
+                      <GridDeleteButton path={`/reclamos/delete/${rec.id}`} onDelete={(e) => onDeleteRecord(e, rec.id, rec.numero)}  className={"w-100"}/>
                     </div>
                   </div>
                   

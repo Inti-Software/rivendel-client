@@ -4,7 +4,7 @@ import Container from "../Forms/Container";
 import useFormGrid from "../../hooks/useFormGrid";
 import { Resoluciones } from "../../utils/endpoints";
 import { RECORDS_PER_PAGE } from "../../utils/constants";
-import ResolucionesGrid from "./ResolucionesGrid";
+import Grid from "./Grid";
 
 const ListResoluciones = () => {
 	const { loading, data, error, currentPage, totalPages, setData, 
@@ -19,7 +19,7 @@ const ListResoluciones = () => {
 			{error ? (
 				<ErrorMessage message={error} />
 			) : (
-				<ResolucionesGrid
+				<Grid
 					data={data}
 					currentPage={currentPage}
 					totalPages={totalPages}
