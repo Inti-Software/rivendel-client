@@ -76,40 +76,46 @@ function getReclamo(data) {
 }
 
 function getPartes(partes) {
-	let cantidadPatrocinados = 0
 	let result = []
 	for(let i = 0; i < partes.length; i++) {
 		let siguiente = null
 		let patrocinante = partes[i].patrocinante
-		if (patrocinante !== null) {
+		if (patrocinante) {
 			if (i + 1 < partes.length) {
 				siguiente = partes[i + 1]
 			}
-			if (siguiente && (siguiente.patrocinante !== null) && 
+			if (!!siguiente?.patrocinante && 
 					siguiente.patrocinante.nroMatricula === patrocinante.nroMatricula) {
 				patrocinante = null
 			}
-			cantidadPatrocinados++
-
-			const sintetico = partes[i].tipoDocumento.sintetico || "DNI";
-			const nroDocumento = partes[i].nroDocumento || NO_ESPECIFICADO
-			const cuil = partes[i].cuil || NO_ESPECIFICADO
-			const domicilio = partes[i].domicilio;
-			const localidad = partes[i].localidad;
-			const nroWhatsapp = partes[i].nroWhatsapp || null
-	
-			const parte = {
-				nombre: partes[i].nombre,
-				sintetico: sintetico,
-				nroDocumento: nroDocumento,
-				cuil: cuil,
-				domicilio: domicilio,
-				localidad: localidad,
-				nroWhatsapp: nroWhatsapp,
-				patrocinante: !patrocinante? null : {...patrocinante, cantidadPatrocinados: cantidadPatrocinados}
-			}
-			result.push(parte)
 		}
+
+		const sintetico = partes[i].tipoDocumento.sintetico;
+		const nroDocumento = partes[i].nroDocumento || NO_ESPECIFICADO
+		const cuil = partes[i].cuil || NO_ESPECIFICADO
+		const domicilio = partes[i].domicilio;
+		const localidad = partes[i].localidad;
+		const nroWhatsappParte = partes[i].nroWhatsappParte || null
+		const nroWhatsappPatrocinante = partes[i].nroWhatsappPatrocinante || null
+
+		if (patrocinante) {
+			patrocinante.domicilio = patrocinante?.domicilio || NO_ESPECIFICADO
+			patrocinante.localidad = patrocinante?.localidad || NO_ESPECIFICADO
+			patrocinante.nroCasillero = patrocinante?.nroCasillero || NO_ESPECIFICADO
+		}
+
+		const parte = {
+			nombre: partes[i].nombre,
+			sintetico: sintetico,
+			nroDocumento: nroDocumento,
+			cuil: cuil,
+			domicilio: domicilio,
+			localidad: localidad,
+			nroWhatsappParte: nroWhatsappParte,
+			nroWhatsappPatrocinante: nroWhatsappPatrocinante,
+			patrocinante: patrocinante
+		}
+		result.push(parte)
 	}
 
 	return result
@@ -124,6 +130,6 @@ export default function ReportData(data) {
 		reclamados: getPartes(data.reclamados),
 	}
 
-	console.log(JSON.stringify(result))
+	console.log("reportData", result)
 	return result
 }

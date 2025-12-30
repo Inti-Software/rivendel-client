@@ -73,53 +73,62 @@ const declaracionPartes = (reclamantes, reclamados) => (
 	</>
 )
 
-const getParte = (parte) => {
-	// por una parte {data?.reclamante.nombre} {data?.reclamante.tipoDocumento.sintetico} {data?.reclamante.nroDocumento}, 
+const getParte = (partes) => {
+	// {data?.reclamante.nombre} {data?.reclamante.tipoDocumento.sintetico} {data?.reclamante.nroDocumento}, 
 	// CUIL {data?.reclamante.cuil}, con domicilio en {data?.reclamante.domicilio}, Localidad: {data?.reclamante.localidad}, 
 	// con el patrocinio letrado del Dr. {data?.reclamante.patrocinante.nombre} MP Nº {data?.reclamante.patrocinante.nroMatricula},
 	// ratificando domicilio en {data?.reclamante.patrocinante.domicilio}, Localidad: {data?.reclamante.patrocinante.localidad} y
 	// constituyendo domicilio en casillero de notificaciones Nº {data?.reclamante.patrocinante.nroCasillero} y 
 	
-	// por la otra parte 
-	// reclamada/empleadora {data?.reclamado.nombre} {data?.reclamado.tipoDocumento.sintetico} {data?.reclamado.nroDocumento}, 
+	// {data?.reclamado.nombre} {data?.reclamado.tipoDocumento.sintetico} {data?.reclamado.nroDocumento}, 
 	// CUIL {data?.reclamado.cuil}, con domicilio en {data?.reclamado.domicilio}, Localidad: {data?.reclamado.localidad}, 
 	// con el patrocinio letrado del Dr. {data?.reclamado.patrocinante.nombre} MP Nº {data?.reclamado.patrocinante.nroMatricula},
 	// ratificando domicilio en {data?.reclamado.patrocinante.domicilio}, Localidad: {data?.reclamado.patrocinante.localidad} y
 	// constituyendo domicilio en casillero de notificaciones Nº {data?.reclamado.patrocinante.nroCasillero}.
 
-	const nombre = parte.nombre;
-	const sintetico = parte.sintetico;
-	const nroDocumento = parte.nroDocumento
-	const cuil = parte.cuil
-	const domicilio = parte.domicilio;
-	const localidad = parte.localidad;
-	const patrocinante = parte.patrocinante || {};
-
-	let s = `${nombre} ${sintetico} ${nroDocumento}, `
-	if (cuil && cuil > 0) {
-		s += `CUIL ${cuil}, `
-	}
-	if (domicilio && domicilio.trim() !== "") {
-		s += `con domicilio en ${domicilio}`
-	}
-	if (localidad && localidad.trim() !== "") {
-		s += `, Localidad: ${localidad}`;
-	}
-
-	if (patrocinante && Object.keys(patrocinante).length > 0) {
-		s += `, con el patrocinio letrado del Dr. ${patrocinante.nombre} MP Nº ${patrocinante.nroMatricula},`
-		if (patrocinante.domicilio !== NO_ESPECIFICADO) {
-			s += ` ratificando domicilio en ${domicilio}`;
+	let s = "";
+	partes.forEach(parte => {
+		const nombre = parte.nombre;
+		const sintetico = parte.sintetico;
+		const nroDocumento = parte.nroDocumento
+		const cuil = parte.cuil
+		const domicilio = parte.domicilio || "";
+		const localidad = parte.localidad || "";
+		const patrocinante = parte.patrocinante || {};
+	
+		s += ((s === "")? " " : ", ") + 
+					`${nombre} ${sintetico} ${nroDocumento}, CUIL ${cuil},` + 
+					` con domicilio en ${domicilio}`;
+		// if (domicilio && domicilio.trim() !== "") {
+		// 	s += `con domicilio en ${domicilio}`
+		// }
+		if (localidad && localidad.trim() !== "") {
+			s += `, de la localidad ${localidad}`;
 		}
-		if (patrocinante.localidad !== NO_ESPECIFICADO) {
-			s += ` Localidad: ${localidad} y `
-		}
-		if (patrocinante.nroCasillero !== NO_ESPECIFICADO) {
-			s += ` constituyendo domicilio en casillero de notificaciones Nº ${patrocinante.nroCasillero}`;
-		}
-	}
 
-	return s;
+		if (parte.nroWhatsappParte) {
+			s += `, quien comparece virtualmente por videollamada de Whatsapp desde el número ${parte.nroWhatsappParte}`;
+		}
+	
+		if (Object.keys(patrocinante || {}).length > 0) {
+			s += `, con el patrocinio letrado del Dr. ${patrocinante.nombre} MP Nº ${patrocinante.nroMatricula},`
+			if (patrocinante.domicilio !== NO_ESPECIFICADO) {
+				s += ` ratificando domicilio en ${patrocinante.domicilio}`;
+			}
+			if (patrocinante.localidad !== NO_ESPECIFICADO) {
+				s += ` de la ciudad ${patrocinante.localidad}`
+			}
+			if (patrocinante.nroCasillero !== NO_ESPECIFICADO) {
+				s += `, casillero Nº ${patrocinante.nroCasillero}`;
+			}
+			if (patrocinante.nroWhatsappPatrocinante) {
+				s += `, quien comparece virtualmente por videollamada de Whatsapp desde el número ${parte.nroWhatsappPatrocinante}`;
+			}
+		}		
+	});
+
+	return s.trim();
+
 }
 
 const lineaFirma = (label1, label2) => (
@@ -149,7 +158,7 @@ const Acta = ({ data = ReportData }) => (
 				<Page style={styles.page}>
 					<View>
 						<Text style={styles.header}>{data?.titulo}</Text>
-						({declaracionPartes(data?.reclamante.nombre, data?.reclamado.nombre)})
+						({declaracionPartes(data?.nombresReclamantes, data?.nombresReclamados)})
 						<Text style={styles.rubros}>
 							<Text>OBJETO DEL RECLAMO/RUBROS Y PERÍODOS: </Text>
 							<Text>{data?.rubros}</Text>
@@ -158,8 +167,8 @@ const Acta = ({ data = ReportData }) => (
 							En la ciudad de Santiago del Estero, provincia del mismo nombre, a los {data?.fechaInicio.dia} días 
 							del mes de {data?.fechaInicio.mes} del año {data?.fechaInicio.anio}, siendo las {data?.fechaInicio.hora} horas,
 							ante mí María Cristina Lavaisse Beck, en mi calidad de Conciliador Laboral, habilitación Nº 7, en ejercicio de las
-							funciones conferidas por la ley 7.330 y el decreto reglamentario 2.2230/22. En el Marco del trámite de referencia,
-							comparecen por una parte {getParte(data?.reclamante)} y por la otra parte reclamada/empleadora {getParte(data?.reclamado)}.
+							funciones conferidas por la ley 7.330 y el decreto reglamentario 2.230/22. En el Marco del trámite de referencia,
+							comparecen por una parte {getParte(data?.reclamantes)} y por la otra parte reclamada/empleadora {getParte(data?.reclamados)}.
 
 							- Y ABIERTO EL ACTO: {data?.resolucion}
 							Siendo las {data?.horaFin} horas, se da por finalizado el acto de conciliación, previa lectura, firmando los 
