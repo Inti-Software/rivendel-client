@@ -24,46 +24,36 @@ const ListPatrocinantes = () => {
 	const { showSuccess, showError } = useNotification();
   const firstTime = useRef(true)
 
+  const endpoint = Patrocinantes.findAll
+  const recordsPerPage = 50
 	const headers = ["Nombre", "Matrícula", "Domicilio", "Localidad", "Casillero", ""];	
   const showSearchBar = true
   const debug = false
 
+
   const fetchData = async () => {
-    //setLoading(true);
     try {
-      const recordsPerPage = 50
-      const response = await Patrocinantes.findAll({ query: debouncedValue.trim(), currentPage, recordsPerPage: recordsPerPage });
+      const response = await endpoint({ query: debouncedValue.trim(), currentPage, recordsPerPage: recordsPerPage });
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        throw new Error(`Error ${response.status} al consultar los datos.`);
       }
 
       const fetchedData = await response.json();
-
       const totalRecords = fetchedData.totalRecords;
       const totalPages = Math.ceil(totalRecords / recordsPerPage);
-      // setTotalPages(Math.ceil(totalRecords / recordsPerPage));
-
-      // setData(fetchedData.data || fetchedData);
-      // setError(null);
-
       return {
         data: fetchedData.data || fetchedData,
         totalPages: totalPages,
         error: null
       }
     } catch (error) {
-      // setError(error.message);
-      // setData([]);
       return {
         data: null,
         totalPages: 0,
         error: error.message
       }
     } 
-    // finally {
-    //   setLoading(false);
-    // }
   };
 
 	const row = (pat) => {
@@ -108,7 +98,6 @@ const ListPatrocinantes = () => {
     setLoading(true);
     fetchData()
       .then(result => {
-        console.log(result)
         setData(result.data);
         setTotalPages(result.totalPages);
         setError(result.error)
@@ -146,20 +135,14 @@ const ListPatrocinantes = () => {
     );
   };
 
-  const nextPage = () => {
-    if (currentPage < totalPages) {
+  const paginate = ({ forward = false, page = 0 }) => {
+    if (page) {
+      setCurrentPage(page)
+    } else if (forward && (currentPage < totalPages)) {
       setCurrentPage((prev) => prev + 1);
-    }
-  };
-
-  const prevPage = () => {
-    if (currentPage > 1) {
+    } else if (!forward && (currentPage > 1)) {
       setCurrentPage((prev) => prev - 1);
     }
-  };
-
-	const handleChange = (e) => {
-    setUserInput(e.target.value)
   }
 
   const handleKeyDown = (e) => {
@@ -196,7 +179,7 @@ const ListPatrocinantes = () => {
 					<div className="col-7 col-offset-2">
 						<input id='criterio' type="text" className="form-control border-primary-subtle" placeholder="Nombre, matrícula o casillero" autoComplete='off'
 							value={userInput}
-							onChange={handleChange}
+							onChange={(e) => setUserInput(e.target.value)}
 							onKeyDown={handleKeyDown}
 							/>
 					</div>
@@ -242,17 +225,25 @@ const ListPatrocinantes = () => {
       <div className="d-flex justify-content-between align-items-center">
         <button
           className="btn btn-primary"
-          onClick={prevPage}
+          onClick={() => paginate({forward: false})}
           disabled={currentPage === 1 || totalPages === 0}
         >
           Anterior
         </button>
-        <span>
-          {totalPages > 0 && (" Página " + currentPage + " de " + totalPages)}
+        <span>          
+          Página
+          <select onChange={(e) => { paginate({ page: e.target.value })}} className="mx-2 text-center">
+            {[...Array(totalPages).keys()].map((i) => (
+              <option key={i + 1} value={i + 1}>
+                {i + 1}
+              </option>
+            ))}
+          </select>
+          de {totalPages}
         </span>
         <button
           className="btn btn-primary"
-          onClick={nextPage}
+          onClick={() => paginate({forward: true})}
           disabled={currentPage === totalPages || totalPages === 0}
         >
           Siguiente
