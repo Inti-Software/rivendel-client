@@ -1,13 +1,9 @@
 import ErrorMessage from "../../Shared/ErrorMessage";
-import Spinner from "../../Shared/Spinner";
-import Container from "../../Forms/Container";
 import { Patrocinantes } from "../../../utils/endpoints";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useNotification } from "../../../contexts/Constants";
 import useDebounce from "../../../hooks/useDebounce";
-import CustomGrid from "../../Grid/Grid";
 import { GridEditButton, GridDeleteButton } from "../../Grid/GridButtons";
-import { SEARCH } from "../../../utils/Icons";
 import { Link } from "react-router-dom";
 
 const ListPatrocinantes = () => {
@@ -22,7 +18,6 @@ const ListPatrocinantes = () => {
 	const [deleteMessage, setDeleteMessage] = useState("");
 	const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 	const { showSuccess, showError } = useNotification();
-  const firstTime = useRef(true)
 
   const endpoint = Patrocinantes.findAll
   const recordsPerPage = 50
@@ -31,9 +26,9 @@ const ListPatrocinantes = () => {
   const debug = false
 
 
-  const fetchData = async () => {
+  const onFetchData = async (query, currentPage, recordsPerPage) => {
     try {
-      const response = await endpoint({ query: debouncedValue.trim(), currentPage, recordsPerPage: recordsPerPage });
+      const response = await endpoint({ query, currentPage, recordsPerPage });
 
       if (!response.ok) {
         throw new Error(`Error ${response.status} al consultar los datos.`);
@@ -94,9 +89,10 @@ const ListPatrocinantes = () => {
     }
   };
 
-  const fetchCustomData = () => {
+	useEffect(() => {
+    console.log("currentPage", currentPage, "debouncedValue", debouncedValue);
     setLoading(true);
-    fetchData()
+    onFetchData(debouncedValue.trim(), currentPage, recordsPerPage)
       .then(result => {
         setData(result.data);
         setTotalPages(result.totalPages);
@@ -105,23 +101,7 @@ const ListPatrocinantes = () => {
       .finally(() => {
         setLoading(false);
       });
-  }
-
-	useEffect(() => {
-    console.log("currentPage");
-		fetchCustomData();
-	}, [currentPage]);
-
-  useEffect(() => {
-    if (firstTime.current) {
-      firstTime.current = false;
-      return;
-    }
-    console.log("debounce")
-    setCurrentPage(1);
-    //fetchData();
-    fetchCustomData();
-  }, [debouncedValue])
+	}, [currentPage, debouncedValue]);
 
   const onDeleteRecord = (e, id, descripcion) => {
     e.preventDefault();
@@ -136,8 +116,9 @@ const ListPatrocinantes = () => {
   };
 
   const paginate = ({ forward = false, page = 0 }) => {
-    if (page) {
-      setCurrentPage(page)
+    const p = parseInt(page)
+    if (p > 0) {
+      setCurrentPage(p)
     } else if (forward && (currentPage < totalPages)) {
       setCurrentPage((prev) => prev + 1);
     } else if (!forward && (currentPage > 1)) {
@@ -145,12 +126,16 @@ const ListPatrocinantes = () => {
     }
   }
 
+  const handleChange = (e) => {
+    setCurrentPage(1);
+    setUserInput(e.target.value)
+  }
+
   const handleKeyDown = (e) => {
     if (e.keyCode === 13) {
       setCurrentPage(1)
-      fetchData();
     }
-  }
+  }  
 	
 	return (
     <>
@@ -177,16 +162,11 @@ const ListPatrocinantes = () => {
         {showSearchBar && (
         <div className="row mb-3 justify-content-center">
 					<div className="col-7 col-offset-2">
-						<input id='criterio' type="text" className="form-control border-primary-subtle" placeholder="Nombre, matrícula o casillero" autoComplete='off'
+						<input id='criterio' type="text" className="form-control border-primary-subtle rounded-4" placeholder="Nombre, matrícula o casillero" autoComplete='off'
 							value={userInput}
-							onChange={(e) => setUserInput(e.target.value)}
+							onChange={handleChange}
 							onKeyDown={handleKeyDown}
 							/>
-					</div>
-					<div className="col-1">
-						<button type="button" className="btn btn-primary form-control" onClick={fetchData}>
-							{SEARCH}
-						</button>
 					</div>
 				</div>
         )}
@@ -234,7 +214,7 @@ const ListPatrocinantes = () => {
           Página
           <select onChange={(e) => { paginate({ page: e.target.value })}} className="mx-2 text-center">
             {[...Array(totalPages).keys()].map((i) => (
-              <option key={i + 1} value={i + 1}>
+              <option key={i + 1} value={i + 1} defaultValue={currentPage}>
                 {i + 1}
               </option>
             ))}
