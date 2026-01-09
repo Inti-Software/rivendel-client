@@ -5,6 +5,7 @@ import { useNotification } from "../../../contexts/Constants";
 import useDebounce from "../../../hooks/useDebounce";
 import { GridEditButton, GridDeleteButton } from "../../Grid/GridButtons";
 import { Link } from "react-router-dom";
+import { SEARCH } from "../../../utils/Icons";
 
 const ListPatrocinantes = () => {
 	const [data, setData] = useState([]);
@@ -162,11 +163,16 @@ const ListPatrocinantes = () => {
         {showSearchBar && (
         <div className="row mb-3 justify-content-center">
 					<div className="col-7 col-offset-2">
-						<input id='criterio' type="text" className="form-control border-primary-subtle rounded-4" placeholder="Nombre, matrícula o casillero" autoComplete='off'
-							value={userInput}
-							onChange={handleChange}
-							onKeyDown={handleKeyDown}
-							/>
+            <div className="position-relative">
+              <input id="criterio" type="text" className="form-control border-primary-subtle rounded-4 ps-5"
+                placeholder="Nombre, matrícula o casillero" autoComplete="off" value={userInput}
+                onChange={handleChange} onKeyDown={handleKeyDown}
+              />
+              <span className="position-absolute top-50 start-0 translate-middle-y ms-3 text-muted">
+                {SEARCH}
+              </span>
+            </div>
+
 					</div>
 				</div>
         )}
