@@ -7,6 +7,7 @@ import { GridEditButton, GridDeleteButton } from "../../Grid/GridButtons";
 import { Link } from "react-router-dom";
 import { SEARCH } from "../../../utils/Icons";
 import DeleteDialog from "../../Modals/DeleteDialog";
+import { DATA_COLUMN, BUTTON_COLUMN, EDIT_BUTTON, DELETE_BUTTON } from "../../../utils/constants";
 
 const ListPatrocinantes = () => {
 	const [data, setData] = useState([]);
@@ -61,20 +62,9 @@ const ListPatrocinantes = () => {
     } catch (error) {
       return { error: `Se produjo un error ${error.message} al intentar eliminar el registro.`};
     }
-  };  
-
-  const handleDelete = async () => {
-    const result = await onDeleteRow(onDeleteId);
-    if (result.error) {
-      showError(error.message);
-    } else {
-      setData((prevData) => prevData.filter((doc) => doc.id !== onDeleteId));
-      showSuccess("Se eliminó correctamente el registro.");
-      setDeleteDialog({show: false});
-    }
   };
 
-	const row = (pat) => {
+  const rowGenerator = (pat) => {
     const getMessage = (pat) => (
       <>
         ¿Está seguro de eliminar el siguiente patrocinante?
@@ -87,23 +77,38 @@ const ListPatrocinantes = () => {
       </>
     )
 
-		return {
-			key: pat.id,
-			columns: [
-				pat.nombre,
-				pat.nroMatricula,
-				pat.domicilio,
-				pat.localidad,
-				pat.nroCasillero,
-				<>
-					<GridEditButton path={`/patrocinantes/edit/${pat.id}`} />
-					<GridDeleteButton 
-            path={`/patrocinantes/delete/${pat.id}`}
-            onDelete={(e) => onDeleteRecord(e, pat.id, getMessage(pat))} />
-				</>
-			],
-		};
-	}
+    return {
+      key: pat.id,
+      columns: [
+        {type: DATA_COLUMN, data: pat.nombre },
+        {type: DATA_COLUMN, data: pat.nroMatricula },
+        {type: DATA_COLUMN, data: pat.domicilio },
+        {type: DATA_COLUMN, data: pat.localidad },
+        {type: DATA_COLUMN, data: pat.nroCasillero },
+        {type: BUTTON_COLUMN, 
+          buttons: [
+            { type: EDIT_BUTTON, path: `/patrocinantes/edit/${pat.id}` },
+            { type: DELETE_BUTTON, 
+              path: `/patrocinantes/delete/${pat.id}`,
+              id: pat.id,
+              message: (getMessage(pat))
+            },
+          ]
+        },
+      ],
+    };
+  }
+
+  const handleDelete = async () => {
+    const result = await onDeleteRow(onDeleteId);
+    if (result.error) {
+      showError(error.message);
+    } else {
+      setData((prevData) => prevData.filter((doc) => doc.id !== onDeleteId));
+      showSuccess("Se eliminó correctamente el registro.");
+      setDeleteDialog({show: false});
+    }
+  };	
 
 	useEffect(() => {
     console.log("currentPage", currentPage, "debouncedValue", debouncedValue);
@@ -146,6 +151,40 @@ const ListPatrocinantes = () => {
       setCurrentPage(1);
     }
   }  
+
+  const renderNoHayDatos = (
+    <tr>
+      <td colSpan={headers?.length || 1} className="text-center">
+        <span className="badge text-secondary bg-body-secondary rounded-2 border border-secondary">
+          No hay datos para mostrar.
+        </span>
+      </td>
+    </tr>
+  )
+
+  const getButtonCol = (btn) => {
+    if (btn.type === EDIT_BUTTON) {
+      return (<GridEditButton key={EDIT_BUTTON} path={btn.path} />)
+    } else if (btn.type === DELETE_BUTTON) {
+      return (<GridDeleteButton key={DELETE_BUTTON} path={btn.path} onDelete={(e) => onDeleteRecord(e, btn.id, btn.message)} />)
+    }
+  }
+
+  const getCol = (c, index) => {
+    let content = ""
+    if (c.type == DATA_COLUMN) {
+      content = c.data
+    } else if (c.type == BUTTON_COLUMN) {
+      content = <>{c.buttons.map(getButtonCol)}</>
+    }
+    return (<td key={index}>{content}</td>)
+  }
+
+  const getRow = (d) => {
+    const r = rowGenerator(d);
+    const content = r.columns.map(getCol)
+    return (<tr key={r.key}>{content}</tr>)
+  }
 	
 	return (
     <>
@@ -195,34 +234,12 @@ const ListPatrocinantes = () => {
           </thead>
         )}
         <tbody>
-          {!data || data.length === 0 ? (
-            <tr>
-              <td colSpan={headers?.length || 1} className="text-center">
-                <span className="badge text-secondary bg-body-secondary rounded-2 border border-secondary">
-                  No hay datos para mostrar.
-                </span>
-              </td>
-            </tr>
-          ) : (
-            data.map((doc) => {
-              const r = row(doc);
-              return (
-                <tr key={r.key}>
-                  {r.columns.map((c, i) => (
-                    <td key={i}>{c}</td>
-                  ))}
-                </tr>
-              );
-            })
-          )}
+          {!data || data.length === 0 ? (renderNoHayDatos) : (data.map(getRow))}
         </tbody>
       </table>
       <div className="d-flex justify-content-between align-items-center">
-        <button
-          className="btn btn-primary"
-          onClick={() => paginate({forward: false})}
-          disabled={currentPage === 1 || totalPages === 0}
-        >
+        <button className="btn btn-primary" onClick={() => paginate({forward: false})}
+          disabled={currentPage === 1 || totalPages === 0}>
           Anterior
         </button>
         <span>          
@@ -236,11 +253,8 @@ const ListPatrocinantes = () => {
           </select>
           de {totalPages}
         </span>
-        <button
-          className="btn btn-primary"
-          onClick={() => paginate({forward: true})}
-          disabled={currentPage === totalPages || totalPages === 0}
-        >
+        <button className="btn btn-primary" onClick={() => paginate({forward: true})}
+          disabled={currentPage === totalPages || totalPages === 0}>
           Siguiente
         </button>
       </div>
@@ -252,6 +266,7 @@ const ListPatrocinantes = () => {
 						handleCancel={() => setDeleteDialog(false)}
 					/>
 				}
+
         {debug && (<pre>{JSON.stringify(data, null, " ")}</pre>)}				
       </div>
     </>
