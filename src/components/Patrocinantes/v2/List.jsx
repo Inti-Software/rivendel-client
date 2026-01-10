@@ -6,6 +6,7 @@ import useDebounce from "../../../hooks/useDebounce";
 import { GridEditButton, GridDeleteButton } from "../../Grid/GridButtons";
 import { Link } from "react-router-dom";
 import { SEARCH } from "../../../utils/Icons";
+import DeleteDialog from "../../Modals/DeleteDialog";
 
 const ListPatrocinantes = () => {
 	const [data, setData] = useState([]);
@@ -16,8 +17,7 @@ const ListPatrocinantes = () => {
 	const [userInput, setUserInput] = useState("");
 	const debouncedValue = useDebounce(userInput, 300)
 	const [onDeleteId, setOnDeleteId] = useState(null);
-	const [deleteMessage, setDeleteMessage] = useState("");
-	const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+	const [deleteDialog, setDeleteDialog] = useState({ show: false, message: "" });
 	const { showSuccess, showError } = useNotification();
 
   const endpoint = Patrocinantes.findAll
@@ -32,7 +32,7 @@ const ListPatrocinantes = () => {
       const response = await endpoint({ query, currentPage, recordsPerPage });
 
       if (!response.ok) {
-        throw new Error(`Error ${response.status} al consultar los datos.`);
+        throw new Error(response.status);
       }
 
       const fetchedData = await response.json();
@@ -47,12 +47,46 @@ const ListPatrocinantes = () => {
       return {
         data: null,
         totalPages: 0,
-        error: error.message
+        error: `Error ${error.message} al consultar los datos.`
       }
     } 
   };
 
+  const onDeleteRow = async (id) => {
+    try {
+      const response = await Patrocinantes.delete(id);
+      if (!response.ok) {
+        throw new Error(response.status);
+      }
+    } catch (error) {
+      return { error: `Se produjo un error ${error.message} al intentar eliminar el registro.`};
+    }
+  };  
+
+  const handleDelete = async () => {
+    const result = await onDeleteRow(onDeleteId);
+    if (result.error) {
+      showError(error.message);
+    } else {
+      setData((prevData) => prevData.filter((doc) => doc.id !== onDeleteId));
+      showSuccess("Se eliminó correctamente el registro.");
+      setDeleteDialog({show: false});
+    }
+  };
+
 	const row = (pat) => {
+    const getMessage = (pat) => (
+      <>
+        ¿Está seguro de eliminar el siguiente patrocinante?
+        <span className="fw-bold text-danger text-center d-block">
+          {pat.nroMatricula} - {pat.nombre}
+        </span>
+        <span style={{ fontSize: "10px"}} className="text-secondary-subtle text-center pt-2 d-block">
+          Esta operación no se puede deshacer.
+        </span>
+      </>
+    )
+
 		return {
 			key: pat.id,
 			columns: [
@@ -65,30 +99,11 @@ const ListPatrocinantes = () => {
 					<GridEditButton path={`/patrocinantes/edit/${pat.id}`} />
 					<GridDeleteButton 
             path={`/patrocinantes/delete/${pat.id}`}
-            onDelete={(e) => onDeleteRecord(e, pat.id, `${pat.nroMatricula} - ${pat.nombre}`)} />
+            onDelete={(e) => onDeleteRecord(e, pat.id, getMessage(pat))} />
 				</>
 			],
 		};
 	}
-
-  const handleDelete = async () => {
-    try {
-      const response = await Patrocinantes.delete(onDeleteId);
-      if (!response.ok) {
-        console.log(
-          `HTTP error! status: ${response.status} - ${response.body}`
-        );
-        throw new Error(
-          "Se produjo un error al intentar eliminar el registro."
-        );
-      }
-      setData((prevData) => prevData.filter((doc) => doc.id !== onDeleteId));
-      showSuccess("Se eliminó correctamente el registro.");
-      setShowDeleteDialog(false);
-    } catch (error) {
-      showError(`Error al eliminar: ${error.message}`);
-    }
-  };
 
 	useEffect(() => {
     console.log("currentPage", currentPage, "debouncedValue", debouncedValue);
@@ -104,16 +119,10 @@ const ListPatrocinantes = () => {
       });
 	}, [currentPage, debouncedValue]);
 
-  const onDeleteRecord = (e, id, descripcion) => {
+  const onDeleteRecord = (e, id, msg) => {
     e.preventDefault();
     setOnDeleteId(id);
-    setShowDeleteDialog(true);
-    setDeleteMessage(
-      <>
-        ¿Está seguro de eliminar el patrocinante
-        <span className="fw-bold text-danger ms-1">{descripcion}</span>?
-      </>
-    );
+    setDeleteDialog({show: true, message: msg});
   };
 
   const paginate = ({ forward = false, page = 0 }) => {
@@ -129,12 +138,12 @@ const ListPatrocinantes = () => {
 
   const handleChange = (e) => {
     setCurrentPage(1);
-    setUserInput(e.target.value)
+    setUserInput(e.target.value);
   }
 
   const handleKeyDown = (e) => {
     if (e.keyCode === 13) {
-      setCurrentPage(1)
+      setCurrentPage(1);
     }
   }  
 	
@@ -236,11 +245,11 @@ const ListPatrocinantes = () => {
         </button>
       </div>
 
-				{ showDeleteDialog && 
+				{ deleteDialog.show && 
 					<DeleteDialog
-						deleteMessage={deleteMessage}
+						deleteMessage={deleteDialog.message}
 						handleDelete={handleDelete}
-						handleCancel={() => setShowDeleteDialog(false)}
+						handleCancel={() => setDeleteDialog(false)}
 					/>
 				}
         {debug && (<pre>{JSON.stringify(data, null, " ")}</pre>)}				
