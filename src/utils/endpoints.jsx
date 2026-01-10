@@ -4,9 +4,9 @@ export const Patrocinantes = {
   get: async (id) => {
     return fetch(`http://localhost:3000/patrocinantes/${id}`);
   },
-  findAll: async ({ currentPage, recordsPerPage = RECORDS_PER_PAGE }) =>
+  findAll: async ({ query, currentPage, recordsPerPage = RECORDS_PER_PAGE }) =>
     fetch(
-      `http://localhost:3000/patrocinantes?page=${currentPage}&limit=${recordsPerPage}`
+      `http://localhost:3000/patrocinantes?query=${query}&page=${currentPage}&limit=${recordsPerPage}`
     ),
   create: async ({
     nombre,
