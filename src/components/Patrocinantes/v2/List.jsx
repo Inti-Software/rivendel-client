@@ -26,7 +26,7 @@ const ListPatrocinantes = () => {
 	const headers = ["Nombre", "Matrícula", "Domicilio", "Localidad", "Casillero", ""];	
   const showSearchBar = true
   const debug = false
-
+  const searchPlaceHolder = "Nombre, matrícula o casillero"
 
   const onFetchData = async (query, currentPage, recordsPerPage) => {
     try {
@@ -111,7 +111,6 @@ const ListPatrocinantes = () => {
   };	
 
 	useEffect(() => {
-    console.log("currentPage", currentPage, "debouncedValue", debouncedValue);
     setLoading(true);
     onFetchData(debouncedValue.trim(), currentPage, recordsPerPage)
       .then(result => {
@@ -213,10 +212,10 @@ const ListPatrocinantes = () => {
 					<div className="col-7 col-offset-2">
             <div className="position-relative">
               <input id="criterio" type="text" className="form-control border-primary-subtle rounded-4 ps-5"
-                placeholder="Nombre, matrícula o casillero" autoComplete="off" value={userInput}
+                placeholder={searchPlaceHolder} autoComplete="off" value={userInput}
                 onChange={handleChange} onKeyDown={handleKeyDown}
               />
-              <span className="position-absolute top-50 start-0 translate-middle-y ms-3 text-muted">
+              <span className="position-absolute top-50 start-0 translate-middle-y ms-3 text-muted" id="searchIcon">
                 {SEARCH}
               </span>
             </div>

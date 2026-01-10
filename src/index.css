@@ -15,7 +15,7 @@ body {
 }
 .modal-backdrop-50 {
   --bs-backdrop-zindex: 1050;
-  --bs-backdrop-bg: rgb(0,0,0,0.5);
+  --bs-backdrop-bg: rgb(0, 0, 0, 0.5);
   --bs-backdrop-opacity: 0.1;
   position: fixed;
   top: 0;
@@ -45,4 +45,14 @@ body {
 #agregar-parte:hover {
   background-color: #ccc;
   color: #000 !important;
+}
+
+input[type="text"]#criterio:focus {
+  border-color: #0d6efd !important;
+  outline: none;
+  box-shadow: 0 0 0 1px #0d6efd;
+}
+
+#searchIcon > svg {
+  color: #0d6efd;
 }
