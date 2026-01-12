@@ -8,10 +8,10 @@ import { Link } from "react-router-dom";
 import { SEARCH } from "../../../utils/Icons";
 import DeleteDialog from "../../Modals/DeleteDialog";
 import { DATA_COLUMN, BUTTON_COLUMN, EDIT_BUTTON, DELETE_BUTTON } from "../../../utils/constants";
+import NotificationDisplay from "../../Shared/NotificationDisplay";
 
 const ListPatrocinantes = () => {
 	const [data, setData] = useState([]);
-	const [error, setError] = useState(null);
 	const [currentPage, setCurrentPage] = useState(1);
 	const [totalPages, setTotalPages] = useState(0);
 	const [loading, setLoading] = useState(true);
@@ -54,13 +54,9 @@ const ListPatrocinantes = () => {
   };
 
   const onDeleteRow = async (id) => {
-    try {
-      const response = await Patrocinantes.delete(id);
-      if (!response.ok) {
-        throw new Error(response.status);
-      }
-    } catch (error) {
-      return { error: `Se produjo un error ${error.message} al intentar eliminar el registro.`};
+    const response = await Patrocinantes.delete(id);
+    if (!response.ok) {
+      return { error: `Se produjo un error ${response.status} al intentar eliminar el registro.`};
     }
   };
 
@@ -101,12 +97,12 @@ const ListPatrocinantes = () => {
 
   const handleDelete = async () => {
     const result = await onDeleteRow(onDeleteId);
-    if (result.error) {
-      showError(error.message);
+    setDeleteDialog({show: false});
+    if (result?.error) {
+      showError(result.error);
     } else {
       setData((prevData) => prevData.filter((doc) => doc.id !== onDeleteId));
       showSuccess("Se eliminó correctamente el registro.");
-      setDeleteDialog({show: false});
     }
   };	
 
@@ -116,7 +112,9 @@ const ListPatrocinantes = () => {
       .then(result => {
         setData(result.data);
         setTotalPages(result.totalPages);
-        setError(result.error)
+        if (result.error) {
+          showError(result.error);
+        }
       })
       .finally(() => {
         setLoading(false);
@@ -205,7 +203,7 @@ const ListPatrocinantes = () => {
             </Link>
           </div>
         </div>
-	      {error && (<ErrorMessage message={error} />)}
+        <NotificationDisplay />
 				
         {showSearchBar && (
         <div className="row mb-3 justify-content-center">
