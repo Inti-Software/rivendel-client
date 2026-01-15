@@ -1,21 +1,29 @@
-import { useNotification } from "../../contexts/Constants";
+ import { useNotification } from "../../contexts/Constants";
+import { ToastContainer, Bounce } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const NotificationDisplay = () => {
   const { notification } = useNotification();
 
-	const backgroundColor = notification.type === "danger" ? "text-bg-danger" : "text-bg-information";
-
-	return (
-    <div className="row" style={{ minHeight: "30px" }}>
-			{notification.visible && (
-				<div id="mensaje" className="d-flex justify-content-between align-items-center">
-					<span className={`badge m-auto p-2 fw-normal ${backgroundColor}`}>
-						{notification.message || "No hay mensajes"}
-					</span>				
-			</div>
-			)}
-    </div>
-  );
+	return <>
+					{notification.visible &&	
+						(<ToastContainer
+							position="top-right"
+							autoClose={notification.duration}
+							limit={1}
+							hideProgressBar
+							newestOnTop={false}
+							closeOnClick={false}
+							rtl={false}
+							pauseOnFocusLoss={false}
+							draggable={false}
+							pauseOnHover={true}
+							theme="colored"
+							transition={Bounce}
+						/>)
+					}
+				</>
+  ;
 };
 
 export default NotificationDisplay;

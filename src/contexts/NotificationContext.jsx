@@ -1,30 +1,37 @@
 import { useState } from 'react';
 import { NotificationContext } from './Constants';
+import { toast, Bounce } from 'react-toastify';
 
 export const NotificationProvider = ({ children }) => {
   const [notification, setNotification] = useState({
     message: '',
-    type: '',
     visible: false,
+    duration: 5000,
   });
 
-  const showSuccess = (message, duration = 3000) => {
-    setNotification({ message, type: "information", visible: true });   
-    setTimeout(() => {
-      setNotification(prev => ({ ...prev, visible: false }));
-    }, duration);
+  const setInvisible = () => {
+    setNotification(prev => ({ ...prev, visible: false }));
+  }
+
+  const properties = { 
+    onClose: setInvisible, 
+    style: { 
+      fontSize: "12px",
+      lineHeight: "12px",
+      minHeight: "24px",
+    }
   };
 
-  const showError = (message, duration = 3000) => {
-    setNotification({ message, type: "danger", visible: true });
+  const showSuccess = (message, duration = 5000) => {
+    setNotification({ message, visible: true, duration });
+    toast.success(message, properties);
+  };
 
-    if (duration > 0) {
-      setTimeout(() => {
-        setNotification(prev => ({ ...prev, visible: false }));
-      }, duration);
-    }
-  }
-  
+  const showError = (message, duration = 5000) => {
+    setNotification({ message, visible: true, duration });
+    toast.error(message, properties);
+  };
+ 
   return (
     <NotificationContext.Provider value={{ notification, showSuccess, showError }}>
       {children}
