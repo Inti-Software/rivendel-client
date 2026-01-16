@@ -1,4 +1,3 @@
-import { Patrocinantes } from "../../utils/endpoints";
 import { useState, useEffect } from "react";
 import { useNotification } from "../../contexts/Constants";
 import useDebounce from "../../hooks/useDebounce";
@@ -9,7 +8,9 @@ import DeleteDialog from "../Modals/DeleteDialog";
 import { DATA_COLUMN, BUTTON_COLUMN, EDIT_BUTTON, DELETE_BUTTON } from "../../utils/constants";
 import NotificationDisplay from "./NotificationDisplay";
 
-const CustomList = ({ rowGenerator, recordsPerPage, headers, showSearchBar, searchPlaceHolder, onFetchData, onDeleteRow, debug }) => {
+const CustomList = ({ rowGenerator, recordsPerPage, headers, showSearchBar, searchPlaceHolder, debug }, 
+  { onFetchData, onDeleteRow }) => {
+
 	const [data, setData] = useState([]);
 	const [currentPage, setCurrentPage] = useState(1);
 	const [totalPages, setTotalPages] = useState(0);
