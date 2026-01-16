@@ -36,8 +36,8 @@ const CustomList = ({ rowGenerator, recordsPerPage, headers, showSearchBar, sear
     setLoading(true);
     onFetchData(debouncedValue.trim(), currentPage, recordsPerPage)
       .then(result => {
-        setData(result.data);
-        setTotalPages(result.totalPages);
+        setData(result.data || result);
+        setTotalPages(result.totalPages || 1);
         if (result.error) {
           showError(result.error);
         }
