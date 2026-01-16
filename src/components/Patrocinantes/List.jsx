@@ -2,7 +2,7 @@ import { DATA_COLUMN, BUTTON_COLUMN, EDIT_BUTTON, DELETE_BUTTON } from "../../ut
 import { Patrocinantes } from "../../utils/endpoints.jsx";
 import { fetchEndpointFactory, deleteEndpointFactory } from "../../utils/endpointFactory.jsx";
 import CustomList from "../Shared/CustomList";
-import DeleteMessage from "./DeleteMessage.jsx";
+import DeleteMessage from "../Shared/DeleteMessage.jsx"
 
 export default function List() {
   const recordsPerPage = 50
@@ -25,7 +25,8 @@ export default function List() {
 						{ type: DELETE_BUTTON, 
 							path: `/patrocinantes/delete/${pat.id}`,
 							id: pat.id,
-							message: (<DeleteMessage nroMatricula={pat.nroMatricula} nombre={pat.nombre} />)
+							message: (<DeleteMessage message={"¿Está seguro que desea eliminar este patrocinante?"}
+								fields={pat.nroMatricula + " - " + pat.nombre} />)
 						},
 					]
 				},

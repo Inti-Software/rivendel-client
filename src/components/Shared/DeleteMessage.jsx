@@ -1,9 +1,9 @@
-export default function DeleteMessage(nroMatricula, nombre) {
+export default function DeleteMessage({ message, fields }) {
   return (
     <>
-      ¿Está seguro de eliminar el siguiente patrocinante?
+      {message}
       <span className="fw-bold text-danger text-center d-block">
-        {nroMatricula} - {nombre}
+        {fields}
       </span>
       <span
         style={{ fontSize: "10px" }}
