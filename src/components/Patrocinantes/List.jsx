@@ -1,34 +1,23 @@
-import ErrorMessage from "../Shared/ErrorMessage";
-import Spinner from "../Shared/Spinner";
-import Container from "../Forms/Container";
-import Grid from "./Grid";
-import useFormGrid from "../../hooks/useFormGrid";
-import { Patrocinantes } from "../../utils/endpoints";
-import { RECORDS_PER_PAGE } from "../../utils/constants";
+import CustomList from "../Shared/CustomList";
+import usePatrocinantes from "./hooks/usePatrocinantes";
 
-const ListPatrocinantes = () => {
-  const { loading, data, error, currentPage, totalPages, setData, 
-    setCurrentPage } = useFormGrid(Patrocinantes.findAll, 50)
+export default function List() {
+  const recordsPerPage = 50
+	const headers = ["Nombre", "Matrícula", "Domicilio", "Localidad", "Casillero", ""];	
+  const showSearchBar = true
+  const debug = false
+  const searchPlaceHolder = "Nombre, matrícula o casillero"
+	
+	const { rowGenerator, onFetchData, onDeleteRow } = usePatrocinantes();
 
-  if (loading) {
-    return <Spinner/>
-  }
-
-  return (
-    <Container title={"Patrocinantes"} newPath="/patrocinantes/new">
-      {error ? (
-        <ErrorMessage message={error} />
-      ) : (
-        <Grid
-          data={data}
-          currentPage={currentPage}
-          totalPages={totalPages}
-          setData={setData}
-          setCurrentPage={setCurrentPage}
-        />
-      )}
-    </Container>
-  )
-};
-
-export default ListPatrocinantes;
+	return CustomList({
+		rowGenerator,
+		recordsPerPage,
+		headers,
+		showSearchBar,
+		searchPlaceHolder,
+		onFetchData,
+		onDeleteRow,
+		debug
+	});
+}
