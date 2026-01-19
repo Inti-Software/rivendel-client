@@ -17,9 +17,9 @@ const ListTiposDocumentos = () => {
 				{type: DATA_COLUMN, data: doc.descripcion },
 				{type: BUTTON_COLUMN, 
 					buttons: [
-						{ type: EDIT_BUTTON, path: `/tipos-documento/edit/${doc.id}` },
+						{ type: EDIT_BUTTON, path: `/tipos-documentos/edit/${doc.id}` },
 						{ type: DELETE_BUTTON, 
-							path: `/tipos-documento/delete/${doc.id}`,
+							path: `/tipos-documentos/delete/${doc.id}`,
 							id: doc.id,
 							message: (
                 <DeleteMessage key={1} message={"¿Está seguro que desea eliminar este tipo de documento?"} 
@@ -37,10 +37,12 @@ const ListTiposDocumentos = () => {
 	const onDeleteRow = deleteEndpointFactory(TiposDocumento.delete);
 
 	const properties = {
+    title: "Tipos de Documentos",
 		rowGenerator,
 		recordsPerPage,
 		headers,
-		showSearchBar
+		showSearchBar,
+    pathToNew: "/tipos-documentos/new",
 	}
 
 	const events = {

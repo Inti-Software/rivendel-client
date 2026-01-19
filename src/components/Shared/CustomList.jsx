@@ -8,7 +8,7 @@ import DeleteDialog from "../Modals/DeleteDialog";
 import { DATA_COLUMN, BUTTON_COLUMN, EDIT_BUTTON, DELETE_BUTTON } from "../../utils/constants";
 import NotificationDisplay from "./NotificationDisplay";
 
-const CustomList = ({ rowGenerator, recordsPerPage, headers, showSearchBar, searchPlaceHolder, debug }, 
+const CustomList = ({ title, rowGenerator, recordsPerPage, headers, showSearchBar, searchPlaceHolder, pathToNew, debug }, 
   { onFetchData, onDeleteRow }) => {
 
 	const [data, setData] = useState([]);
@@ -114,7 +114,7 @@ const CustomList = ({ rowGenerator, recordsPerPage, headers, showSearchBar, sear
       <div className="container mt-4">
         <div>
           <div className="col-8 d-inline-block">
-              <h1 className="d-inline">Patrocinantes</h1>
+              <h1 className="d-inline">{title}</h1>
               {loading && (
               <div className="d-inline ms-2 mx-2 text-center">
                 <div className="spinner-border text-bg-success" style={{height: "16px !important", width: "16px !important"}} role="status">
@@ -124,7 +124,7 @@ const CustomList = ({ rowGenerator, recordsPerPage, headers, showSearchBar, sear
               )}
           </div>
           <div className="col-4 d-inline-flex justify-content-end">
-            <Link to="/patrocinantes/new" className="btn btn-outline-primary mb-2">
+            <Link to={pathToNew} className="btn btn-outline-primary mb-2">
               Nuevo
             </Link>
           </div>

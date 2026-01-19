@@ -39,11 +39,13 @@ export default function List() {
 	const onDeleteRow = deleteEndpointFactory(Patrocinantes.delete);
 
 	const properties = {
+		title: "Patrocinantes",
 		rowGenerator,
 		recordsPerPage,
 		headers,
 		showSearchBar,
-		searchPlaceHolder
+		searchPlaceHolder,
+		pathToNew: "/patrocinantes/new",
 	}
 
 	const events = {
