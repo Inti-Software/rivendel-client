@@ -3,6 +3,7 @@ import { Patrocinantes } from "../../utils/endpoints.jsx";
 import { fetchEndpointFactory, deleteEndpointFactory } from "../../utils/endpointFactory.jsx";
 import CustomList from "../Shared/CustomList";
 import DeleteMessage from "../Shared/DeleteMessage.jsx"
+import { useTitle } from "../Shared/hooks/useTitle.js";
 
 export default function List() {
   const recordsPerPage = 50
@@ -53,5 +54,6 @@ export default function List() {
 		onDeleteRow,
 	}
 
+	useTitle("Patrocinantes");
 	return CustomList(properties, events);
 }
