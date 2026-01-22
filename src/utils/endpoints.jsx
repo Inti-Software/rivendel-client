@@ -4,10 +4,15 @@ export const Patrocinantes = {
   get: async (id) => {
     return fetch(`http://localhost:3000/patrocinantes/${id}`);
   },
-  findAll: async ({ query, currentPage, recordsPerPage = RECORDS_PER_PAGE }) =>
-    fetch(
-      `http://localhost:3000/patrocinantes?query=${query}&page=${currentPage}&limit=${recordsPerPage}`
-    ),
+  findAll: async ({ query, currentPage, recordsPerPage }) => {
+    const params = new URLSearchParams();
+    if (query) params.append("query", query);
+    if (currentPage) params.append("page", currentPage);
+    if (recordsPerPage) params.append("limit", recordsPerPage);
+    return fetch(
+      `http://localhost:3000/patrocinantes?${params}`
+    );
+  },
   create: async ({
     nombre,
     nroMatricula,
@@ -51,9 +56,6 @@ export const Patrocinantes = {
     fetch(`http://localhost:3000/patrocinantes/${id}`, {
       method: "DELETE",
     }),
-  search: async (term) => {
-    return fetch(`http://localhost:3000/patrocinantes/search?q=${term}`);
-  },
 };
 
 export const TiposDocumento = {

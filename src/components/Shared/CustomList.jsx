@@ -5,10 +5,10 @@ import { GridEditButton, GridDeleteButton } from "../Grid/GridButtons";
 import { Link } from "react-router-dom";
 import { SEARCH } from "../../utils/Icons";
 import DeleteDialog from "../Modals/DeleteDialog";
-import { DATA_COLUMN, BUTTON_COLUMN, EDIT_BUTTON, DELETE_BUTTON } from "../../utils/constants";
+import { DATA_COLUMN, BUTTON_COLUMN, CUSTOM_COLUMN, EDIT_BUTTON, DELETE_BUTTON } from "../../utils/constants";
 import NotificationDisplay from "./NotificationDisplay";
 
-const CustomList = ({ title, rowGenerator, recordsPerPage, headers, showSearchBar, searchPlaceHolder, pathToNew, debug }, 
+const CustomList = ({ title, rowGenerator: columnBuilder, recordsPerPage, headers, showSearchBar, searchPlaceHolder, pathToNew, debug }, 
   { onFetchData, onDeleteRow }) => {
 
 	const [data, setData] = useState([]);
@@ -30,7 +30,7 @@ const CustomList = ({ title, rowGenerator, recordsPerPage, headers, showSearchBa
       setData((prevData) => prevData.filter((doc) => doc.id !== onDeleteId));
       showSuccess("Se eliminó correctamente el registro.");
     }
-  };	
+  };
 
 	useEffect(() => {
     setLoading(true);
@@ -78,8 +78,8 @@ const CustomList = ({ title, rowGenerator, recordsPerPage, headers, showSearchBa
   const renderNoHayDatos = (
     <tr>
       <td colSpan={headers?.length || 1} className="text-center">
-        <span className="badge text-secondary bg-body-secondary rounded-2 border border-secondary">
-          No hay datos para mostrar.
+        <span className="badge text-black fw-light bg-secondary-subtle rounded-2 border border-secondary">
+          No hay datos para mostrar
         </span>
       </td>
     </tr>
@@ -93,22 +93,48 @@ const CustomList = ({ title, rowGenerator, recordsPerPage, headers, showSearchBa
     }
   }
 
-  const getCol = (c, index) => {
+  const getCol = (column, index) => {
     let content = ""
-    if (c.type == DATA_COLUMN) {
-      content = c.data
-    } else if (c.type == BUTTON_COLUMN) {
-      content = <>{c.buttons.map(getButtonCol)}</>
+    if (column.type == DATA_COLUMN) {
+      content = column.data
+    } else if (column.type == BUTTON_COLUMN) {
+      content = <>{column.buttons.map(getButtonCol)}</>
+    } else if (column.type == CUSTOM_COLUMN) {
+      content = column.content;
     }
     return (<td key={index}>{content}</td>)
   }
 
   const getRow = (d) => {
-    const r = rowGenerator(d);
-    const content = r.columns.map(getCol)
-    return (<tr key={r.key}>{content}</tr>)
+    const colBuilder = columnBuilder(d, onDeleteRecord);
+    const content = colBuilder.columns.map(getCol)
+    return (<tr key={colBuilder.key}>{content}</tr>)
   }
-	
+
+  const pager = (
+    <div className="d-flex justify-content-between align-items-center">
+      <button className="btn btn-primary" onClick={() => paginate({forward: false})}
+        disabled={currentPage === 1 || totalPages === 0}>
+        Anterior
+      </button>
+      <span>          
+        Página
+        <select onChange={(e) => { paginate({ page: e.target.value })}} className="mx-2 text-center">
+          {[...Array(totalPages).keys()].map((i) => (
+            <option key={i + 1} value={i + 1} defaultValue={currentPage}>
+              {i + 1}
+            </option>
+          ))}
+        </select>
+        de {totalPages}
+      </span>
+      <button className="btn btn-primary" onClick={() => paginate({forward: true})}
+        disabled={currentPage === totalPages || totalPages === 0}>
+        Siguiente
+      </button>
+    </div>
+  );
+  
 	return (
     <>
       <div className="container mt-4">
@@ -160,27 +186,7 @@ const CustomList = ({ title, rowGenerator, recordsPerPage, headers, showSearchBa
           {!data || data.length === 0 ? (renderNoHayDatos) : (data.map(getRow))}
         </tbody>
       </table>
-      <div className="d-flex justify-content-between align-items-center">
-        <button className="btn btn-primary" onClick={() => paginate({forward: false})}
-          disabled={currentPage === 1 || totalPages === 0}>
-          Anterior
-        </button>
-        <span>          
-          Página
-          <select onChange={(e) => { paginate({ page: e.target.value })}} className="mx-2 text-center">
-            {[...Array(totalPages).keys()].map((i) => (
-              <option key={i + 1} value={i + 1} defaultValue={currentPage}>
-                {i + 1}
-              </option>
-            ))}
-          </select>
-          de {totalPages}
-        </span>
-        <button className="btn btn-primary" onClick={() => paginate({forward: true})}
-          disabled={currentPage === totalPages || totalPages === 0}>
-          Siguiente
-        </button>
-      </div>
+      {data && data.length > 0 && (pager)}
 
 				{ deleteDialog.show && 
 					<DeleteDialog
