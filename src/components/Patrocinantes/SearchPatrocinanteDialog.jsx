@@ -98,14 +98,14 @@ const SearchPatrocinanteDialog = ({ handleAccept, handleCancel }) => {
 
 		dispatch({ type: "SEARCH_START" })
 		Patrocinantes
-			.search(debouncedValue.trim())
+			.findAll({ query: debouncedValue.trim() })
 			.then(response => {
 				if (!response.ok) {
 					throw new Error(`HTTP error! status: ${response.status}`);
 				}
 				return response.json();
 			})
-			.then(data => { dispatch({ type: "SEARCH_SUCCESS", data: data }) })
+			.then(data => { dispatch({ type: "SEARCH_SUCCESS", data: data.data }) })
 			.catch(error => {
 				console.error("Error al buscar patrocinantes:", error);
 				dispatch({ type: "SEARCH_FAIL", error: "Ocurrió un error al realizar la búsqueda. " + 
