@@ -3,6 +3,7 @@ import { DATA_COLUMN, BUTTON_COLUMN, EDIT_BUTTON, DELETE_BUTTON } from "../../ut
 import { fetchEndpointFactory, deleteEndpointFactory } from "../../utils/endpointFactory.jsx";
 import CustomList from "../Shared/CustomList";
 import DeleteMessage from "../Shared/DeleteMessage.jsx"
+import { useTitle } from "../Shared/hooks/useTitle.js";
 
 const ListTiposDocumentos = () => {
   const recordsPerPage = 50
@@ -50,6 +51,7 @@ const ListTiposDocumentos = () => {
 		onDeleteRow,
 	}
 
+	useTitle("Tipos de documentos");
 	return CustomList(properties, events);
 };
 
