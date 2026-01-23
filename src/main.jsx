@@ -43,9 +43,10 @@ root.render(
             <Route path="/resoluciones" element={<ListResoluciones />} />
             <Route path="/resoluciones/new" element={<ResolucionesForm />} />
             <Route path="/resoluciones/edit/:id" element={<ResolucionesForm />} />
+            
             <Route path="/reclamos" element={<ListReclamos />} />
-            <Route path="/reclamos/form" element={<ReclamosForm />} />
-            <Route path="/reclamos/form/:id" element={<ReclamosForm />} />
+            <Route path="/reclamos/new" element={<ReclamosForm />} />
+            <Route path="/reclamos/edit/:id" element={<ReclamosForm />} />
           </Route>
         </Routes>
       </BrowserRouter>

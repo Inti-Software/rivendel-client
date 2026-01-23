@@ -106,7 +106,7 @@ const CustomList = ({ title, rowGenerator: columnBuilder, recordsPerPage, header
   }
 
   const getRow = (d) => {
-    const colBuilder = columnBuilder(d, onDeleteRecord);
+    const colBuilder = columnBuilder({ data: d, onDelete: onDeleteRecord });
     const content = colBuilder.columns.map(getCol)
     return (<tr key={colBuilder.key}>{content}</tr>)
   }
