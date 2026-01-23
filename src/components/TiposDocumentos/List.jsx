@@ -10,7 +10,7 @@ const ListTiposDocumentos = () => {
 	const headers = ["Sintético", "Descripción", ""];
   const showSearchBar = false
 	
-	const rowGenerator = (doc) => {
+	const rowGenerator = ({ data: doc }) => {
 		return {
 			key: doc.id,
 			columns: [

@@ -7,13 +7,11 @@ import ListCell from "./ListCell.jsx";
 import { useTitle } from "../Shared/hooks/useTitle.js";
 
 const ListPartes = () => {
-  const showSearchBar = false
-
-	const rowGenerator = (parte, onDeleteRecord) => {
+	const rowGenerator = ({ data, onDelete }) => {
 		return {
-			key: parte.id,
+			key: data.id,
 			columns: [
-				{type: CUSTOM_COLUMN, content: ListCell(parte, onDeleteRecord) },
+				{type: CUSTOM_COLUMN, content: ListCell(data, onDelete) },
 			],
 		};
 	}
@@ -26,7 +24,7 @@ const ListPartes = () => {
 		title: "Partes",
 		rowGenerator,
 		recordsPerPage: RECORDS_PER_PAGE,
-		showSearchBar,
+		showSearchBar: false,
 		pathToNew: "/partes/new",
 	}
 

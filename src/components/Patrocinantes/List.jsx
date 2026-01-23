@@ -11,7 +11,7 @@ export default function List() {
   const showSearchBar = true
   const searchPlaceHolder = "Nombre, matrícula o casillero"
 	
-	const rowGenerator = (pat) => {
+	const rowGenerator = ({ data: pat }) => {
 		return {
 			key: pat.id,
 			columns: [
