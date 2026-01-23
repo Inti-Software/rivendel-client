@@ -4,6 +4,7 @@ import { DELETE, EDIT, PRINT } from "../../utils/Icons";
 const GridEditButton = ({path, style, className}) => {
 	return (
 		<Link to={path}
+				title="Editar"
 				className={"btn btn-outline-secondary btn-sm ms-2" + (className ? ` ${className}` : "")}
 				style={style || {}}
 		>
@@ -14,7 +15,9 @@ const GridEditButton = ({path, style, className}) => {
 
 const GridDeleteButton = ({path, style, className, onDelete}) => {
 	return (
-		<a href={path || "/#"} onClick={onDelete}
+		<a href={path || "/#"} 
+			title="Eliminar"
+			onClick={onDelete}
 			className={"btn btn-outline-danger btn-sm ms-2" + (className ? ` ${className}` : "")}
 			style={style || {}}
 			>
@@ -26,6 +29,7 @@ const GridDeleteButton = ({path, style, className, onDelete}) => {
 const GridPrintButton = ({path, style, className, onClick}) => {
 	return (
 		<Link to={path || "#"}
+				title="Imprimir"
 				className={"btn btn-outline-primary btn-sm ms-2" + (className ? ` ${className}` : "")}
 				style={style || {}}
 				onClick={onClick}

@@ -3,7 +3,7 @@ import { useNotification } from "../../contexts/Constants";
 import useDebounce from "../../hooks/useDebounce";
 import { GridEditButton, GridDeleteButton } from "../Grid/GridButtons";
 import { Link } from "react-router-dom";
-import { SEARCH } from "../../utils/Icons";
+import { FILEEARMARKPLUS, SEARCH } from "../../utils/Icons";
 import DeleteDialog from "../Modals/DeleteDialog";
 import { DATA_COLUMN, BUTTON_COLUMN, CUSTOM_COLUMN, EDIT_BUTTON, DELETE_BUTTON } from "../../utils/constants";
 import NotificationDisplay from "./NotificationDisplay";
@@ -154,8 +154,8 @@ const CustomList = ({ title, rowGenerator: columnBuilder, recordsPerPage, header
               )}
           </div>
           <div className="col-4 d-inline-flex justify-content-end">
-            <Link to={pathToNew} className="btn btn-outline-primary mb-2">
-              Nuevo
+            <Link to={pathToNew} className="btn btn-outline-primary mb-2" title="Nuevo">
+              {FILEEARMARKPLUS}
             </Link>
           </div>
         </div>
