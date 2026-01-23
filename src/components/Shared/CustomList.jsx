@@ -41,6 +41,10 @@ const CustomList = ({ title, rowGenerator: columnBuilder, recordsPerPage, header
         if (result.error) {
           showError(result.error);
         }
+        let pager = document.getElementById('selectPager');
+        if (pager) {
+          pager.value = currentPage;
+        }
       })
       .finally(() => {
         setLoading(false);
@@ -119,7 +123,7 @@ const CustomList = ({ title, rowGenerator: columnBuilder, recordsPerPage, header
       </button>
       <span>          
         Página
-        <select onChange={(e) => { paginate({ page: e.target.value })}} className="mx-2 text-center">
+        <select id="selectPager" onChange={(e) => { paginate({ page: e.target.value })}} className="mx-2 text-center">
           {[...Array(totalPages).keys()].map((i) => (
             <option key={i + 1} value={i + 1} defaultValue={currentPage}>
               {i + 1}
