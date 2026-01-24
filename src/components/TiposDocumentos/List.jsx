@@ -1,7 +1,7 @@
 import { TiposDocumento } from "../../utils/endpoints";
 import { DATA_COLUMN, BUTTON_COLUMN, EDIT_BUTTON, DELETE_BUTTON } from "../../utils/constants.jsx";
 import { fetchEndpointFactory, deleteEndpointFactory } from "../../utils/endpointFactory.jsx";
-import Grid from "../Shared/Grid";
+import Grid from "../Grid/Grid";
 import DeleteMessage from "../Shared/DeleteMessage.jsx"
 import { useTitle } from "../Shared/hooks/useTitle.js";
 import Container from "../Shared/Container.jsx";

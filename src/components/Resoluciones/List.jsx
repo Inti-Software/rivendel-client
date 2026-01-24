@@ -2,7 +2,7 @@ import { Resoluciones } from "../../utils/endpoints";
 import { BUTTON_COLUMN, DATA_COLUMN, EDIT_BUTTON, DELETE_BUTTON, RECORDS_PER_PAGE } from "../../utils/constants";
 import { useTitle } from "../Shared/hooks/useTitle";
 import { fetchEndpointFactory, deleteEndpointFactory } from "../../utils/endpointFactory";
-import Grid from "../Shared/Grid";
+import Grid from "../Grid/Grid";
 import DeleteMessage from "../Shared/DeleteMessage.jsx"
 import Container from "../Shared/Container.jsx";
 import NotificationDisplay from "../Shared/NotificationDisplay.jsx";

@@ -1,7 +1,7 @@
 import { Reclamos } from "../../utils/endpoints";
 import { CUSTOM_COLUMN } from "../../utils/constants";
 import { fetchEndpointFactory, deleteEndpointFactory } from "../../utils/endpointFactory.jsx";
-import Grid from "../Shared/Grid";
+import Grid from "../Grid/Grid";
 import ListCell from "./ListCell.jsx";
 import { useTitle } from "../Shared/hooks/useTitle.js";
 import Container from "../Shared/Container.jsx";
