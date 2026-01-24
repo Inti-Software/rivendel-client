@@ -1,14 +1,14 @@
 import { TiposDocumento } from "../../utils/endpoints";
 import { DATA_COLUMN, BUTTON_COLUMN, EDIT_BUTTON, DELETE_BUTTON } from "../../utils/constants.jsx";
 import { fetchEndpointFactory, deleteEndpointFactory } from "../../utils/endpointFactory.jsx";
-import CustomList from "../Shared/CustomList";
+import Grid from "../Shared/Grid";
 import DeleteMessage from "../Shared/DeleteMessage.jsx"
 import { useTitle } from "../Shared/hooks/useTitle.js";
+import Container from "../Shared/Container.jsx";
+import NotificationDisplay from "../Shared/NotificationDisplay.jsx";
 
 const ListTiposDocumentos = () => {
-  const recordsPerPage = 50
 	const headers = ["Sintético", "Descripción", ""];
-  const showSearchBar = false
 	
 	const rowGenerator = ({ data: doc }) => {
 		return {
@@ -37,22 +37,15 @@ const ListTiposDocumentos = () => {
 
 	const onDeleteRow = deleteEndpointFactory(TiposDocumento.delete);
 
-	const properties = {
-    title: "Tipos de Documentos",
-		rowGenerator,
-		recordsPerPage,
-		headers,
-		showSearchBar,
-    pathToNew: "/tipos-documentos/new",
-	}
-
-	const events = {
-		onFetchData,
-		onDeleteRow,
-	}
-
 	useTitle("Tipos de documentos");
-	return CustomList(properties, events);
+
+  return (
+    <Container title="Tipos de documentos" pathToNew="/tipos-documentos/new">
+      <NotificationDisplay />
+      <Grid columnBuilder={rowGenerator} recordsPerPage={50} headers={headers} 
+				onFetchData={onFetchData} onDeleteRow={onDeleteRow} />
+    </Container>
+  );
 };
 
 export default ListTiposDocumentos;

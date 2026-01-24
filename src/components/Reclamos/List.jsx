@@ -1,10 +1,11 @@
 import { Reclamos } from "../../utils/endpoints";
-import { RECORDS_PER_PAGE } from "../../utils/constants";
-import { CUSTOM_COLUMN } from "../../utils/constants.jsx";
+import { CUSTOM_COLUMN } from "../../utils/constants";
 import { fetchEndpointFactory, deleteEndpointFactory } from "../../utils/endpointFactory.jsx";
-import CustomList from "../Shared/CustomList";
+import Grid from "../Shared/Grid";
 import ListCell from "./ListCell.jsx";
 import { useTitle } from "../Shared/hooks/useTitle.js";
+import Container from "../Shared/Container.jsx";
+import NotificationDisplay from "../Shared/NotificationDisplay.jsx";
 
 const ListReclamos = () => {
 	const rowGenerator = ({ data, onDelete }) => {
@@ -20,21 +21,14 @@ const ListReclamos = () => {
 
 	const onDeleteRow = deleteEndpointFactory(Reclamos.delete);
 
-	const properties = {
-		title: "Reclamos",
-		rowGenerator,
-		recordsPerPage: RECORDS_PER_PAGE,
-		showSearchBar: false,
-		pathToNew: "/reclamos/new",
-	}
-
-	const events = {
-		onFetchData,
-		onDeleteRow,
-	}
-
 	useTitle("Reclamos");
-	return CustomList(properties, events);
+
+  return (
+    <Container title="Reclamos" pathToNew="/reclamos/new">
+      <NotificationDisplay />
+      <Grid columnBuilder={rowGenerator} onFetchData={onFetchData} onDeleteRow={onDeleteRow} />
+    </Container>
+  );
 };
 
 export default ListReclamos;

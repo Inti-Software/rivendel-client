@@ -2,8 +2,10 @@ import { Resoluciones } from "../../utils/endpoints";
 import { BUTTON_COLUMN, DATA_COLUMN, EDIT_BUTTON, DELETE_BUTTON, RECORDS_PER_PAGE } from "../../utils/constants";
 import { useTitle } from "../Shared/hooks/useTitle";
 import { fetchEndpointFactory, deleteEndpointFactory } from "../../utils/endpointFactory";
-import CustomList from "../Shared/CustomList";
+import Grid from "../Shared/Grid";
 import DeleteMessage from "../Shared/DeleteMessage.jsx"
+import Container from "../Shared/Container.jsx";
+import NotificationDisplay from "../Shared/NotificationDisplay.jsx";
 
 const ListResoluciones = () => {
 	const getDeleteMessage = (r) =>
@@ -28,21 +30,14 @@ const ListResoluciones = () => {
 
 	const onDeleteRow = deleteEndpointFactory(Resoluciones.delete);
 
-	const properties = {
-		title: "Resoluciones",
-		rowGenerator,
-		recordsPerPage: RECORDS_PER_PAGE,
-		showSearchBar: false,
-		pathToNew: "/resoluciones/new",
-	}
-
-	const events = {
-		onFetchData,
-		onDeleteRow,
-	}
-
 	useTitle("Resoluciones");
-	return CustomList(properties, events);
+
+  return (
+    <Container title="Resoluciones" pathToNew="/resoluciones/new">
+      <NotificationDisplay />
+      <Grid columnBuilder={rowGenerator} onFetchData={onFetchData} onDeleteRow={onDeleteRow} />
+    </Container>
+  );
 };
 
 export default ListResoluciones;

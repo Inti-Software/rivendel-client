@@ -1,14 +1,14 @@
 import { DATA_COLUMN, BUTTON_COLUMN, EDIT_BUTTON, DELETE_BUTTON } from "../../utils/constants.jsx";
 import { Patrocinantes } from "../../utils/endpoints.jsx";
 import { fetchEndpointFactory, deleteEndpointFactory } from "../../utils/endpointFactory.jsx";
-import CustomList from "../Shared/CustomList";
+import Grid from "../Shared/Grid";
 import DeleteMessage from "../Shared/DeleteMessage.jsx"
 import { useTitle } from "../Shared/hooks/useTitle.js";
+import Container from "../Shared/Container.jsx";
+import NotificationDisplay from "../Shared/NotificationDisplay.jsx";
 
 export default function List() {
-  const recordsPerPage = 50
 	const headers = ["Nombre", "Matrícula", "Domicilio", "Localidad", "Casillero", ""];	
-  const showSearchBar = true
   const searchPlaceHolder = "Nombre, matrícula o casillero"
 	
 	const rowGenerator = ({ data: pat }) => {
@@ -39,21 +39,14 @@ export default function List() {
 
 	const onDeleteRow = deleteEndpointFactory(Patrocinantes.delete);
 
-	const properties = {
-		title: "Patrocinantes",
-		rowGenerator,
-		recordsPerPage,
-		headers,
-		showSearchBar,
-		searchPlaceHolder,
-		pathToNew: "/patrocinantes/new",
-	}
-
-	const events = {
-		onFetchData,
-		onDeleteRow,
-	}
-
 	useTitle("Patrocinantes");
-	return CustomList(properties, events);
+
+	return (
+		<Container title="Patrocinantes" pathToNew="/patrocinantes/new">
+			<NotificationDisplay />
+			<Grid columnBuilder={rowGenerator} recordsPerPage={50} headers={headers} 
+				showSearchBar={true} searchPlaceHolder={searchPlaceHolder} onFetchData={onFetchData} 
+				onDeleteRow={onDeleteRow} />
+		</Container>
+  );
 }

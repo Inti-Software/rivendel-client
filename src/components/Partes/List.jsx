@@ -1,10 +1,11 @@
 import { Partes } from "../../utils/endpoints";
-import { RECORDS_PER_PAGE } from "../../utils/constants";
-import { CUSTOM_COLUMN } from "../../utils/constants.jsx";
+import { RECORDS_PER_PAGE, CUSTOM_COLUMN } from "../../utils/constants";
 import { fetchEndpointFactory, deleteEndpointFactory } from "../../utils/endpointFactory.jsx";
-import CustomList from "../Shared/CustomList";
+import Grid from "../Shared/Grid";
 import ListCell from "./ListCell.jsx";
 import { useTitle } from "../Shared/hooks/useTitle.js";
+import Container from "../Shared/Container.jsx";
+import NotificationDisplay from "../Shared/NotificationDisplay.jsx";
 
 const ListPartes = () => {
 	const rowGenerator = ({ data, onDelete }) => {
@@ -20,21 +21,14 @@ const ListPartes = () => {
 
 	const onDeleteRow = deleteEndpointFactory(Partes.delete);
 
-	const properties = {
-		title: "Partes",
-		rowGenerator,
-		recordsPerPage: RECORDS_PER_PAGE,
-		showSearchBar: false,
-		pathToNew: "/partes/new",
-	}
-
-	const events = {
-		onFetchData,
-		onDeleteRow,
-	}
-
 	useTitle("Partes");
-	return CustomList(properties, events);
+
+  return (
+    <Container title="Partes" pathToNew="/partes/new">
+      <NotificationDisplay />
+      <Grid columnBuilder={rowGenerator} onFetchData={onFetchData} onDeleteRow={onDeleteRow} />
+    </Container>
+  );
 };
 
 export default ListPartes;

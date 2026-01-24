@@ -2,14 +2,12 @@ import { useState, useEffect } from "react";
 import { useNotification } from "../../contexts/Constants";
 import useDebounce from "../../hooks/useDebounce";
 import { GridEditButton, GridDeleteButton } from "../Grid/GridButtons";
-import { Link } from "react-router-dom";
-import { FILEEARMARKPLUS, SEARCH } from "../../utils/Icons";
+import { SEARCH } from "../../utils/Icons";
 import DeleteDialog from "../Modals/DeleteDialog";
-import { DATA_COLUMN, BUTTON_COLUMN, CUSTOM_COLUMN, EDIT_BUTTON, DELETE_BUTTON } from "../../utils/constants";
-import NotificationDisplay from "./NotificationDisplay";
+import { DATA_COLUMN, BUTTON_COLUMN, CUSTOM_COLUMN, EDIT_BUTTON, DELETE_BUTTON, RECORDS_PER_PAGE } from "../../utils/constants";
 
-const CustomList = ({ title, rowGenerator: columnBuilder, recordsPerPage, headers, showSearchBar, searchPlaceHolder, pathToNew, debug }, 
-  { onFetchData, onDeleteRow }) => {
+const Grid = ({ columnBuilder, recordsPerPage = RECORDS_PER_PAGE, headers = [], 
+  showSearchBar = false, searchPlaceHolder, onFetchData, onDeleteRow, debug = false }) => {
 
 	const [data, setData] = useState([]);
 	const [currentPage, setCurrentPage] = useState(1);
@@ -141,69 +139,59 @@ const CustomList = ({ title, rowGenerator: columnBuilder, recordsPerPage, header
   
 	return (
     <>
-      <div className="container mt-4">
-        <div>
-          <div className="col-8 d-inline-block">
-              <h1 className="d-inline">{title}</h1>
-              {loading && (
-              <div className="d-inline ms-2 mx-2 text-center">
+      {showSearchBar && (
+      <div className="row mb-3 justify-content-center">
+        <div className="col-7 col-offset-2">
+          <div className="position-relative">
+            <input id="criterio" type="text" className="form-control border-primary-subtle rounded-4 ps-5"
+              placeholder={searchPlaceHolder} autoComplete="off" value={userInput}
+              onChange={handleChange} onKeyDown={handleKeyDown}
+            />
+            <span className="position-absolute top-50 start-0 translate-middle-y ms-3 text-muted" id="searchIcon">
+              {SEARCH}
+            </span>
+          </div>
+
+        </div>
+      </div>
+      )}
+      
+      <table className="table table-striped table-hover">
+      { headers && (
+        <thead>
+          <tr>
+            {headers.map((h, i) => (<th key={i}>{h}</th>))}
+          </tr>
+        </thead>
+      ) }
+        <tbody>
+          {(!loading && (!data || data.length === 0)) ? (renderNoHayDatos) : (data.map(getRow))}
+          {loading && (
+          <>
+            <tr>
+              <td colSpan={headers?.length || 1} className="text-center">
                 <div className="spinner-border text-bg-success" style={{height: "16px !important", width: "16px !important"}} role="status">
                   <span className="visually-hidden">Cargando...</span>
                 </div>
-              </div>
-              )}
-          </div>
-          <div className="col-4 d-inline-flex justify-content-end">
-            <Link to={pathToNew} className="btn btn-outline-primary mb-2" title="Nuevo">
-              {FILEEARMARKPLUS}
-            </Link>
-          </div>
-        </div>
-        <NotificationDisplay />
-				
-        {showSearchBar && (
-        <div className="row mb-3 justify-content-center">
-					<div className="col-7 col-offset-2">
-            <div className="position-relative">
-              <input id="criterio" type="text" className="form-control border-primary-subtle rounded-4 ps-5"
-                placeholder={searchPlaceHolder} autoComplete="off" value={userInput}
-                onChange={handleChange} onKeyDown={handleKeyDown}
-              />
-              <span className="position-absolute top-50 start-0 translate-middle-y ms-3 text-muted" id="searchIcon">
-                {SEARCH}
-              </span>
-            </div>
-
-					</div>
-				</div>
-        )}
-				
-				<table className="table table-striped table-hover">
-        {headers && (
-          <thead>
-            <tr>
-              {headers.map((h, i) => (<th key={i}>{h}</th>))}
+              </td>
             </tr>
-          </thead>
-        )}
-        <tbody>
-          {!data || data.length === 0 ? (renderNoHayDatos) : (data.map(getRow))}
+          </>
+          )}
         </tbody>
       </table>
       {data && data.length > 0 && (pager)}
 
-				{ deleteDialog.show && 
-					<DeleteDialog
-						deleteMessage={deleteDialog.message}
-						handleDelete={handleDelete}
-						handleCancel={() => setDeleteDialog(false)}
-					/>
-				}
+      { deleteDialog.show && 
+        <DeleteDialog
+          deleteMessage={deleteDialog.message}
+          handleDelete={handleDelete}
+          handleCancel={() => setDeleteDialog(false)}
+        />
+      }
 
-        {debug && (<pre>{JSON.stringify(data, null, " ")}</pre>)}				
-      </div>
+      {debug && (<pre>{JSON.stringify(data, null, " ")}</pre>)}
     </>
   )
 };
 
-export default CustomList;
+export default Grid;
