@@ -307,12 +307,12 @@ export default function Form() {
 						<input 	type="checkbox" 
 										defaultChecked={hasValue}
 										onChange={(e) => habilitarWhatsapp(e)} 
-						/> Audiencia online
+						/> &nbsp;{esPatrocinante ? "Patrocinio " : "Comparecencia "} Online
 				</label>
 				<input 	type="number" 
 								className="form-control-inline form-control-sm mt-1 mb-1 border-0" 
 								disabled={disabled}
-								placeholder="Número de Whatsapp" 
+								placeholder={"Whatsapp " + (esPatrocinante ? "Patrocinante" : "Parte") }
 								style={style}
 								value={nroWhatsapp || undefined}
 								onChange={e => actualizarNroWhatsapp(e.target.value, parte.id, !esPatrocinante, esReclamante)} />
@@ -350,39 +350,45 @@ export default function Form() {
 											</div>
 											<div>
 												<span className="text-secondary d-flex border-bottom border-secondary-subtle">Patrocinante</span>
-												<div className="row">
 													{(p.patrocinante == null) ? (
-													<div className="col-12 d-flex p-2">
-														<span className="border rounded border-warning bg-warning-subtle m-auto p-1" 
-															style={{"fontSize": "0.75em"}}>No hay datos para mostrar.</span>
-														<button type="button" className="btn btn-sm btn-outline-danger"
-															onClick={() => removeParte(p.id, esReclamante)}>{DELETE}
-														</button>
+													<div className="row py-1">
+														<div className="col-11 text-center">
+															<span className="border rounded border-warning bg-warning-subtle m-auto p-1" 
+																style={{"fontSize": "0.75em"}}>No hay datos para mostrar.</span>
+														</div>
+														<div className="col-1 d-flex justify-content-end align-items-end">
+															<button className="btn btn-sm btn-outline-danger" title="Eliminar"
+																onClick={() => removeParte(p.id, esReclamante)}>
+																	{DELETE}
+															</button>
+														</div>
 													</div>
 													):(
 													<>
-														<div className="col-2">
-															<span className="fw-bold">Nº Matr.: </span> {p.patrocinante?.nroMatricula}
+														<div className="row">
+															<div className="col-2">
+																<span className="fw-bold">Nº Matr.: </span> {p.patrocinante?.nroMatricula}
+															</div>
+															<div className="col-4">
+																<span className="fw-bold">Nombre: </span>{p.patrocinante?.nombre}
+															</div>
+															<div className="col-6">
+																<span className="fw-bold">Domicilio: </span> 
+																{getDomicilio(p.patrocinante)}
+															</div>
 														</div>
-														<div className="col-4">
-															<span className="fw-bold">Nombre: </span>{p.patrocinante?.nombre}
-														</div>
-														<div className="col-6">
-															<span className="fw-bold">Domicilio: </span> 
-															{getDomicilio(p.patrocinante)}
+														<div className="row pt-2">
+															{inputNroWhatsapp(p, false, esReclamante)}
+															{inputNroWhatsapp(p, true, esReclamante)}
+															<div className="col-1 d-flex justify-content-end align-items-end">
+																<button className="btn btn-sm btn-outline-danger mb-1" title="Eliminar Parte"
+																	onClick={() => removeParte(p.id, esReclamante)}>
+																		{DELETE}
+																</button>
+															</div>
 														</div>
 													</>
 													)}
-												</div>
-												<div className="row">
-													{inputNroWhatsapp(p, false, esReclamante)}
-													{inputNroWhatsapp(p, true, esReclamante)}
-													<div className="col-1 d-flex justify-content-end align-items-end">
-														<button type="button" className="btn btn-sm btn-outline-danger mb-1"
-															onClick={() => removeParte(p.id, esReclamante)}>{DELETE}
-														</button>
-													</div>
-												</div>
 											</div>
 										</div>
 									</td>
@@ -446,7 +452,7 @@ export default function Form() {
 					<Link to="/reclamos" className="btn btn-outline-primary">Cancelar</Link>
 			</div>
 
-    <pre>{JSON.stringify(state, null, 2)}</pre>
+    {/* <pre>{JSON.stringify(state, null, 2)}</pre> */}
     </form>
 
   );
