@@ -120,13 +120,15 @@ export default function Form() {
 					const data = await response.json();
 					const fechaHoraInicio = dayjs(data.fechaHoraInicio, "DD/MM/YYYY HH:mm", true).isValid()? 
 						dayjs(data.fechaHoraInicio, "DD/MM/YYYY HH:mm").format("YYYY-MM-DDTHH:mm") : "";
+					const horafin = data.horaFin == null ? "" : dayjs(data.horaFin, "HH:mm", true).isValid() ?
+						dayjs(data.horaFin, "HH:mm").format("HH:mm") : ""; 
 					dispatch({ type: "INITIAL_LOAD", payload: {
 						id: data.id,
 						numero: data.numero,
 						rubros: data.rubros,
 						idResolucion: isNaN(data.idResolucion)? 0 : parseInt(data.idResolucion),
 						fechaHoraInicio: fechaHoraInicio,
-						horaFin: data.horaFin == null ? "" : data.horaFin,
+						horaFin: horafin,
 						reclamantes: data.reclamantes,
 						reclamados: data.reclamados
 					}});
