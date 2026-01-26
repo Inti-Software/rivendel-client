@@ -55,15 +55,21 @@ export default function ListCell(p, onDeleteRecord) {
 					<span>{p.localidad}</span>
 				</div>
 			</div>
-			<div className="row mb-2 border-bottom border-primary-subtle mt-3">
-				<div className="col">
-					<span className="text-info-emphasis">Patrocinante</span><br/>
-				</div>
-			</div>
+			<h6 className="d-flex w-100 border-bottom border-primary-subtle mt-3">
+					<span className="text-info-emphasis">
+						Patrocinante 
+					</span>
+					<span className="badge text-bg-secondary ms-2 mb-1" style={{ fontSize: "0.5em" }}>
+						{p.esApoderado? "Apoderado": ""}
+					</span>
+			</h6>
 			<div className="row mb-2">
 				{(p.patrocinante == null) ? (
 				<div className="col">
-					<span className="d-flex justify-content-center m-auto bg-warning-subtle border rounded border-warning" style={{"fontSize": "0.75em", width: "125px"}}>- Sin patrocinante -</span>
+					<span className="d-flex justify-content-center m-auto bg-warning-subtle border rounded border-warning" 
+						style={{"fontSize": "0.75em", width: "125px"}}>
+							- Sin patrocinante -
+					</span>
 				</div>
 				):(
 				<>

@@ -104,6 +104,7 @@ export const Partes = {
     cuil,
     domicilio,
     idPatrocinante,
+    esApoderado,
     localidad,
   }) => {
     return fetch(`http://localhost:3000/partes`, {
@@ -116,6 +117,7 @@ export const Partes = {
         cuil,
         domicilio,
         idPatrocinante,
+        esApoderado,
         localidad,
       }),
     });
@@ -128,6 +130,7 @@ export const Partes = {
     cuil,
     domicilio,
     idPatrocinante,
+    esApoderado,
     localidad,
   }) => {
     return fetch(`http://localhost:3000/partes/${id}`, {
@@ -140,6 +143,7 @@ export const Partes = {
         cuil,
         domicilio,
         idPatrocinante,
+        esApoderado,
         localidad,
       }),
     });

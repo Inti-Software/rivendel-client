@@ -18,6 +18,7 @@ const initialState = {
 		nroMatricula: 0,
 		nombre: ""
 	},
+	esApoderado: false,
   localidad: "",
   domicilio: "",
   initializing: true,
@@ -126,17 +127,16 @@ export default function Form() {
 							nombre: data.patrocinante?.nombre || "",
 							nroMatricula: data.patrocinante?.nroMatricula || 0
 						},
+						esApoderado: data.esApoderado,
 						localidad: data.localidad,
 						domicilio: data.domicilio,
 					}});
-				} else {					
-					console.error(await response.json());
+				} else {
 					dispatch({ type: "INITIAL_LOAD", payload: {} });
 				}
 			};
 			fetchData();
-		} catch (err) {
-			console.error(err);
+		} catch {
 			dispatch({ type: "INITIAL_LOAD", payload: {} });
 		}
 	}, [id]);
@@ -175,6 +175,7 @@ export default function Form() {
 				domicilio: state.domicilio,
 				localidad: state.localidad,
 				idPatrocinante: state.patrocinante.id,
+				esApoderado: state.esApoderado
 			};
 
 			let result;
@@ -207,7 +208,11 @@ export default function Form() {
   }
   
 	const setField = (e) => {
-		dispatch({ type: "SET_FIELD", field: e.target.id, value: e.target.value})
+		if (e.target.type === "checkbox") {
+			dispatch({ type: "SET_FIELD", field: e.target.id, value: e.target.checked })
+		} else {
+			dispatch({ type: "SET_FIELD", field: e.target.id, value: e.target.value})
+		}
 	}
 
 	const getPatrocinante = (p) => {
@@ -260,24 +265,35 @@ export default function Form() {
 				<div className="mb-3">
 					<label htmlFor="patrocinante" className="form-label">Patrocinante</label>
 					<div className="row g-3">
-						<div className="col-10">
+						<div className="col-11">
 							<input id="patrocinante" className="form-control bg-dark-subtle" 
 								value={getPatrocinante(state.patrocinante)}
 								readOnly={true} tabIndex={-1}/>
 						</div>
-						<div className="col-2">
+						<div className="col-1">
 							<button type="button" className="btn btn-outline-primary me-2" onClick={() => showSearchPatrocinante(true)} >
 								{SEARCH}
 							</button>							
 						</div>
 					</div>
+					<div className="d-flex mt-1">
+						<label className="me-2">
+								<input 	id="esApoderado"
+												type="checkbox" 
+												checked={state.esApoderado}
+												onChange={setField}
+								/> Es apoderado
+						</label>
+					</div>
 				</div>
 				<div className="mb-3 d-flex justify-content-end border-top pt-2 border-primary-subtle">
 						<button disabled={state.loading || state.searchPatrocinante} type="submit" className="btn btn-primary me-2">{state.loading? "Grabando...":"Grabar"}</button>
-						<Link to="/resoluciones" className="btn btn-outline-primary">Cancelar</Link>
+						<Link to="/partes" className="btn btn-outline-primary">Cancelar</Link>
 				</div>
 
 			</form>
-	</div>				
+
+			<pre>{JSON.stringify(state, null, " ")}</pre>
+	</div>
 	);
 }
