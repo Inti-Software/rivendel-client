@@ -13,6 +13,7 @@ const initialState = {
   idTipoDocumento: 0,
   nroDocumento: "",
   cuil: "",
+	enableCuil: true,
 	patrocinante: {
 		id: 0,
 		nroMatricula: 0,
@@ -31,6 +32,14 @@ const initialState = {
 function formReducer(state, action) {
   switch (action.type) {
     case "SET_FIELD":
+			if (action.field === "enableCuil" && !action.value) {
+				return {
+					...state,
+					enableCuil: false,
+					cuil: "0",
+					errors: []
+				};
+			}
       return {
         ...state,
         [action.field]: action.value,
@@ -121,6 +130,7 @@ export default function Form() {
 						nombre: data.nombre,
 						idTipoDocumento: data.idTipoDocumento,
 						nroDocumento: data.nroDocumento,
+						enableCuil: data.cuil != "0",
 						cuil: data.cuil,
 						patrocinante: {
 							id: data.patrocinante?.id || 0,
@@ -150,7 +160,8 @@ export default function Form() {
 		const errors = [];
 		if (state.nombre.trim() === "") errors.push("Ingrese un nombre.");
 		if (!esEnteroValido(state.nroDocumento)) errors.push("Ingrese un número de documento válido.")
-		if (!esEnteroValido(state.cuil)) errors.push("Ingrese un cuil válido (sin espacios ni guiones).")
+		if (state.enableCuil && (!esEnteroValido(state.cuil) || (state.cuil == "0")))
+			errors.push("Ingrese un cuil válido (sin espacios ni guiones).")
 		return errors;
 	};
 
@@ -211,7 +222,11 @@ export default function Form() {
 		if (e.target.type === "checkbox") {
 			dispatch({ type: "SET_FIELD", field: e.target.id, value: e.target.checked })
 		} else {
-			dispatch({ type: "SET_FIELD", field: e.target.id, value: e.target.value})
+			let v = e.target.value;
+			if (e.target.id === "cuil") {
+				v = e.target.value.replace(/\D/g, '');
+			}
+			dispatch({ type: "SET_FIELD", field: e.target.id, value: v })
 		}
 	}
 
@@ -221,6 +236,18 @@ export default function Form() {
 		}
 
 		return ""
+	}
+
+	function formatCuil(value) {
+		if (!value) return " -        - ";
+		const v = value.replace(/\D/g, '');
+		if (v.length <= 2) return v;
+		if (v.length < 10) return `${v.slice(0,2)}-${v.slice(2,10)}`;
+		return `${v.slice(0,2)}-${v.slice(2,10)}-${v.slice(10,11)}`;
+	}
+
+	function handleChangeLabelCuil() {
+		dispatch({ type: "SET_FIELD", field: "enableCuil", value: !state.enableCuil })
 	}
 
 	return (
@@ -238,7 +265,7 @@ export default function Form() {
 					<input id="nombre" className="form-control" type="text" value={state.nombre} onChange={setField} required />
 				</div>
 				<div className="mb-3">
-						<label htmlFor="nroDocumento" className="form-label">Documento</label>
+					<label htmlFor="nroDocumento" className="form-label">Documento</label>
 					<div className="row g-3">
 						<div className="col">
 							<DataBindedSelect id={"idTipoDocumento"} data={tiposDocumento} selectedValue={state.idTipoDocumento} 
@@ -250,9 +277,13 @@ export default function Form() {
 					</div>
 				</div>
 				<div className="mb-3">
-					<label htmlFor="cuil" className="form-label">CUIL</label>
-					<input id="cuil" className="form-control" value={state.cuil} onChange={setField} />
-					<span className="form-text d-block text-end">0 si es el mismo que el documento</span>
+					<label htmlFor="cuil" className="form-label" onClick={handleChangeLabelCuil}>
+							<input id="enableCuil" type="checkbox" checked={state.enableCuil} onChange={() => {}} /> CUIL
+					</label>
+					<input id="cuil" className="form-control" placeholder="  -        - "
+						value={formatCuil(state.cuil)} onChange={setField} disabled={!state.enableCuil} 
+						style={{ backgroundColor: state.enableCuil? "#fff" : "#aaa" }}
+						/>
 				</div>
 				<div className="mb-3">
 					<label htmlFor="domicilio" className="form-label">Domicilio</label>
@@ -278,22 +309,18 @@ export default function Form() {
 					</div>
 					<div className="d-flex mt-1">
 						<label className="me-2">
-								<input 	id="esApoderado"
-												type="checkbox" 
-												checked={state.esApoderado}
-												onChange={setField}
-								/> Es apoderado
+								<input id="esApoderado" type="checkbox" checked={state.esApoderado} onChange={setField} /> Es apoderado
 						</label>
 					</div>
 				</div>
 				<div className="mb-3 d-flex justify-content-end border-top pt-2 border-primary-subtle">
-						<button disabled={state.loading || state.searchPatrocinante} type="submit" className="btn btn-primary me-2">{state.loading? "Grabando...":"Grabar"}</button>
+						<button disabled={state.loading || state.searchPatrocinante} type="submit" className="btn btn-primary me-2">
+							{state.loading? "Grabando...":"Grabar"}
+						</button>
 						<Link to="/partes" className="btn btn-outline-primary">Cancelar</Link>
 				</div>
 
 			</form>
-
-			<pre>{JSON.stringify(state, null, " ")}</pre>
 	</div>
 	);
 }
