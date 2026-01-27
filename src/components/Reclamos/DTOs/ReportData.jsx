@@ -113,7 +113,8 @@ function getPartes(partes) {
 			localidad: localidad,
 			nroWhatsappParte: nroWhatsappParte,
 			nroWhatsappPatrocinante: nroWhatsappPatrocinante,
-			patrocinante: patrocinante
+			patrocinante: patrocinante,
+			esApoderado: partes[i].esApoderado
 		}
 		result.push(parte)
 	}
@@ -130,6 +131,6 @@ export default function ReportData(data) {
 		reclamados: getPartes(data.reclamados),
 	}
 
-	console.log("reportData", result)
+	console.log("reportData", JSON.stringify(result, null, " "))
 	return result
 }

@@ -97,11 +97,11 @@ const getParte = (partes) => {
 		const patrocinante = parte.patrocinante || {};
 	
 		s += ((s === "")? " " : ", ") + 
-					`${nombre} ${sintetico} ${nroDocumento}, CUIL ${cuil},` + 
-					` con domicilio en ${domicilio}`;
-		// if (domicilio && domicilio.trim() !== "") {
-		// 	s += `con domicilio en ${domicilio}`
-		// }
+					`${nombre} ${sintetico} ${nroDocumento}`
+		if (parte.cuil !== "0") {
+			s += `, CUIL ${cuil}`
+		}
+		s += `, con domicilio en ${domicilio}`;
 		if (localidad && localidad.trim() !== "") {
 			s += `, de la localidad ${localidad}`;
 		}
@@ -111,7 +111,11 @@ const getParte = (partes) => {
 		}
 	
 		if (Object.keys(patrocinante || {}).length > 0) {
-			s += `, con el patrocinio letrado del Dr. ${patrocinante.nombre} MP Nº ${patrocinante.nroMatricula},`
+			if (parte.esApoderado) {
+				s += `, representado por su apoderado el Dr. ${patrocinante.nombre} MP Nº ${patrocinante.nroMatricula},`
+			} else {
+				s += `, con el patrocinio letrado del Dr. ${patrocinante.nombre} MP Nº ${patrocinante.nroMatricula},`
+			}
 			if (patrocinante.domicilio !== NO_ESPECIFICADO) {
 				s += ` ratificando domicilio en ${patrocinante.domicilio}`;
 			}
@@ -121,7 +125,7 @@ const getParte = (partes) => {
 			if (patrocinante.nroCasillero !== NO_ESPECIFICADO) {
 				s += `, casillero Nº ${patrocinante.nroCasillero}`;
 			}
-			if (patrocinante.nroWhatsappPatrocinante) {
+			if (parte.nroWhatsappPatrocinante) {
 				s += `, quien comparece virtualmente por videollamada de Whatsapp desde el número ${parte.nroWhatsappPatrocinante}`;
 			}
 		}		
@@ -170,9 +174,8 @@ const Acta = ({ data = ReportData }) => (
 							funciones conferidas por la ley 7.330 y el decreto reglamentario 2.230/22. En el Marco del trámite de referencia,
 							comparecen por una parte {getParte(data?.reclamantes)} y por la otra parte reclamada/empleadora {getParte(data?.reclamados)}.
 
-							- Y ABIERTO EL ACTO: {data?.resolucion}
-							Siendo las {data?.horaFin} horas, se da por finalizado el acto de conciliación, previa lectura, firmando los 
-							comparecientes al pie de la presente, ante mí conciliadora autorizante.
+							- Y ABIERTO EL ACTO: {data?.resolucion} Siendo las {data?.horaFin} horas, se da por finalizado el 
+							acto de conciliación, previa lectura, firmando los comparecientes al pie de la presente, ante mí conciliadora autorizante.
 						</Text>
 					</View>
 
