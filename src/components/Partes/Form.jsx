@@ -1,4 +1,4 @@
-import { useReducer, useEffect, useState } from "react";
+import { useReducer, useEffect, useState, useRef } from "react";
 import { useNavigate, Link, useParams } from "react-router-dom";
 import ValidationErrors from "../Shared/ValidationErrors";
 import { useNotification } from "../../contexts/Constants";
@@ -36,7 +36,7 @@ function formReducer(state, action) {
 				return {
 					...state,
 					enableCuil: false,
-					cuil: "0",
+					cuil: "",
 					errors: []
 				};
 			}
@@ -98,6 +98,7 @@ export default function Form() {
 	const { id } = useParams();
 	const { showSuccess } = useNotification();
 	const [tiposDocumento, setTiposDocumento] = useState([]);
+	const cuilInputRef = useRef(null);
 
   useEffect(() => {
 		const fetchTiposDocumento = async () => {
@@ -130,7 +131,7 @@ export default function Form() {
 						nombre: data.nombre,
 						idTipoDocumento: data.idTipoDocumento,
 						nroDocumento: data.nroDocumento,
-						enableCuil: data.cuil != "0",
+						enableCuil: data.cuil.trim() !== "" && data.cuil != "0",
 						cuil: data.cuil,
 						patrocinante: {
 							id: data.patrocinante?.id || 0,
@@ -151,6 +152,12 @@ export default function Form() {
 		}
 	}, [id]);
 
+	useEffect(() => {
+		if (state.enableCuil && cuilInputRef.current) {
+			cuilInputRef.current.focus();
+		}
+	}, [state.enableCuil])
+
 	const esEnteroValido = (s) => {
 		const nro = Number(s)
 		return s?.trim() !== "" && !isNaN(nro) && Number.isInteger(nro)
@@ -161,7 +168,7 @@ export default function Form() {
 		if (state.nombre.trim() === "") errors.push("Ingrese un nombre.");
 		if (!esEnteroValido(state.nroDocumento)) errors.push("Ingrese un número de documento válido.")
 		if (state.enableCuil && (!esEnteroValido(state.cuil) || (state.cuil == "0")))
-			errors.push("Ingrese un cuil válido (sin espacios ni guiones).")
+			errors.push("Ingrese un cuil válido.")
 		return errors;
 	};
 
@@ -238,12 +245,9 @@ export default function Form() {
 		return ""
 	}
 
-	function formatCuil(value) {
-		if (!value) return " -        - ";
-		const v = value.replace(/\D/g, '');
-		if (v.length <= 2) return v;
-		if (v.length < 10) return `${v.slice(0,2)}-${v.slice(2,10)}`;
-		return `${v.slice(0,2)}-${v.slice(2,10)}-${v.slice(10,11)}`;
+	function formatCuil(value = "") {
+		const digits = value.replace(/\D/g, "").padEnd(11, " ");
+		return `${digits.slice(0, 2)}-${digits.slice(2, 10)}-${digits.slice(10, 11)}`;
 	}
 
 	function handleChangeLabelCuil() {
@@ -262,7 +266,8 @@ export default function Form() {
 						) }
 				<div className="mb-3">
 					<label htmlFor="nombre" className="form-label">Nombre</label>
-					<input id="nombre" className="form-control" type="text" value={state.nombre} onChange={setField} required />
+					<input id="nombre" className="form-control" type="text" value={state.nombre} onChange={setField} 
+						required autoComplete="off" />
 				</div>
 				<div className="mb-3">
 					<label htmlFor="nroDocumento" className="form-label">Documento</label>
@@ -272,7 +277,8 @@ export default function Form() {
 								setSelectedValue={(v) => dispatch({ type: "SET_FIELD", field: "idTipoDocumento", value: parseInt(v) }) } />
 						</div>
 						<div className="col">
-							<input id="nroDocumento" type="number" className="form-control" value={state.nroDocumento} onChange={setField} />
+							<input id="nroDocumento" type="number" className="form-control" value={state.nroDocumento} 
+								onChange={setField} autoComplete="off" />
 						</div>
 					</div>
 				</div>
@@ -280,18 +286,21 @@ export default function Form() {
 					<label htmlFor="cuil" className="form-label" onClick={handleChangeLabelCuil}>
 							<input id="enableCuil" type="checkbox" checked={state.enableCuil} onChange={() => {}} /> CUIL
 					</label>
-					<input id="cuil" className="form-control" placeholder="  -        - "
+					<input id="cuil" className="form-control text-start" placeholder="  -        - "
 						value={formatCuil(state.cuil)} onChange={setField} disabled={!state.enableCuil} 
 						style={{ backgroundColor: state.enableCuil? "#fff" : "#aaa" }}
+						autoComplete="off" ref={cuilInputRef}
 						/>
 				</div>
 				<div className="mb-3">
 					<label htmlFor="domicilio" className="form-label">Domicilio</label>
-					<input id="domicilio" className="form-control" value={state.domicilio} onChange={setField} />
+					<input id="domicilio" className="form-control" value={state.domicilio} 
+						onChange={setField} autoComplete="off" />
 				</div>
 				<div className="mb-3">
 					<label htmlFor="localidad" className="form-label">Localidad</label>
-					<input id="localidad" className="form-control" value={state.localidad} onChange={setField} />
+					<input id="localidad" className="form-control" value={state.localidad} 
+						onChange={setField} autoComplete="off" />
 				</div>
 				<div className="mb-3">
 					<label htmlFor="patrocinante" className="form-label">Patrocinante</label>
@@ -308,7 +317,7 @@ export default function Form() {
 						</div>
 					</div>
 					<div className="d-flex mt-1">
-						<label className="me-2">
+						<label className="me-2 small">
 								<input id="esApoderado" type="checkbox" checked={state.esApoderado} onChange={setField} /> Es apoderado
 						</label>
 					</div>
@@ -321,6 +330,8 @@ export default function Form() {
 				</div>
 
 			</form>
+
+			<pre>{JSON.stringify(state, null, " ")}</pre>
 	</div>
 	);
 }
