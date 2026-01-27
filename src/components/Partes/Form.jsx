@@ -1,4 +1,4 @@
-import { useReducer, useEffect, useState, useRef } from "react";
+import { useReducer, useEffect, useState } from "react";
 import { useNavigate, Link, useParams } from "react-router-dom";
 import ValidationErrors from "../Shared/ValidationErrors";
 import { useNotification } from "../../contexts/Constants";
@@ -98,7 +98,6 @@ export default function Form() {
 	const { id } = useParams();
 	const { showSuccess } = useNotification();
 	const [tiposDocumento, setTiposDocumento] = useState([]);
-	const cuilInputRef = useRef(null);
 
   useEffect(() => {
 		const fetchTiposDocumento = async () => {
@@ -116,6 +115,7 @@ export default function Form() {
 		}
 
 		fetchTiposDocumento();
+		document.getElementById('nombre').focus()
 	}, []);
 
 	useEffect(() => {
@@ -151,12 +151,6 @@ export default function Form() {
 			dispatch({ type: "INITIAL_LOAD", payload: {} });
 		}
 	}, [id]);
-
-	useEffect(() => {
-		if (state.enableCuil && cuilInputRef.current) {
-			cuilInputRef.current.focus();
-		}
-	}, [state.enableCuil])
 
 	const esEnteroValido = (s) => {
 		const nro = Number(s)
@@ -289,8 +283,7 @@ export default function Form() {
 					<input id="cuil" className="form-control text-start" placeholder="  -        - "
 						value={formatCuil(state.cuil)} onChange={setField} disabled={!state.enableCuil} 
 						style={{ backgroundColor: state.enableCuil? "#fff" : "#aaa" }}
-						autoComplete="off" ref={cuilInputRef}
-						/>
+						autoComplete="off" />
 				</div>
 				<div className="mb-3">
 					<label htmlFor="domicilio" className="form-label">Domicilio</label>
@@ -330,8 +323,6 @@ export default function Form() {
 				</div>
 
 			</form>
-
-			<pre>{JSON.stringify(state, null, " ")}</pre>
 	</div>
 	);
 }
