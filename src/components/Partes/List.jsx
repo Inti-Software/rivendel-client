@@ -1,9 +1,8 @@
 import { Partes } from "../../utils/endpoints";
-import { RECORDS_PER_PAGE, CUSTOM_COLUMN } from "../../utils/constants";
+import { CUSTOM_COLUMN } from "../../utils/constants";
 import { fetchEndpointFactory, deleteEndpointFactory } from "../../utils/endpointFactory.jsx";
 import Grid from "../Grid/Grid";
 import ListCell from "./ListCell.jsx";
-import { useTitle } from "../Shared/hooks/useTitle.js";
 import Container from "../Shared/Container.jsx";
 import NotificationDisplay from "../Shared/NotificationDisplay.jsx";
 
@@ -21,10 +20,8 @@ const ListPartes = () => {
 
 	const onDeleteRow = deleteEndpointFactory(Partes.delete);
 
-	useTitle("Partes");
-
   return (
-    <Container title="Partes" pathToNew="/partes/new">
+    <Container pathToNew="/partes/new">
       <NotificationDisplay />
       <Grid columnBuilder={rowGenerator} onFetchData={onFetchData} onDeleteRow={onDeleteRow} />
     </Container>

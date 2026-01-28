@@ -1,6 +1,5 @@
 import { Resoluciones } from "../../utils/endpoints";
 import { BUTTON_COLUMN, DATA_COLUMN, EDIT_BUTTON, DELETE_BUTTON, RECORDS_PER_PAGE } from "../../utils/constants";
-import { useTitle } from "../Shared/hooks/useTitle";
 import { fetchEndpointFactory, deleteEndpointFactory } from "../../utils/endpointFactory";
 import Grid from "../Grid/Grid";
 import DeleteMessage from "../Shared/DeleteMessage.jsx"
@@ -30,10 +29,8 @@ const ListResoluciones = () => {
 
 	const onDeleteRow = deleteEndpointFactory(Resoluciones.delete);
 
-	useTitle("Resoluciones");
-
   return (
-    <Container title="Resoluciones" pathToNew="/resoluciones/new">
+    <Container pathToNew="/resoluciones/new">
       <NotificationDisplay />
       <Grid columnBuilder={rowGenerator} onFetchData={onFetchData} onDeleteRow={onDeleteRow} />
     </Container>

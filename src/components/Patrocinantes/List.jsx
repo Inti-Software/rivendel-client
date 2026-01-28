@@ -3,7 +3,6 @@ import { Patrocinantes } from "../../utils/endpoints.jsx";
 import { fetchEndpointFactory, deleteEndpointFactory } from "../../utils/endpointFactory.jsx";
 import Grid from "../Grid/Grid";
 import DeleteMessage from "../Shared/DeleteMessage.jsx"
-import { useTitle } from "../Shared/hooks/useTitle.js";
 import Container from "../Shared/Container.jsx";
 import NotificationDisplay from "../Shared/NotificationDisplay.jsx";
 
@@ -39,10 +38,8 @@ export default function List() {
 
 	const onDeleteRow = deleteEndpointFactory(Patrocinantes.delete);
 
-	useTitle("Patrocinantes");
-
 	return (
-		<Container title="Patrocinantes" pathToNew="/patrocinantes/new">
+		<Container pathToNew="/patrocinantes/new">
 			<NotificationDisplay />
 			<Grid columnBuilder={rowGenerator} recordsPerPage={50} headers={headers} 
 				showSearchBar={true} searchPlaceHolder={searchPlaceHolder} onFetchData={onFetchData} 

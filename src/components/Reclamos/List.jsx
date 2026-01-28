@@ -3,7 +3,6 @@ import { CUSTOM_COLUMN } from "../../utils/constants";
 import { fetchEndpointFactory, deleteEndpointFactory } from "../../utils/endpointFactory.jsx";
 import Grid from "../Grid/Grid";
 import ListCell from "./ListCell.jsx";
-import { useTitle } from "../Shared/hooks/useTitle.js";
 import Container from "../Shared/Container.jsx";
 import NotificationDisplay from "../Shared/NotificationDisplay.jsx";
 
@@ -21,10 +20,8 @@ const ListReclamos = () => {
 
 	const onDeleteRow = deleteEndpointFactory(Reclamos.delete);
 
-	useTitle("Reclamos");
-
   return (
-    <Container title="Reclamos" pathToNew="/reclamos/new">
+    <Container pathToNew="/reclamos/new">
       <NotificationDisplay />
       <Grid columnBuilder={rowGenerator} onFetchData={onFetchData} onDeleteRow={onDeleteRow} />
     </Container>

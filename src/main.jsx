@@ -18,12 +18,15 @@ import LayoutRoutes from "./components/Layout/LayoutRoutes.jsx";
 import ReclamosForm  from "./components/Reclamos/Form.jsx";
 import PatrocinantesForm from "./components/Patrocinantes/Form.jsx";
 import PartesForm from "./components/Partes/Form.jsx";
+import PageTitle from "./components/PageTitle/PageTitle.jsx";
 
 const root = createRoot(document.getElementById("root"))
 root.render(
   <StrictMode>
     <NotificationProvider>
       <BrowserRouter>
+        <PageTitle />
+
         <Routes>
           <Route path="/reclamos/reporte/:id" element={<Reporte root={root} />} />
 

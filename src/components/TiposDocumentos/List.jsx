@@ -3,7 +3,6 @@ import { DATA_COLUMN, BUTTON_COLUMN, EDIT_BUTTON, DELETE_BUTTON } from "../../ut
 import { fetchEndpointFactory, deleteEndpointFactory } from "../../utils/endpointFactory.jsx";
 import Grid from "../Grid/Grid";
 import DeleteMessage from "../Shared/DeleteMessage.jsx"
-import { useTitle } from "../Shared/hooks/useTitle.js";
 import Container from "../Shared/Container.jsx";
 import NotificationDisplay from "../Shared/NotificationDisplay.jsx";
 
@@ -37,10 +36,8 @@ const ListTiposDocumentos = () => {
 
 	const onDeleteRow = deleteEndpointFactory(TiposDocumento.delete);
 
-	useTitle("Tipos de documentos");
-
   return (
-    <Container title="Tipos de documentos" pathToNew="/tipos-documentos/new">
+    <Container pathToNew="/tipos-documentos/new">
       <NotificationDisplay />
       <Grid columnBuilder={rowGenerator} recordsPerPage={50} headers={headers} 
 				onFetchData={onFetchData} onDeleteRow={onDeleteRow} />

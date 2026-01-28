@@ -1,6 +1,3 @@
-//import MyForm from "./components/TipoDocumentoEdit";
-//import './App.css'
-
 function App() {
   return (
     <>
