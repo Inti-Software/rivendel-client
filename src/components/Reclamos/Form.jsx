@@ -12,10 +12,12 @@ import { NO_ESPECIFICADO } from "../../utils/constants";
 const initialState = {
   id: 0,
   numero: 0,
-  rubros: "",
-  idResolucion: 0,
   fechaHoraInicio: "",
+	pospuesto: false,
   horaFin: "",
+  idResolucion: 0,
+	proxFecha: "",
+  rubros: "",
   reclamantes: [],
   reclamados: [],
 	searchPartes: {
@@ -142,6 +144,24 @@ export default function Form() {
 		}
 	}, [id]);
 
+	const setField = (e) => {
+		let v = e.target.value;
+		switch (e.target.id) {
+			case "numero":
+				v = parseInt(e.target.value.replace(/\D/g, ''));
+				break;
+			case "pospuesto":
+				v = !state.pospuesto;
+				break;
+			default:
+				if (e.target.type === "checkbox") {
+					v = e.target.checked
+				}
+				break;
+		}
+		dispatch({ type: "SET_FIELD", field: e.target.id, value: v })
+	}
+
   const validate = () => {
     const errors = [];
     if (state.numero <= 0) errors.push("Ingrese un número de reclamo válido");
@@ -151,6 +171,14 @@ export default function Form() {
     if (dayjs(state.horaFin, "HH:mm", true).isValid())
       errors.push("Ingrese una hora de fin válida");
 		if (state.idResolucion <= 0) errors.push("Seleccione una resolución válida");
+    if (state.proxFecha && !dayjs(state.proxFecha, "YYYY-MM-DDTHH:mm", true).isValid())
+      errors.push("Ingrese una próxima fecha válida");
+
+		const inicio = dayjs(state.fechaHoraInicio)
+		const prox = dayjs(state.proxFecha)
+		if (inicio.isAfter(prox)) {
+			errors.push("La próxima fecha no puede ser anterior a la fecha hora de inicio.")
+		}
     return errors;
   };
 
@@ -411,33 +439,47 @@ export default function Form() {
 
 		  <h3 className="mb-3">{isNaN(id)? "Nuevo " : "Edición de "} Reclamo</h3>
 			{state.errors.length > 0 && <ValidationErrors errors={state.errors} />}
-			<div className="row">
-				<div className="col-md-2 mb-3">
+			<div className="row mb-3">
+				<div className="col">
 					<label htmlFor="numero" className="form-label">Número</label>
-					<input id="numero" placeholder="Número" className="form-control text-end" type="number" value={state.numero} 
-						onChange={(e) => dispatch({ type: "SET_FIELD", field: "numero", value: parseInt(e.target.value) })} required />
+					<input id="numero" placeholder="Número" className="form-control text-end w-auto" type="number" value={state.numero} 
+						onChange={setField} required />
 				</div>
-				<div className="col-md-3 mb-3">
-					<label htmlFor="fechaHoraInicio" className="form-label">Fecha y Hora de Inicio</label>
-					<input id="fechaHoraInicio" placeholder="AAAA-MM-DD HH:MM" className="form-control text-center" type="datetime-local" value={state.fechaHoraInicio} 
-						onChange={(e) => dispatch({ type: "SET_FIELD", field: "fechaHoraInicio", value: e.target.value })} />
+				<div className="col">
+					<label htmlFor="fechaHoraInicio" className="form-label d-block">Fecha y Hora de Inicio</label>
+					<input id="fechaHoraInicio" placeholder="AAAA-MM-DD HH:MM" className="form-control text-center d-inline-block w-auto" 
+						type="datetime-local" value={state.fechaHoraInicio} onChange={setField} />
+					<label htmlFor="cuil" id="pospuesto" className="form-label" onClick={setField}
+						title="Esta audiencia fue pospuesta en acuerdo con las partes.">
+							<input type="checkbox" className="ms-2" checked={state.pospuesto} onChange={(e) => {e.target.parentElement.click()}} /> Fue pospuesto.
+					</label>
 				</div>
-				<div className="col-md-1 mb-3">
+				<div className="col">
 					<label htmlFor="horaFin" className="form-label">Hora de Fin</label>
-					<input id="horaFin" placeholder="HH:MM" className="form-control text-center" type="time" value={state.horaFin} 
-						onChange={(e) => dispatch({ type: "SET_FIELD", field: "horaFin", value: e.target.value })} />
+					<input id="horaFin" placeholder="HH:MM" className="form-control text-center w-auto" type="time" value={state.horaFin} 
+						onChange={setField} />
 				</div>
-				<div className="col-md-6 mb-3">
+			</div>
+
+			<div className="row mb-3">
+				<div className="col">
 					<label htmlFor="idResolucion" className="form-label">Resolución</label>
 					<DataBindedSelect data={resoluciones} selectedValue={state.idResolucion} 
 						setSelectedValue={(v) => dispatch({ type: "SET_FIELD", field: "idResolucion", value: parseInt(v) })} />
 				</div>
+
+				<div className="col">
+					<label htmlFor="proxFecha" className="form-label d-block">Próxima audiencia:</label>
+					<input id="proxFecha" placeholder="AAAA-MM-DD HH:MM" className="form-control text-center d-inline-block w-auto" 
+						type="datetime-local" value={state.proxFecha} onChange={setField} />
+				</div>
+				<div className="col"></div>
 			</div>
 
 			<div className="mb-3">
 				<label htmlFor="rubros" className="form-label">Rubros</label>
 				<textarea className="form-control" id="rubros" rows="5" placeholder="Objetos del reclamo/rubros y períodos..."
-					value={state.rubros} onChange={(e) => dispatch({ type: "SET_FIELD", field: "rubros", value: e.target.value })}>
+					value={state.rubros} onChange={setField}>
 				</textarea>
 			</div>
 
@@ -454,7 +496,7 @@ export default function Form() {
 					<Link to="/reclamos" className="btn btn-outline-primary">Cancelar</Link>
 			</div>
 
-    {/* <pre>{JSON.stringify(state, null, 2)}</pre> */}
+    <pre>{JSON.stringify(state, null, 2)}</pre>
     </form>
 
   );
