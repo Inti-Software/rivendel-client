@@ -204,10 +204,9 @@ export const Reclamos = {
     rubros,
     idResolucion,
     fechaHoraInicio,
+    pospuesto,
     horaFin,
-    segundaFecha,
-    segFechaHoraInicio,
-    segHoraFin,
+    proxFecha,
     reclamantes,
     reclamados
   }) => {
@@ -219,10 +218,9 @@ export const Reclamos = {
         rubros,
         idResolucion,
         fechaHoraInicio,
+        pospuesto,
         horaFin,
-        segundaFecha,
-        segFechaHoraInicio,
-        segHoraFin,
+        proxFecha,
         reclamantes,
         reclamados
       }),

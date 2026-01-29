@@ -224,7 +224,9 @@ export default function Form() {
 				rubros: state.rubros, 
 				idResolucion: state.idResolucion,
 				fechaHoraInicio: state.fechaHoraInicio, 
+				pospuesto: state.pospuesto,
 				horaFin: state.horaFin === "" ? null : combinarHoraConFecha(state.horaFin, dayjs(state.fechaHoraInicio)),
+				proxFecha: state.proxFecha === "" ? null : state.proxFecha,
 				reclamantes: state.reclamantes.map(parteToParteDTO),
 				reclamados: state.reclamados.map(parteToParteDTO)
 			};
