@@ -4,9 +4,9 @@ import { GridEditButton, GridDeleteButton } from "../Grid/GridButtons.jsx";
 
 const getDomicilio = (p) => {
 	let s = NO_ESPECIFICADO
-	if (p?.domicilio !== "")
+	if (p.domicilio && p?.domicilio !== "")
 		s = p?.domicilio;
-	if (p?.localidad !== "")
+	if (p?.localidad && p?.localidad !== "")
 		s += ", " + p?.localidad
 
 	return s;
