@@ -33,16 +33,22 @@ const Grid = ({ columnBuilder, recordsPerPage = RECORDS_PER_PAGE, headers = [],
 	useEffect(() => {
     setLoading(true);
     onFetchData(debouncedValue.trim(), currentPage, recordsPerPage)
-      .then(result => {
-        setData(result.data || result);
-        setTotalPages(result.totalPages || 1);
-        if (result.error) {
-          showError(result.error);
+      .then(response => {
+        console.log(response);
+        if (response.ok) {
+          console.log("Response data:", response.data);
+          setData(response.data || response);
+          setTotalPages(response.totalPages || 1);          
+          let pager = document.getElementById('selectPager');
+          if (pager) {
+            pager.value = currentPage;
+          }
+        } else if (response.error) {
+          showError(response.error);
         }
-        let pager = document.getElementById('selectPager');
-        if (pager) {
-          pager.value = currentPage;
-        }
+      })
+      .catch((err) => {
+        showError(err.message || "Error al cargar los datos");
       })
       .finally(() => {
         setLoading(false);

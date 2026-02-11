@@ -19,40 +19,45 @@ import ReclamosForm  from "./components/Reclamos/Form.jsx";
 import PatrocinantesForm from "./components/Patrocinantes/Form.jsx";
 import PartesForm from "./components/Partes/Form.jsx";
 import PageTitle from "./components/PageTitle/PageTitle.jsx";
+import { AuthProvider } from "./auth/AuthProvider.jsx";
+import { setupInterceptors } from "./api/interceptors.js";
 
+setupInterceptors(); // ← fuera de React
 const root = createRoot(document.getElementById("root"))
 root.render(
-  <StrictMode>
+  // <StrictMode>
     <NotificationProvider>
       <BrowserRouter>
         <PageTitle />
 
+          {/* <AuthProvider> */}
         <Routes>
-          <Route path="/reclamos/reporte/:id" element={<Reporte root={root} />} />
+            <Route path="/reclamos/reporte/:id" element={<Reporte root={root} />} />
 
-          <Route element={<LayoutRoutes />}>
-            <Route path="/" element={<App />} />
-            <Route path="/tipos-documentos" element={<ListTiposDocumentos />} />
-            <Route path="/tipos-documentos/new" element={<NewTipoDocumento />} />
-            <Route path="/tipos-documentos/edit/:id" element={<EditTipoDocumento />} />
-            <Route path="/patrocinantes" element={<ListPatrocinantes />} />
-            <Route path="/patrocinantes/new" element={<PatrocinantesForm />} />
-            <Route path="/patrocinantes/edit/:id" element={<PatrocinantesForm />} />
-            
-            <Route path="/partes" element={<ListPartes />} />
-            <Route path="/partes/new" element={<PartesForm />} />
-            <Route path="/partes/edit/:id" element={<PartesForm />} />
+            <Route element={<LayoutRoutes />}>
+              <Route path="/" element={<App />} />
+              <Route path="/tipos-documentos" element={<ListTiposDocumentos />} />
+              <Route path="/tipos-documentos/new" element={<NewTipoDocumento />} />
+              <Route path="/tipos-documentos/edit/:id" element={<EditTipoDocumento />} />
+              <Route path="/patrocinantes" element={<ListPatrocinantes />} />
+              <Route path="/patrocinantes/new" element={<PatrocinantesForm />} />
+              <Route path="/patrocinantes/edit/:id" element={<PatrocinantesForm />} />
+              
+              <Route path="/partes" element={<ListPartes />} />
+              <Route path="/partes/new" element={<PartesForm />} />
+              <Route path="/partes/edit/:id" element={<PartesForm />} />
 
-            <Route path="/resoluciones" element={<ListResoluciones />} />
-            <Route path="/resoluciones/new" element={<ResolucionesForm />} />
-            <Route path="/resoluciones/edit/:id" element={<ResolucionesForm />} />
-            
-            <Route path="/reclamos" element={<ListReclamos />} />
-            <Route path="/reclamos/new" element={<ReclamosForm />} />
-            <Route path="/reclamos/edit/:id" element={<ReclamosForm />} />
-          </Route>
+              <Route path="/resoluciones" element={<ListResoluciones />} />
+              <Route path="/resoluciones/new" element={<ResolucionesForm />} />
+              <Route path="/resoluciones/edit/:id" element={<ResolucionesForm />} />
+              
+              <Route path="/reclamos" element={<ListReclamos />} />
+              <Route path="/reclamos/new" element={<ReclamosForm />} />
+              <Route path="/reclamos/edit/:id" element={<ReclamosForm />} />
+            </Route>
         </Routes>
+          {/* </AuthProvider> */}
       </BrowserRouter>
     </NotificationProvider>
-  </StrictMode>
+  // </StrictMode>
 );

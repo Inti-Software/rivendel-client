@@ -1,4 +1,5 @@
 import { RECORDS_PER_PAGE } from "./constants";
+import { http } from "../api/http.js";
 
 export const Patrocinantes = {
   get: async (id) => {
@@ -161,10 +162,12 @@ export const Resoluciones = {
   get: async (id) => {
     return fetch(`http://localhost:3000/resoluciones/${id}`);
   },
-  findAll: async ({ currentPage, recordsPerPage = RECORDS_PER_PAGE }) =>
-    fetch(
-      `http://localhost:3000/resoluciones?page=${currentPage}&limit=${recordsPerPage}`
-    ),
+  findAll: async ({ currentPage, recordsPerPage = RECORDS_PER_PAGE }) => {
+    console.log("Fetching resoluciones with page:", currentPage, "and limit:", recordsPerPage);
+    return http.get(
+      `/resoluciones?page=${currentPage}&limit=${recordsPerPage}`
+    )
+  },
   create: async ({ descripcion, detalle }) => {
     return fetch(`http://localhost:3000/resoluciones`, {
       method: "POST",

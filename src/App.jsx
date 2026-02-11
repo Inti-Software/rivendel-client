@@ -1,8 +1,10 @@
+import { Login } from "./components/Login/Login.jsx";
+
 function App() {
   return (
-    <>
-      <h1>An app</h1>
-    </>
+    <div>
+      <Login />
+    </div>
   );
 }
 
