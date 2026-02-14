@@ -28,7 +28,7 @@ function Layout({ children }) {
     <>
       <nav className="navbar navbar-expand-lg bg-dark border-bottom border-body" data-bs-theme="dark">
         <div className="container-fluid">
-          <a className="navbar-brand" href="#">
+          <a className="navbar-brand" href="/">
             {DEAL}
             <span className="ms-2">Conciliaciones</span>
           </a>

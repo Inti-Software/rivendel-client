@@ -22,18 +22,15 @@ import PageTitle from "./components/PageTitle/PageTitle.jsx";
 import { AuthProvider } from "./auth/AuthProvider.jsx";
 import { setupInterceptors } from "./api/interceptors.js";
 
-setupInterceptors(); // ← fuera de React
+setupInterceptors();
 const root = createRoot(document.getElementById("root"))
 root.render(
-  // <StrictMode>
+  <StrictMode>
     <NotificationProvider>
       <BrowserRouter>
         <PageTitle />
-
-          {/* <AuthProvider> */}
         <Routes>
             <Route path="/reclamos/reporte/:id" element={<Reporte root={root} />} />
-
             <Route element={<LayoutRoutes />}>
               <Route path="/" element={<App />} />
               <Route path="/tipos-documentos" element={<ListTiposDocumentos />} />
@@ -56,8 +53,7 @@ root.render(
               <Route path="/reclamos/edit/:id" element={<ReclamosForm />} />
             </Route>
         </Routes>
-          {/* </AuthProvider> */}
       </BrowserRouter>
     </NotificationProvider>
-  // </StrictMode>
+  </StrictMode>
 );
