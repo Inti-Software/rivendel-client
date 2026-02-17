@@ -1,6 +1,5 @@
 import { Partes } from "../../utils/endpoints";
 import { CUSTOM_COLUMN } from "../../utils/constants";
-import { fetchEndpointFactory, deleteEndpointFactory } from "../../utils/endpointFactory.jsx";
 import Grid from "../Grid/Grid";
 import ListCell from "./ListCell.jsx";
 import Container from "../Shared/Container.jsx";
@@ -16,14 +15,10 @@ const ListPartes = () => {
 		};
 	}
 
-	const onFetchData = fetchEndpointFactory(Partes.findAll);
-
-	const onDeleteRow = deleteEndpointFactory(Partes.delete);
-
   return (
     <Container pathToNew="/partes/new">
       <NotificationDisplay />
-      <Grid columnBuilder={rowGenerator} onFetchData={onFetchData} onDeleteRow={onDeleteRow} />
+      <Grid columnBuilder={rowGenerator} endpoints={Partes} />
     </Container>
   );
 };

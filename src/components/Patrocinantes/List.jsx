@@ -1,6 +1,5 @@
 import { DATA_COLUMN, BUTTON_COLUMN, EDIT_BUTTON, DELETE_BUTTON } from "../../utils/constants.jsx";
 import { Patrocinantes } from "../../utils/endpoints.jsx";
-import { fetchEndpointFactory, deleteEndpointFactory } from "../../utils/endpointFactory.jsx";
 import Grid from "../Grid/Grid";
 import DeleteMessage from "../Shared/DeleteMessage.jsx"
 import Container from "../Shared/Container.jsx";
@@ -34,16 +33,11 @@ export default function List() {
 		};
 	}
 
-	const onFetchData = fetchEndpointFactory(Patrocinantes.findAll);
-
-	const onDeleteRow = deleteEndpointFactory(Patrocinantes.delete);
-
 	return (
 		<Container pathToNew="/patrocinantes/new">
 			<NotificationDisplay />
 			<Grid columnBuilder={rowGenerator} recordsPerPage={50} headers={headers} 
-				showSearchBar={true} searchPlaceHolder={searchPlaceHolder} onFetchData={onFetchData} 
-				onDeleteRow={onDeleteRow} />
+				showSearchBar={true} searchPlaceHolder={searchPlaceHolder} endpoints={Patrocinantes} />
 		</Container>
   );
 }

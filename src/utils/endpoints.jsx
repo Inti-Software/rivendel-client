@@ -1,18 +1,19 @@
 import { RECORDS_PER_PAGE } from "./constants";
-import { http } from "../api/http.js";
 
 export const Patrocinantes = {
   get: async (id) => {
     return fetch(`http://localhost:3000/patrocinantes/${id}`);
   },
-  findAll: async ({ query, currentPage, recordsPerPage }) => {
+  findAll: ({ query, currentPage, recordsPerPage }) => {
     const params = new URLSearchParams();
     if (query) params.append("query", query);
     if (currentPage) params.append("page", currentPage);
     if (recordsPerPage) params.append("limit", recordsPerPage);
-    return fetch(
-      `http://localhost:3000/patrocinantes?${params}`
-    );
+    console.log("entra", `/patrocinantes?${params}`);
+    return { 
+      method: "get", 
+      url: `/patrocinantes?${params}`
+    };
   },
   create: async ({
     nombre,
@@ -53,19 +54,14 @@ export const Patrocinantes = {
       }),
     });
   },
-  delete: async (id) =>
-    fetch(`http://localhost:3000/patrocinantes/${id}`, {
-      method: "DELETE",
-    }),
+  delete: (id) =>({ method: 'delete', url: `/patrocinantes/${id}` }),
 };
 
 export const TiposDocumento = {
   get: async (id) => {
     return fetch(`http://localhost:3000/tipdocs/${id}`);
-  },
-  findAll: async () => {
-    return fetch(`http://localhost:3000/tipdocs`);
-  },
+  },  
+  findAll: () => ({ method: 'get', url: `/tipdocs` }),
   create: async ({ sintetico, descripcion }) => {
     return fetch(`http://localhost:3000/tipdocs`, {
       method: "POST",
@@ -82,22 +78,17 @@ export const TiposDocumento = {
       body: JSON.stringify({ 
         sintetico, 
         descripcion }),
-    });
-  },
-  delete: async (id) =>
-    fetch(`http://localhost:3000/tipdocs/${id}`, {
-      method: "DELETE",
-    }),
+      });
+    },
+  delete: (id) => ({ method: "delete", url: `/tipdocs/${id}` })
 };
 
 export const Partes = {
   get: async (id) => {
     return fetch(`http://localhost:3000/partes/${id}`);
   },
-  findAll: async ({ currentPage, recordsPerPage = RECORDS_PER_PAGE }) =>
-    fetch(
-      `http://localhost:3000/partes?page=${currentPage}&limit=${recordsPerPage}`
-    ),
+  findAll: ({ currentPage, recordsPerPage = RECORDS_PER_PAGE }) =>
+    ({ method: "get", url: `/partes?page=${currentPage}&limit=${recordsPerPage}` }),
   create: async ({
     nombre,
     idTipoDocumento,
@@ -149,10 +140,7 @@ export const Partes = {
       }),
     });
   },
-  delete: async (id) =>
-    fetch(`http://localhost:3000/partes/${id}`, {
-      method: "DELETE",
-    }),
+  delete: (id) => ({ method: 'delete', url: `/partes/${id}` }),
   search: async ({ q, currentPage, recordsPerPage = RECORDS_PER_PAGE }) => {
     return fetch(`http://localhost:3000/partes/search?q=${q}&page=${currentPage}&limit=${recordsPerPage}`);
   }
@@ -162,12 +150,8 @@ export const Resoluciones = {
   get: async (id) => {
     return fetch(`http://localhost:3000/resoluciones/${id}`);
   },
-  findAll: async ({ currentPage, recordsPerPage = RECORDS_PER_PAGE }) => {
-    console.log("Fetching resoluciones with page:", currentPage, "and limit:", recordsPerPage);
-    return http.get(
-      `/resoluciones?page=${currentPage}&limit=${recordsPerPage}`
-    )
-  },
+  findAll: ({ currentPage, recordsPerPage = RECORDS_PER_PAGE }) => 
+    ({ method: "get", url: `/resoluciones?page=${currentPage}&limit=${recordsPerPage}` }),
   create: async ({ descripcion, detalle }) => {
     return fetch(`http://localhost:3000/resoluciones`, {
       method: "POST",
@@ -188,20 +172,16 @@ export const Resoluciones = {
       }),
     });
   },
-  delete: async (id) =>
-    fetch(`http://localhost:3000/resoluciones/${id}`, {
-      method: "DELETE",
-    }),
+  delete: (id) =>
+    ({ method: 'delete', url: `/resoluciones/${id}` }),
 };
 
 export const Reclamos = {
   get: async (id) => {
     return fetch(`http://localhost:3000/reclamos/${id}`);
   },
-  findAll: async ({ currentPage, recordsPerPage = RECORDS_PER_PAGE }) =>
-    fetch(
-      `http://localhost:3000/reclamos?page=${currentPage}&limit=${recordsPerPage}`
-    ),
+  findAll: ({ currentPage, recordsPerPage = RECORDS_PER_PAGE }) =>
+    ({ method: "get", url: `/reclamos?page=${currentPage}&limit=${recordsPerPage}` }),
   create: async ({
     numero,
     rubros,
@@ -254,8 +234,5 @@ export const Reclamos = {
       }),
     });
   },
-  delete: async (id) =>
-    fetch(`http://localhost:3000/reclamos/${id}`, {
-      method: "DELETE",
-    }),
+  delete: (id) => ({ method: 'delete', url: `http://localhost:3000/reclamos/${id}` }),
 };

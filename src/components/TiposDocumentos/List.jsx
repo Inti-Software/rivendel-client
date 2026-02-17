@@ -1,6 +1,5 @@
 import { TiposDocumento } from "../../utils/endpoints";
 import { DATA_COLUMN, BUTTON_COLUMN, EDIT_BUTTON, DELETE_BUTTON } from "../../utils/constants.jsx";
-import { fetchEndpointFactory, deleteEndpointFactory } from "../../utils/endpointFactory.jsx";
 import Grid from "../Grid/Grid";
 import DeleteMessage from "../Shared/DeleteMessage.jsx"
 import Container from "../Shared/Container.jsx";
@@ -32,15 +31,10 @@ const ListTiposDocumentos = () => {
 		};
 	}
 
-	const onFetchData = fetchEndpointFactory(TiposDocumento.findAll);
-
-	const onDeleteRow = deleteEndpointFactory(TiposDocumento.delete);
-
   return (
     <Container pathToNew="/tipos-documentos/new">
       <NotificationDisplay />
-      <Grid columnBuilder={rowGenerator} recordsPerPage={50} headers={headers} 
-				onFetchData={onFetchData} onDeleteRow={onDeleteRow} />
+      <Grid columnBuilder={rowGenerator} recordsPerPage={50} headers={headers} endpoints={TiposDocumento} />
     </Container>
   );
 };

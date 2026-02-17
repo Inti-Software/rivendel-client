@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { NotificationContext } from './Constants';
-import { toast, Bounce } from 'react-toastify';
+import { toast } from 'react-toastify';
 
-export const NotificationProvider = ({ children }) => {
+const NotificationProvider = ({ children }) => {
   const [notification, setNotification] = useState({
     message: '',
     visible: false,
@@ -38,3 +38,5 @@ export const NotificationProvider = ({ children }) => {
     </NotificationContext.Provider>
   );
 };
+
+export default NotificationProvider;

@@ -5,10 +5,11 @@ import { GridEditButton, GridDeleteButton } from "./GridButtons";
 import { SEARCH } from "../../utils/Icons";
 import DeleteDialog from "../Modals/DeleteDialog";
 import { DATA_COLUMN, BUTTON_COLUMN, CUSTOM_COLUMN, EDIT_BUTTON, DELETE_BUTTON, RECORDS_PER_PAGE } from "../../utils/constants";
+import { EndpointFactory } from "../../utils/endpointFactory";
 
 const Grid = ({ columnBuilder, recordsPerPage = RECORDS_PER_PAGE, headers = [], 
-  showSearchBar = false, searchPlaceHolder, onFetchData, onDeleteRow, debug = false }) => {
-
+  showSearchBar = false, searchPlaceHolder, endpoints, debug = false }) => {
+    
 	const [data, setData] = useState([]);
 	const [currentPage, setCurrentPage] = useState(1);
 	const [totalPages, setTotalPages] = useState(0);
@@ -20,7 +21,8 @@ const Grid = ({ columnBuilder, recordsPerPage = RECORDS_PER_PAGE, headers = [],
 	const { showSuccess, showError } = useNotification();
 
   const handleDelete = async () => {
-    const result = await onDeleteRow(onDeleteId);
+    const factory = new EndpointFactory(endpoints);
+    const result = await factory.delete(onDeleteId);
     setDeleteDialog({show: false});
     if (result?.error) {
       showError(result.error);
@@ -30,29 +32,26 @@ const Grid = ({ columnBuilder, recordsPerPage = RECORDS_PER_PAGE, headers = [],
     }
   };
 
+  
 	useEffect(() => {
-    setLoading(true);
-    onFetchData(debouncedValue.trim(), currentPage, recordsPerPage)
-      .then(response => {
-        console.log(response);
-        if (response.ok) {
-          console.log("Response data:", response.data);
-          setData(response.data || response);
-          setTotalPages(response.totalPages || 1);          
-          let pager = document.getElementById('selectPager');
-          if (pager) {
-            pager.value = currentPage;
-          }
-        } else if (response.error) {
-          showError(response.error);
+    async function fetchData() {
+      const factory = new EndpointFactory(endpoints);
+      const { data, totalPages, error } = await factory.findAll(debouncedValue.trim(), currentPage, recordsPerPage);
+      if (error) {        
+        showError(error);
+        //setError(error);
+      } else {
+        setData(data);
+        setTotalPages(totalPages || 1);
+        let pager = document.getElementById('selectPager');
+        if (pager) {
+          pager.value = currentPage;
         }
-      })
-      .catch((err) => {
-        showError(err.message || "Error al cargar los datos");
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+      }
+    }
+    
+    setLoading(true);
+    fetchData().finally(() => setLoading(false));
 	}, [currentPage, debouncedValue]);
 
   const onDeleteRecord = (e, id, msg) => {
@@ -142,51 +141,61 @@ const Grid = ({ columnBuilder, recordsPerPage = RECORDS_PER_PAGE, headers = [],
       </button>
     </div>
   );
+
+  const spinner = (
+    <div className="spinner-border text-success h4 m-auto d-block" role="status">
+      <span className="visually-hidden">Cargando...</span>
+    </div>
+  );
+
+  const table = (
+    <table className="table table-striped table-hover">
+    { headers && (
+      <thead>
+        <tr>
+          {headers.map((h, i) => (<th key={i}>{h}</th>))}
+        </tr>
+      </thead>
+    ) }
+      <tbody>
+        {(!data || data.length === 0) ? (renderNoHayDatos) : (data.map(getRow))}
+      </tbody>
+    </table>
+  );
+
+  const searchBar = (
+    <div className="row mb-3 justify-content-center">
+      <div className="col-7 col-offset-2">
+        <div className="position-relative">
+          <input id="criterio" type="text" className="form-control border-primary-subtle rounded-4 ps-5"
+            placeholder={searchPlaceHolder} autoComplete="off" value={userInput}
+            onChange={handleChange} onKeyDown={handleKeyDown}
+          />
+          <span className="position-absolute top-50 start-0 translate-middle-y ms-3 text-muted" id="searchIcon">
+            {SEARCH}
+          </span>
+        </div>
+
+      </div>
+    </div>
+  );
+  
   
 	return (
     <>
-      {showSearchBar && (
-      <div className="row mb-3 justify-content-center">
-        <div className="col-7 col-offset-2">
-          <div className="position-relative">
-            <input id="criterio" type="text" className="form-control border-primary-subtle rounded-4 ps-5"
-              placeholder={searchPlaceHolder} autoComplete="off" value={userInput}
-              onChange={handleChange} onKeyDown={handleKeyDown}
-            />
-            <span className="position-absolute top-50 start-0 translate-middle-y ms-3 text-muted" id="searchIcon">
-              {SEARCH}
-            </span>
-          </div>
+      {loading && spinner}
 
-        </div>
-      </div>
-      )}
-      
-      {loading && (
-        <div className="spinner-border text-success h4 m-auto d-block" role="status">
-          <span className="visually-hidden">Cargando...</span>
-        </div>
-      )}
+      {showSearchBar && (searchBar)}
 
-      <table className="table table-striped table-hover">
-      { headers && (
-        <thead>
-          <tr>
-            {headers.map((h, i) => (<th key={i}>{h}</th>))}
-          </tr>
-        </thead>
-      ) }
-        <tbody>
-          {(!data || data.length === 0) ? (renderNoHayDatos) : (data.map(getRow))}
-        </tbody>
-      </table>
-      {data?.length > 0 && (pager)}
+      {table}
+
+      {totalPages > 1 && (pager)}
 
       { deleteDialog.show && 
         <DeleteDialog
           deleteMessage={deleteDialog.message}
           handleDelete={handleDelete}
-          handleCancel={() => setDeleteDialog(false)}
+          handleCancel={() => setDeleteDialog({ show: false, message: "" })}
         />
       }
 
