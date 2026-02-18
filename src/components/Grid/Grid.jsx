@@ -52,7 +52,7 @@ const Grid = ({ columnBuilder, recordsPerPage = RECORDS_PER_PAGE, headers = [],
     
     setLoading(true);
     fetchData().finally(() => setLoading(false));
-	}, [currentPage, debouncedValue]);
+	}, [currentPage, debouncedValue, endpoints, recordsPerPage, showError]);
 
   const onDeleteRecord = (e, id, msg) => {
     e.preventDefault();

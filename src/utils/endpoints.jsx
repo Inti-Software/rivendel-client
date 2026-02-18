@@ -9,7 +9,6 @@ export const Patrocinantes = {
     if (query) params.append("query", query);
     if (currentPage) params.append("page", currentPage);
     if (recordsPerPage) params.append("limit", recordsPerPage);
-    console.log("entra", `/patrocinantes?${params}`);
     return { 
       method: "get", 
       url: `/patrocinantes?${params}`

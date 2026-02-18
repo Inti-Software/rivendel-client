@@ -1,6 +1,9 @@
 import { Link, useLocation } from "react-router-dom";
 import "./Layout.css";
 import { DEAL } from "../../utils/Icons";
+import { logout } from "../../auth/auth.api";
+import { useNotification } from "../../contexts/Constants";
+import { useState } from "react";
 
 const NavLink = ({relativeUrl, text}) => {
   const location = useLocation()
@@ -16,6 +19,16 @@ const NavLink = ({relativeUrl, text}) => {
 }
 
 function Layout({ children }) {
+  const { showError } = useNotification();
+  const [error, setError] = useState(false);
+
+  useState(() => {
+    if (error) {
+      showError("Error al cerrar sesión. Intente nuevamente.");
+      setError(false);
+    }
+  }, [error, showError]);
+
   const items = [
     { relativeUrl: '/tipos-documentos', text: 'Tipos de documentos' },
     { relativeUrl: '/patrocinantes', text: 'Patrocinantes' },
@@ -23,6 +36,16 @@ function Layout({ children }) {
     { relativeUrl: '/resoluciones', text: 'Resoluciones' },
     { relativeUrl: '/reclamos', text: 'Reclamos' }
   ]
+
+  const handleLogout = async (e) => {
+    e.preventDefault();
+    try {
+      await logout();
+      window.location.href = "/";
+    } catch {
+      setError(true);
+    }
+  };
 
   return (
     <>
@@ -50,6 +73,12 @@ function Layout({ children }) {
                   <NavLink relativeUrl={item.relativeUrl} text={item.text} />
                 </li>
               )) }
+              | 
+              <li>
+                <a className="nav-link" href="/logout" onClick={handleLogout}>
+                  Logout
+                </a>
+              </li>
             </ul>
           </div>
         </div>

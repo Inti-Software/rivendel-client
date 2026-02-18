@@ -28,6 +28,7 @@ async function onResponseUseRejected(error) {
       })
       .catch((err) => {
         clearToken();
+        window.location.href = "/";
         return Promise.reject(err);
       });
   }
