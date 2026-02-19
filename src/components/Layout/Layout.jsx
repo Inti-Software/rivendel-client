@@ -1,10 +1,11 @@
 import { Link, useLocation } from "react-router-dom";
 import "./Layout.css";
-import { DEAL } from "../../utils/Icons";
+import { DEAL, PERSON } from "../../utils/Icons";
 import { logout } from "../../auth/auth.api";
 import { useNotification } from "../../contexts/Constants";
 import { useState } from "react";
 import { BOXARROWLEFT } from "../../utils/Icons";
+import { getUserName } from "../../auth/authState";
 
 const NavLink = ({relativeUrl, text}) => {
   const location = useLocation()
@@ -87,8 +88,12 @@ function Layout({ children }) {
 
       <main className="container py-4">{children}</main>
 
-      <footer className="text-center py-3 mt-auto footer">
-        <p className="text-center text-body-secondary">© 2025 Inti Software</p>
+      <footer className="pt-2 mt-auto footer d-flex justify-content-between align-items-center px-3">
+        <p className="text-body-secondary ps-2 mb-0">© 2025 Inti Software</p>
+        <p className="mb-0 text-success fw-bold">
+          <span className="pe-1"><PERSON size="20px" /></span>
+          { getUserName() }
+        </p>
       </footer>
     </>
   );

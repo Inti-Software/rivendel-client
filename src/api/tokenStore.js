@@ -1,17 +1,19 @@
-import { setAuthenticated } from "../auth/authState";
+import { setAuthenticated, setUserName } from "../auth/authState";
 
 let accessToken = null;
 
-export function setToken(token) {
-  accessToken = token;
+export function setAuthData(data) {
+  accessToken = data.accessToken;
   setAuthenticated(true);
+  setUserName(data.userName);
 }
 
 export function getToken() {
   return accessToken;
 }
 
-export function clearToken() {
+export function clearAuthData() {
   accessToken = null;
   setAuthenticated(false);
+  setUserName(null);
 }

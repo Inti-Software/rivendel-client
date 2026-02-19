@@ -1,6 +1,6 @@
 import { http } from "./http.js";
 import { refresh } from "../auth/auth.api.js";
-import { getToken, setToken, clearToken } from "./tokenStore.js";
+import { getToken, clearAuthData, setAuthData } from "./tokenStore.js";
 
 async function onRequestUseFullFilled(config) {
   const token = getToken();
@@ -21,13 +21,13 @@ async function onResponseUseFullFilled(response) {
 async function onResponseUseRejected(error) {
   if (error.response?.status === 401) {
     return refresh()
-      .then((newToken) => {
-        setToken(newToken);
-        error.config.headers.Authorization = `Bearer ${newToken}`;
+      .then((data) => {
+        setAuthData(data);
+        error.config.headers.Authorization = `Bearer ${data.accessToken}`;
         return http(error.config);
       })
       .catch((err) => {
-        clearToken();
+        clearAuthData();
         window.location.href = "/";
         return Promise.reject(err);
       });

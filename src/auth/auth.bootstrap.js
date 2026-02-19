@@ -1,11 +1,11 @@
 import { refresh } from "./auth.api";
-import { clearToken, setToken } from "../api/tokenStore";
+import { clearAuthData, setAuthData } from "../api/tokenStore";
 
 export async function initializeAuth() {
   try {
-    const newToken = await refresh();
-    setToken(newToken);
+    const data = await refresh();
+    setAuthData(data);
   } catch {
-    clearToken();
+    clearAuthData();
   }
 }

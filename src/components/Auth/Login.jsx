@@ -1,5 +1,5 @@
 import { login } from '../../auth/auth.api.js';
-import { setToken } from "../../api/tokenStore.js";
+import { setAuthData } from "../../api/tokenStore.js";
 import { useState } from "react";
 import { DEAL } from '../../utils/Icons.jsx';
 
@@ -17,7 +17,8 @@ export function Login() {
         setError("El usuario o la contraseña son incorrectos.");
       } else {
         setError("");
-        setToken(result.data.accessToken);
+        const data = result.data;
+        setAuthData(data);
         window.location.href = "/reclamos";
       }
     };
