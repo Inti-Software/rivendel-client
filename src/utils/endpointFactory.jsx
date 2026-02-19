@@ -8,7 +8,7 @@ export class EndpointFactory {
   async findAll(query, currentPage, recordsPerPage) {    
     const findAllConfig = this.config.findAll({ query, currentPage, recordsPerPage });
     const response = await http(findAllConfig)
-      .then(function(response) {
+      .then((response) => {
         const { data } = response;
         const totalRecords = data.totalRecords;
         const totalPages = Math.ceil(totalRecords / recordsPerPage);

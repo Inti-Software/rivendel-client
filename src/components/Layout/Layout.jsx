@@ -4,6 +4,7 @@ import { DEAL } from "../../utils/Icons";
 import { logout } from "../../auth/auth.api";
 import { useNotification } from "../../contexts/Constants";
 import { useState } from "react";
+import { BOXARROWLEFT } from "../../utils/Icons";
 
 const NavLink = ({relativeUrl, text}) => {
   const location = useLocation()
@@ -52,7 +53,7 @@ function Layout({ children }) {
       <nav className="navbar navbar-expand-lg bg-dark border-bottom border-body" data-bs-theme="dark">
         <div className="container-fluid">
           <a className="navbar-brand" href="/">
-            {DEAL}
+            <span style={{ color: "#75FB4C", width: "24px" }} className="d-inline-block align-middle" ><DEAL /></span>
             <span className="ms-2">Conciliaciones</span>
           </a>
           <button
@@ -74,10 +75,10 @@ function Layout({ children }) {
                 </li>
               )) }
               | 
-              <li>
-                <a className="nav-link" href="/logout" onClick={handleLogout}>
-                  Logout
-                </a>
+              <li className="nav-item">
+                <Link to={"/logout"} className="nav-link" title="Cerrar sesión" onClick={handleLogout}>
+                  {BOXARROWLEFT}
+                </Link>
               </li>
             </ul>
           </div>

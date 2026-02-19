@@ -1,15 +1,25 @@
-import { http } from '../api/http';
+import axios from "axios";
+import { http } from "../api/http";
 
 export async function login(email, password) {
-  const res = await http.post('/auth/login', { email, password });
-  return res.data;
+  const response = await axios
+    .post("http://localhost:3000/auth/login", { email, password })
+    .then((response) => {
+      const { data } = response;
+      return { data: data };
+    })
+    .catch(() => {
+      return { error: true };
+    });
+
+  return response;
 }
 
 export async function refresh() {
-  const res = await http.post('/auth/refresh');
-  return res.data; // accessToken
+  const res = await http({ method: "post", url: "/auth/refresh" });
+  return res.data;
 }
 
 export async function logout() {
-  await http.post('/auth/logout');
+  await http.post("/auth/logout");
 }
