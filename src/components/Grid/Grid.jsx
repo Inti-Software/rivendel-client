@@ -19,9 +19,9 @@ const Grid = ({ columnBuilder, recordsPerPage = RECORDS_PER_PAGE, headers = [],
 	const [onDeleteId, setOnDeleteId] = useState(null);
 	const [deleteDialog, setDeleteDialog] = useState({ show: false, message: "" });
 	const { showSuccess, showError } = useNotification();
+  const factory = new EndpointFactory(endpoints);
 
   const handleDelete = async () => {
-    const factory = new EndpointFactory(endpoints);
     const result = await factory.delete(onDeleteId);
     setDeleteDialog({show: false});
     if (result?.error) {
@@ -31,11 +31,9 @@ const Grid = ({ columnBuilder, recordsPerPage = RECORDS_PER_PAGE, headers = [],
       showSuccess("Se eliminó correctamente el registro.");
     }
   };
-
   
 	useEffect(() => {
     async function fetchData() {
-      const factory = new EndpointFactory(endpoints);
       const { data, totalPages, error } = await factory.findAll(debouncedValue.trim(), currentPage, recordsPerPage);
       if (error) {        
         showError(error);

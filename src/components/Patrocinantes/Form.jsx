@@ -3,6 +3,7 @@ import { useNavigate, useParams, Link } from "react-router-dom";
 import { Patrocinantes } from "../../utils/endpoints";
 import ValidationErrors from "../Shared/ValidationErrors";
 import { useNotification } from "../../contexts/Constants";
+import { EndpointFactory } from "../../utils/endpointFactory";
 
 const initialState = {
   id: 0,
@@ -72,15 +73,16 @@ export default function Form() {
 	const navigate = useNavigate();
 	const { id } = useParams();
 	const { showSuccess } = useNotification();
+	const endpointFactory = new EndpointFactory(Patrocinantes);
 
 	useEffect(() => {
 		if (isNaN(id)) return;
 
 		try {
 			const fetchData = async () => {
-				const response = await Patrocinantes.get(id);
+				const response = await endpointFactory.get(id);
 				if (response.ok) {
-					const data = await response.json();
+					const data = response.data;
 					dispatch({ type: "INITIAL_LOAD", payload: {
 						id: data.id,
 						nombre: data.nombre,
@@ -90,7 +92,7 @@ export default function Form() {
 						nroCasillero: data.nroCasillero
 					}});
 				} else {					
-					console.error(await response.json());
+					console.error(response.error);
 					dispatch({ type: "INITIAL_LOAD", payload: {} });
 				}
 			};
@@ -130,9 +132,9 @@ export default function Form() {
 
 			let result;
 			if (isNaN(id))
-				result = await Patrocinantes.create(patrocinante);
+				result = await endpointFactory.post(patrocinante);
 			else
-				result = await	Patrocinantes.update(patrocinante);
+				result = await	endpointFactory.update(patrocinante);
 
 			if (result.ok) {
 				showSuccess(
@@ -141,8 +143,7 @@ export default function Form() {
 				dispatch({ type: "SUBMIT_SUCCESS" });
 				navigate("/patrocinantes");
 			} else {				
-				const errorData = await result.json();
-				dispatch({ type: "SUBMIT_FAIL", errors: errorData.message });
+				dispatch({ type: "SUBMIT_FAIL", errors: result.error });
 			}
 		} catch (err) {
 			dispatch({ type: "SUBMIT_FAIL", errors: [err.message] });

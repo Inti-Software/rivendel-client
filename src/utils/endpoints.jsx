@@ -1,9 +1,7 @@
 import { RECORDS_PER_PAGE } from "./constants";
 
 export const Patrocinantes = {
-  get: async (id) => {
-    return fetch(`http://localhost:3000/patrocinantes/${id}`);
-  },
+  get: (id) => ({ method: 'get', url: `/patrocinantes/${id}` }),
   findAll: ({ query, currentPage, recordsPerPage }) => {
     const params = new URLSearchParams();
     if (query) params.append("query", query);
@@ -14,45 +12,44 @@ export const Patrocinantes = {
       url: `/patrocinantes?${params}`
     };
   },
-  create: async ({
+  create: ({
     nombre,
     nroMatricula,
     domicilio,
     localidad,
     nroCasillero,
-  }) => {
-    return fetch(`http://localhost:3000/patrocinantes`, {
+  }) => ({
       method: "POST",
+      url: `/patrocinantes`,
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
+      data: {
         nombre,
         nroMatricula,
         domicilio,
         localidad,
         nroCasillero,
-      }),
-    });
-  },
-  update: async ({
+      },
+    }),
+  update: ({
     id,
     nombre,
     nroMatricula,
     domicilio,
     localidad,
     nroCasillero,
-  }) => {
-    return fetch(`http://localhost:3000/patrocinantes/${id}`, {
+  }) => ({
       method: "PATCH",
+      url: `/patrocinantes/${id}`,
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
+      data: {
         nombre,
         nroMatricula,
         domicilio,
         localidad,
         nroCasillero,
-      }),
-    });
-  },
+      },
+    }
+  ),
   delete: (id) =>({ method: 'delete', url: `/patrocinantes/${id}` }),
 };
 
