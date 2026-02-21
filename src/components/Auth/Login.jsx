@@ -1,7 +1,7 @@
 import { login } from '../../auth/auth.api.js';
 import { setAuthData } from "../../api/tokenStore.js";
 import { useState } from "react";
-import { DEAL } from '../../utils/Icons.jsx';
+import { DEAL } from '../Shared/Icons';
 
 export function Login() {
   const [error, setError] = useState("");

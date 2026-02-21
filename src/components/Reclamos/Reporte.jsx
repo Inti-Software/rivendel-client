@@ -1,9 +1,9 @@
 import { Document, Page, Text, View, StyleSheet, PDFViewer } from '@react-pdf/renderer';
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Reclamos } from '../../utils/endpoints';
+import { Reclamos } from '../../api/endpointsConfiguration';
 import ReportData from './DTOs/ReportData';
-import { NO_ESPECIFICADO } from '../../utils/constants';
+import { NO_ESPECIFICADO } from '../Shared/constants';
 
 const SIZE_OFICIO_LA = {
   width: 609.5, // 21.5 cm

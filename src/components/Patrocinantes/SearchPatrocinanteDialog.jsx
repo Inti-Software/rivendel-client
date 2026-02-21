@@ -1,6 +1,6 @@
 import { useEffect, useReducer } from 'react';
-import { Patrocinantes } from '../../utils/endpoints';
-import { SEARCH } from '../../utils/Icons';
+import { Patrocinantes } from '../../api/endpointsConfiguration';
+import { SEARCH } from '../Shared/Icons';
 import useDebounce from '../../hooks/useDebounce';
 
 const initialState = {

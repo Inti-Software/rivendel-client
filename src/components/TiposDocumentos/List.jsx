@@ -1,5 +1,5 @@
-import { TiposDocumento } from "../../utils/endpoints";
-import { DATA_COLUMN, BUTTON_COLUMN, EDIT_BUTTON, DELETE_BUTTON } from "../../utils/constants.jsx";
+import { TiposDocumento } from "../../api/endpointsConfiguration";
+import { DATA_COLUMN, BUTTON_COLUMN, EDIT_BUTTON, DELETE_BUTTON } from "../Shared/constants.jsx";
 import Grid from "../Grid/Grid";
 import DeleteMessage from "../Shared/DeleteMessage.jsx"
 import Container from "../Shared/Container.jsx";

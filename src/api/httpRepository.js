@@ -1,6 +1,6 @@
-import { http } from "../api/http";
+import { http } from "./http";
 
-export class EndpointFactory {
+export class HttpRepository {
   constructor(configuration) {
     this.config = configuration;
   }

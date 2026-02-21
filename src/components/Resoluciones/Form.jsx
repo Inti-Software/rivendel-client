@@ -2,7 +2,7 @@ import { useReducer, useEffect } from "react";
 import { useNavigate, Link, useParams } from "react-router-dom";
 import ValidationErrors from "../Shared/ValidationErrors";
 import { useNotification } from "../../contexts/Constants";
-import { Resoluciones } from "../../utils/endpoints";
+import { Resoluciones } from "../../api/endpointsConfiguration";
 
 const initialState = {
   id: 0,

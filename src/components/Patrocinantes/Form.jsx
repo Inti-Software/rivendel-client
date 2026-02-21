@@ -1,9 +1,9 @@
 import { useEffect, useReducer } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
-import { Patrocinantes } from "../../utils/endpoints";
+import { Patrocinantes } from "../../api/endpointsConfiguration";
 import ValidationErrors from "../Shared/ValidationErrors";
 import { useNotification } from "../../contexts/Constants";
-import { EndpointFactory } from "../../utils/endpointFactory";
+import { HttpRepository } from "../../api/httpRepository";
 
 const initialState = {
   id: 0,
@@ -73,7 +73,7 @@ export default function Form() {
 	const navigate = useNavigate();
 	const { id } = useParams();
 	const { showSuccess } = useNotification();
-	const endpointFactory = new EndpointFactory(Patrocinantes);
+	const endpointFactory = new HttpRepository(Patrocinantes);
 
 	useEffect(() => {
 		if (isNaN(id)) return;

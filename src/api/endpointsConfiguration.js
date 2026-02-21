@@ -1,4 +1,8 @@
-import { RECORDS_PER_PAGE } from "./constants";
+export const RECORDS_PER_PAGE = 15;
+
+export const ACTION_CREATE = "create";
+
+export const ACTION_UPDATE = "update";
 
 export const Patrocinantes = {
   get: (id) => ({ method: 'get', url: `/patrocinantes/${id}` }),

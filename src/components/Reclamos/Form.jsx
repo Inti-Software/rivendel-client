@@ -1,13 +1,13 @@
 import { useReducer, useEffect, useState } from "react";
 import { useNavigate, Link, useParams } from "react-router-dom";
 import SearchParteDialog from "../Partes/SearchParteDialog";
-import { Resoluciones, Reclamos, Partes } from "../../utils/endpoints";
+import { Resoluciones, Reclamos, Partes } from "../../api/endpointsConfiguration";
 import DataBindedSelect from "../Forms/DataBindedSelect";
 import ValidationErrors from "../Shared/ValidationErrors";
 import dayjs from "dayjs";
 import { useNotification } from "../../contexts/Constants";
-import { DELETE, PLUSCIRCLE } from "../../utils/Icons";
-import { NO_ESPECIFICADO } from "../../utils/constants";
+import { DELETE, PLUSCIRCLE } from "../Shared/Icons";
+import { NO_ESPECIFICADO } from "../Shared/constants";
 
 const initialState = {
   id: 0,

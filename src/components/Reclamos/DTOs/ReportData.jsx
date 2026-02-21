@@ -1,4 +1,4 @@
-import { NO_ESPECIFICADO } from "../../../utils/constants";
+import { NO_ESPECIFICADO } from "../../Shared/constants";
 
 /*
 const result = {

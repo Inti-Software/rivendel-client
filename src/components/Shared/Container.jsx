@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { FILEEARMARKPLUS } from "../../utils/Icons";
+import { FILEEARMARKPLUS } from "./Icons";
 import { useEffect, useState } from "react";
 
 const Container = ({children, title = "", pathToNew}) => {

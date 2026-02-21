@@ -1,7 +1,7 @@
 import { useEffect, useReducer } from 'react';
-import { Partes } from '../../utils/endpoints';
-import { SEARCH } from '../../utils/Icons';
-import { NO_ESPECIFICADO } from '../../utils/constants';
+import { Partes } from '../../api/endpointsConfiguration';
+import { SEARCH } from '../Shared/Icons';
+import { NO_ESPECIFICADO } from '../Shared/constants';
 import useDebounce from '../../hooks/useDebounce';
 
 const initialState = {

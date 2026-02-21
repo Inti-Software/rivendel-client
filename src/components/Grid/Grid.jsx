@@ -2,10 +2,11 @@ import { useState, useEffect } from "react";
 import { useNotification } from "../../contexts/Constants";
 import useDebounce from "../../hooks/useDebounce";
 import { GridEditButton, GridDeleteButton } from "./GridButtons";
-import { SEARCH } from "../../utils/Icons";
+import { SEARCH } from "../Shared/Icons";
 import DeleteDialog from "../Modals/DeleteDialog";
-import { DATA_COLUMN, BUTTON_COLUMN, CUSTOM_COLUMN, EDIT_BUTTON, DELETE_BUTTON, RECORDS_PER_PAGE } from "../../utils/constants";
-import { EndpointFactory } from "../../utils/endpointFactory";
+import { DATA_COLUMN, BUTTON_COLUMN, CUSTOM_COLUMN, EDIT_BUTTON, DELETE_BUTTON } from "../Shared/constants";
+import { HttpRepository } from "../../api/httpRepository";
+import { RECORDS_PER_PAGE } from "../../api/endpointsConfiguration";
 
 const Grid = ({ columnBuilder, recordsPerPage = RECORDS_PER_PAGE, headers = [], 
   showSearchBar = false, searchPlaceHolder, endpoints, debug = false }) => {
@@ -19,7 +20,7 @@ const Grid = ({ columnBuilder, recordsPerPage = RECORDS_PER_PAGE, headers = [],
 	const [onDeleteId, setOnDeleteId] = useState(null);
 	const [deleteDialog, setDeleteDialog] = useState({ show: false, message: "" });
 	const { showSuccess, showError } = useNotification();
-  const factory = new EndpointFactory(endpoints);
+  const factory = new HttpRepository(endpoints);
 
   const handleDelete = async () => {
     const result = await factory.delete(onDeleteId);

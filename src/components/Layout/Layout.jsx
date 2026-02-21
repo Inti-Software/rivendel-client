@@ -1,11 +1,10 @@
-import { Link, useLocation } from "react-router-dom";
 import "./Layout.css";
-import { DEAL, PERSON } from "../../utils/Icons";
-import { logout } from "../../auth/auth.api";
-import { useNotification } from "../../contexts/Constants";
 import { useState } from "react";
-import { BOXARROWLEFT } from "../../utils/Icons";
+import { Link, useLocation } from "react-router-dom";
+import { logout } from "../../auth/auth.api";
 import { getUserName } from "../../auth/authState";
+import { useNotification } from "../../contexts/Constants";
+import { DEAL, PERSON, BOXARROWLEFT } from "../Shared/Icons";
 
 const NavLink = ({relativeUrl, text}) => {
   const location = useLocation()

@@ -1,5 +1,5 @@
-import { Reclamos } from "../../utils/endpoints";
-import { CUSTOM_COLUMN } from "../../utils/constants";
+import { Reclamos } from "../../api/endpointsConfiguration";
+import { CUSTOM_COLUMN } from "../Shared/constants.jsx";
 import Grid from "../Grid/Grid";
 import ListCell from "./ListCell.jsx";
 import Container from "../Shared/Container.jsx";
