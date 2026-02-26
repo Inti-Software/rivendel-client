@@ -5,103 +5,56 @@ export class HttpRepository {
     this.config = configuration;
   }
 
+  async request(config) {
+    try {
+      const response = await http(config);
+      return { ok: true, data: response.data, status: response.status };
+    } catch (err) {
+      const status = err.response?.status ?? "inesperado";
+      const message =
+        err.response?.data?.message ??
+        `Error ${status} al procesar la solicitud.`;
+
+      return {
+        ok: false,
+        error: message,
+        status,
+      };
+    }
+  }
+
   async findAll(query, currentPage, recordsPerPage) {
     const config = this.config.findAll({query, currentPage, recordsPerPage});
-    const response = await http(config)
-      .then((response) => {
-        const { data } = response;
-        const totalRecords = data.totalRecords;
-        const totalPages = Math.ceil(totalRecords / recordsPerPage);
-        return {
-          data: data.data || data,
-          totalPages: totalPages,
-          error: null,
-        };
-      })
-      .catch((err) => {
-        let status = err.response ? err.response.status : "inesperado";
-        return {
-          data: null,
-          totalPages: 0,
-          error: `Error ${status} al consultar los datos.`,
-        };
-      });
+    const result = await this.request(config);
 
-    return response;
+    if (!result.ok) {
+      return { data: null, totalPages: 0, error: result.error };
+    }
+
+    const totalRecords = result.data.totalRecords || 0;
+    const totalPages = Math.ceil(totalRecords / recordsPerPage);
+
+    return {
+      data: result.data.data || result.data,
+      totalPages,
+      error: null,
+    };
   }
-
+  
   async delete(id) {
-    const response = await http(this.config.delete(id))
-      .then((response) => {
-        const { status } = response;
-        return { ok: status == 200 || status === 201 };
-      })
-      .catch((err) => {
-        if (err.response) {
-          const { data } = err.response;
-          return { ok: false, error: data?.message };
-        } else {
-          let status = err.response ? err.response.status : "inesperado";
-          return { ok: false, error: `Error ${status} al intentar eliminar el registro.` };
-        }
-      });
-    return response;
+    return await this.request(this.config.delete(id));
   }
 
-  async post({nombre, nroMatricula, domicilio, localidad, nroCasillero}) {
-    const config = this.config.create({ nombre, nroMatricula, domicilio, localidad, nroCasillero });
-    const response = await http(config)
-      .then((response) => {
-        const { status } = response;
-        return { ok: status == 200 || status === 201 };
-      })
-      .catch((err) => {
-        if (err.response) {
-          const { data } = err.response;
-          return { ok: false, error: data.message };
-        } else {
-          let status = err.response ? err.response.status : "inesperado";
-          return { ok: false, error: `Error ${status} al intentar crear el registro.` };
-        }
-      });
-    return response;
+  async create(payload) {
+    return await this.request(this.config.create(payload));
   }
 
-  async update({id, nombre, nroMatricula, domicilio, localidad, nroCasillero}) {
-    const config = this.config.update({ id, nombre, nroMatricula, domicilio, localidad, nroCasillero });
-    const response = await http(config)
-      .then((response) => {
-        const { status } = response;
-        return { ok: status == 200 || status === 201 };
-      })
-      .catch((err) => {
-        if (err.response) {
-          const { data } = err.response;
-          return { ok: false, error: data.message };
-        } else {
-          let status = err.response ? err.response.status : "inesperado";
-          return { ok: false, error: `Error ${status} al intentar actualizar el registro.` };
-        }
-      });
-    return response;
+  async update(payload) {
+    return await this.request(this.config.update(payload));
   }
-
   async get(id) {
-    const config = this.config.get(id);
-    const response = await http(config)
-      .then((response) => {
-        const { data } = response;
-        return { ok: true, data };
-      })
-      .catch((err) => {
-        if (err.response) {
-          const { data } = err.response;
-          return { ok: false, error: data };
-        } else {
-          let status = err.response ? err.response.status : "inesperado";
-          return { ok: false, error: `Error ${status} al consultar los datos.` };
-        }
-      });
-    return response;
+    const result = await this.request(this.config.get(id));
+    if (!result.ok) return result;
+    return { ok: true, data: result.data };
   }
 }
