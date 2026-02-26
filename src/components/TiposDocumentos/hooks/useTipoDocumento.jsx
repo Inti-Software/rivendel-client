@@ -1,7 +1,7 @@
 import { useNotification } from "../../../contexts/Constants";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { ACTION_CREATE } from "../../../api/endpointsConfiguration";
+import { ACTION_CREATE } from "../../../api/endpoints";
 import { useParams } from "react-router-dom";
 
 export function useTipoDocumento(request, accion, getRequest) {

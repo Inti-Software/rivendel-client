@@ -1,5 +1,5 @@
 import { useEffect, useReducer } from 'react';
-import { Partes } from '../../api/endpointsConfiguration';
+import { Partes } from '../../api/endpoints';
 import { SEARCH } from '../Shared/Icons';
 import { NO_ESPECIFICADO } from '../Shared/constants';
 import useDebounce from '../../hooks/useDebounce';

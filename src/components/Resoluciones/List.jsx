@@ -1,4 +1,4 @@
-import { Resoluciones } from "../../api/endpointsConfiguration";
+import { Resoluciones } from "../../api/endpoints";
 import { BUTTON_COLUMN, DATA_COLUMN, EDIT_BUTTON, DELETE_BUTTON } from "../Shared/constants.jsx";
 import Grid from "../Grid/Grid";
 import DeleteMessage from "../Shared/DeleteMessage.jsx"

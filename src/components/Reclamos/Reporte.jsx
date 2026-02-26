@@ -1,7 +1,7 @@
 import { Document, Page, Text, View, StyleSheet, PDFViewer } from '@react-pdf/renderer';
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Reclamos } from '../../api/endpointsConfiguration';
+import { Reclamos } from '../../api/endpoints';
 import ReportData from './DTOs/ReportData';
 import { NO_ESPECIFICADO } from '../Shared/constants';
 

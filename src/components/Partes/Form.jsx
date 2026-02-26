@@ -2,11 +2,10 @@ import { useReducer, useEffect, useState } from "react";
 import { useNavigate, Link, useParams } from "react-router-dom";
 import ValidationErrors from "../Shared/ValidationErrors";
 import { useNotification } from "../../contexts/Constants";
-import { Partes, TiposDocumento } from "../../api/endpointsConfiguration";
+import { Partes, TiposDocumento } from "../../api/endpoints";
 import DataBindedSelect from "../Forms/DataBindedSelect";
 import { SEARCH } from "../Shared/Icons";
 import SearchPatrocinanteDialog from "../Patrocinantes/SearchPatrocinanteDialog";
-import { HttpRepository } from "../../api/httpRepository";
 
 const initialState = {
   id: 0,

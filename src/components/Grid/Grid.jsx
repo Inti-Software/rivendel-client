@@ -5,8 +5,7 @@ import { GridEditButton, GridDeleteButton } from "./GridButtons";
 import { SEARCH } from "../Shared/Icons";
 import DeleteDialog from "../Modals/DeleteDialog";
 import { DATA_COLUMN, BUTTON_COLUMN, CUSTOM_COLUMN, EDIT_BUTTON, DELETE_BUTTON } from "../Shared/constants";
-import { HttpRepository } from "../../api/httpRepository";
-import { RECORDS_PER_PAGE } from "../../api/endpointsConfiguration";
+import { RECORDS_PER_PAGE } from "../../api/endpoints";
 
 const Grid = ({ columnBuilder, recordsPerPage = RECORDS_PER_PAGE, headers = [], 
   showSearchBar = false, searchPlaceHolder, endpoints, debug = false }) => {
@@ -20,10 +19,9 @@ const Grid = ({ columnBuilder, recordsPerPage = RECORDS_PER_PAGE, headers = [],
 	const [onDeleteId, setOnDeleteId] = useState(null);
 	const [deleteDialog, setDeleteDialog] = useState({ show: false, message: "" });
 	const { showSuccess, showError } = useNotification();
-  const factory = new HttpRepository(endpoints);
 
   const handleDelete = async () => {
-    const result = await factory.delete(onDeleteId);
+    const result = await endpoints.delete(onDeleteId);
     setDeleteDialog({show: false});
     if (result?.error) {
       showError(result.error);
@@ -35,7 +33,7 @@ const Grid = ({ columnBuilder, recordsPerPage = RECORDS_PER_PAGE, headers = [],
   
 	useEffect(() => {
     async function fetchData() {
-      const { data, totalPages, error } = await factory.findAll(debouncedValue.trim(), currentPage, recordsPerPage);
+      const { data, totalPages, error } = await endpoints.findAll(debouncedValue.trim(), currentPage, recordsPerPage);
       if (error) {        
         showError(error);
         //setError(error);

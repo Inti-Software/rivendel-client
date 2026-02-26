@@ -1,9 +1,8 @@
 import { useEffect, useReducer } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
-import { Patrocinantes } from "../../api/endpointsConfiguration";
+import { Patrocinantes } from "../../api/endpoints";
 import ValidationErrors from "../Shared/ValidationErrors";
 import { useNotification } from "../../contexts/Constants";
-import { HttpRepository } from "../../api/httpRepository";
 
 const initialState = {
   id: 0,
@@ -73,14 +72,13 @@ export default function Form() {
 	const navigate = useNavigate();
 	const { id } = useParams();
 	const { showSuccess } = useNotification();
-	const endpointFactory = new HttpRepository(Patrocinantes);
 
 	useEffect(() => {
 		if (isNaN(id)) return;
 
 		try {
 			const fetchData = async () => {
-				const response = await endpointFactory.get(id);
+				const response = await Patrocinantes.get(id);
 				if (response.ok) {
 					const data = response.data;
 					dispatch({ type: "INITIAL_LOAD", payload: {
@@ -132,9 +130,9 @@ export default function Form() {
 
 			let result;
 			if (isNaN(id))
-				result = await endpointFactory.post(patrocinante);
+				result = await Patrocinantes.post(patrocinante);
 			else
-				result = await	endpointFactory.update(patrocinante);
+				result = await	Patrocinantes.update(patrocinante);
 
 			if (result.ok) {
 				showSuccess(

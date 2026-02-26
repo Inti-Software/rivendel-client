@@ -1,7 +1,7 @@
 import FormContainer from "../Layout/FormContainer";
 import FormFields from "./FormFields";
 import { useTipoDocumento } from "./hooks/useTipoDocumento";
-import { TiposDocumento, ACTION_CREATE } from "../../api/endpointsConfiguration";
+import { TiposDocumento, ACTION_CREATE } from "../../api/endpoints";
 
 const NewTipoDocumento = () => {
   const {fields, error, handleSubmit} = useTipoDocumento (TiposDocumento.create, ACTION_CREATE);

@@ -1,5 +1,5 @@
 import { useEffect, useReducer } from 'react';
-import { Patrocinantes } from '../../api/endpointsConfiguration';
+import { Patrocinantes } from '../../api/endpoints';
 import { SEARCH } from '../Shared/Icons';
 import useDebounce from '../../hooks/useDebounce';
 
