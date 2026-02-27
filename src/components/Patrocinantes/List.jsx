@@ -1,5 +1,5 @@
-import { DATA_COLUMN, BUTTON_COLUMN, EDIT_BUTTON, DELETE_BUTTON } from "../Shared/constants.jsx";
-import { Patrocinantes } from "../../api/endpoints";
+import { DATA_COLUMN, BUTTON_COLUMN, EDIT_BUTTON, DELETE_BUTTON } from "../Shared/constants";
+import { Patrocinantes } from "../../api/endpoints/patrocinantes";
 import Grid from "../Grid/Grid";
 import DeleteMessage from "../Shared/DeleteMessage.jsx"
 import Container from "../Shared/Container.jsx";

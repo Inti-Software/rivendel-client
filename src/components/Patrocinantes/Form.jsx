@@ -1,6 +1,6 @@
 import { useEffect, useReducer } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
-import { Patrocinantes } from "../../api/endpoints";
+import { Patrocinantes } from "../../api/endpoints/patrocinantes";
 import ValidationErrors from "../Shared/ValidationErrors";
 import { useNotification } from "../../contexts/Constants";
 
@@ -130,7 +130,7 @@ export default function Form() {
 
 			let result;
 			if (isNaN(id))
-				result = await Patrocinantes.post(patrocinante);
+				result = await Patrocinantes.create(patrocinante);
 			else
 				result = await	Patrocinantes.update(patrocinante);
 

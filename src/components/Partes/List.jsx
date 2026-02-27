@@ -1,5 +1,5 @@
 import { Partes } from "../../api/endpoints";
-import { CUSTOM_COLUMN } from "../Shared/constants.jsx";
+import { CUSTOM_COLUMN } from "../Shared/constants";
 import Grid from "../Grid/Grid";
 import ListCell from "./ListCell.jsx";
 import Container from "../Shared/Container.jsx";

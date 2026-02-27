@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { RECLAMANTE, RECLAMADO } from "../Shared/constants.jsx";
+import { RECLAMANTE, RECLAMADO } from "../Shared/constants";
 import DeleteMessage from "../Shared/DeleteMessage.jsx"
 import { GridEditButton, GridDeleteButton, GridPrintButton } from "../Grid/GridButtons.jsx";
 

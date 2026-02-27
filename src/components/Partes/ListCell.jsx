@@ -1,4 +1,4 @@
-import { NO_ESPECIFICADO } from "../Shared/constants.jsx";
+import { NO_ESPECIFICADO } from "../Shared/constants";
 import DeleteMessage from "../Shared/DeleteMessage.jsx"
 import { GridEditButton, GridDeleteButton } from "../Grid/GridButtons.jsx";
 
