@@ -1,5 +1,5 @@
 import { useEffect, useReducer } from 'react';
-import { Patrocinantes } from '../../api/endpoints';
+import { Patrocinantes } from '../../api/endpoints/patrocinantes';
 import { SEARCH } from '../Shared/Icons';
 import useDebounce from '../../hooks/useDebounce';
 
@@ -100,12 +100,12 @@ const SearchPatrocinanteDialog = ({ handleAccept, handleCancel }) => {
 		Patrocinantes
 			.findAll({ query: debouncedValue.trim() })
 			.then(response => {
-				if (!response.ok) {
+				console.log("Respuesta de búsqueda:", response);
+				if (response.error) {
 					throw new Error(`HTTP error! status: ${response.status}`);
 				}
-				return response.json();
+				dispatch({ type: "SEARCH_SUCCESS", data: response.data });
 			})
-			.then(data => { dispatch({ type: "SEARCH_SUCCESS", data: data.data }) })
 			.catch(error => {
 				console.error("Error al buscar patrocinantes:", error);
 				dispatch({ type: "SEARCH_FAIL", error: "Ocurrió un error al realizar la búsqueda. " + 

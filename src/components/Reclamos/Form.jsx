@@ -1,7 +1,8 @@
 import { useReducer, useEffect, useState } from "react";
 import { useNavigate, Link, useParams } from "react-router-dom";
 import SearchParteDialog from "../Partes/SearchParteDialog";
-import { Resoluciones, Reclamos, Partes } from "../../api/endpoints";
+import { Resoluciones, Reclamos } from "../../api/endpoints";
+import { Partes } from "../../api/endpoints/partes";
 import DataBindedSelect from "../Forms/DataBindedSelect";
 import ValidationErrors from "../Shared/ValidationErrors";
 import dayjs from "dayjs";

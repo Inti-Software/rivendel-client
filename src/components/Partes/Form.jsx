@@ -2,7 +2,8 @@ import { useReducer, useEffect, useState } from "react";
 import { useNavigate, Link, useParams } from "react-router-dom";
 import ValidationErrors from "../Shared/ValidationErrors";
 import { useNotification } from "../../contexts/Constants";
-import { Partes, TiposDocumento } from "../../api/endpoints";
+import { Partes } from "../../api/endpoints/partes";
+import { TiposDocumento } from "../../api/endpoints";
 import DataBindedSelect from "../Forms/DataBindedSelect";
 import { SEARCH } from "../Shared/Icons";
 import SearchPatrocinanteDialog from "../Patrocinantes/SearchPatrocinanteDialog";
@@ -102,16 +103,16 @@ export default function Form() {
   useEffect(() => {
 		const fetchTiposDocumento = async () => {
 			const response = await TiposDocumento.findAll()
-			if (!response.ok) {
-				throw new Error(`HTTP error! status: ${response.status}`);
+			if (response.error) {
+				throw new Error(`Error al obtener tipos de documentos: ${response.error}`);
 			}
 
-			const data = await response.json()
-			const td = data.map(d => ({
+			const td = response.data.map(d => ({
 				value: d.id,
 				text: d.descripcion
 			}));
 			setTiposDocumento(td);
+			dispatch({ type: "SET_FIELD", field: "idTipoDocumento", value: 1 })
 		}
 
 		fetchTiposDocumento();
@@ -124,27 +125,26 @@ export default function Form() {
 		try {
 			const fetchData = async () => {
 				const response = await Partes.get(id);
-				if (response.ok) {
-					const data = await response.json();
-					dispatch({ type: "INITIAL_LOAD", payload: {
-						id: data.id,
-						nombre: data.nombre,
-						idTipoDocumento: data.idTipoDocumento,
-						nroDocumento: data.nroDocumento,
-						enableCuil: data.cuil.trim() !== "" && data.cuil != "0",
-						cuil: data.cuil,
-						patrocinante: {
-							id: data.patrocinante?.id || 0,
-							nombre: data.patrocinante?.nombre || "",
-							nroMatricula: data.patrocinante?.nroMatricula || 0
-						},
-						esApoderado: data.esApoderado,
-						localidad: data.localidad,
-						domicilio: data.domicilio,
-					}});
-				} else {
+				if (response.error) {
 					dispatch({ type: "INITIAL_LOAD", payload: {} });
 				}
+				const data = response.data;
+				dispatch({ type: "INITIAL_LOAD", payload: {
+					id: data.id,
+					nombre: data.nombre,
+					idTipoDocumento: data.idTipoDocumento,
+					nroDocumento: data.nroDocumento,
+					enableCuil: data.cuil.trim() !== "" && data.cuil != "0",
+					cuil: data.cuil,
+					patrocinante: {
+						id: data.patrocinante?.id || 0,
+						nombre: data.patrocinante?.nombre || "",
+						nroMatricula: data.patrocinante?.nroMatricula || 0
+					},
+					esApoderado: data.esApoderado,
+					localidad: data.localidad,
+					domicilio: data.domicilio,
+				}});
 			};
 			fetchData();
 		} catch {
@@ -323,6 +323,7 @@ export default function Form() {
 				</div>
 
 			</form>
+
 	</div>
 	);
 }

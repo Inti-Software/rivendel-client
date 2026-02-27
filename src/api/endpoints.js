@@ -1,44 +1,10 @@
-import { HttpRepository } from "./httpRepository";
+import HttpRepository from "./httpRepository";
 
 export const RECORDS_PER_PAGE = 15;
 
 export const ACTION_CREATE = "create";
 
 export const ACTION_UPDATE = "update";
-
-export const Patrocinantes = new HttpRepository({
-  get: (id) => ({ method: "get", url: `/patrocinantes/${id}` }),
-  findAll: ({ query, currentPage, recordsPerPage }) => {
-    const params = new URLSearchParams();
-    if (query) params.append("query", query);
-    if (currentPage) params.append("page", currentPage);
-    if (recordsPerPage) params.append("limit", recordsPerPage);
-    return {
-      method: "get",
-      url: `/patrocinantes?${params}`,
-    };
-  },
-  create: ({ nombre, nroMatricula, domicilio, localidad, nroCasillero }) => ({
-    method: "POST",
-    url: `/patrocinantes`,
-    headers: { "Content-Type": "application/json" },
-    data: { nombre, nroMatricula, domicilio, localidad, nroCasillero },
-  }),
-  update: ({
-    id,
-    nombre,
-    nroMatricula,
-    domicilio,
-    localidad,
-    nroCasillero,
-  }) => ({
-    method: "PATCH",
-    url: `/patrocinantes/${id}`,
-    headers: { "Content-Type": "application/json" },
-    data: { nombre, nroMatricula, domicilio, localidad, nroCasillero },
-  }),
-  delete: (id) => ({ method: "delete", url: `/patrocinantes/${id}` }),
-});
 
 export const TiposDocumento = new HttpRepository({
   get: (id) => ({ method: "get", url: `/tipdocs/${id}` }),
@@ -56,35 +22,6 @@ export const TiposDocumento = new HttpRepository({
     data: { sintetico, descripcion },
   }),
   delete: (id) => ({ method: "delete", url: `/tipdocs/${id}` }),
-});
-
-export const Partes = new HttpRepository({
-  get: (id) => ({ method: "get", url: `/partes/${id}` }),
-  findAll: ({ currentPage, recordsPerPage = RECORDS_PER_PAGE }) => ({
-    method: "get",
-    url: `/partes?page=${currentPage}&limit=${recordsPerPage}`,
-  }),
-  create: ({ nombre, idTipoDocumento, nroDocumento, cuil, domicilio, idPatrocinante,
-    esApoderado, localidad }) => ({
-      method: "POST",
-      url: `/partes`,
-      headers: { "Content-Type": "application/json" },
-      data: { nombre, idTipoDocumento, nroDocumento, cuil, domicilio, idPatrocinante,
-        esApoderado, localidad },
-    }),
-  update: ({ id, nombre, idTipoDocumento, nroDocumento, cuil, domicilio, idPatrocinante,
-    esApoderado, localidad }) => ({
-      method: "PATCH",
-      url: `/partes/${id}`,
-      headers: { "Content-Type": "application/json" },
-      data: { nombre, idTipoDocumento, nroDocumento, cuil, domicilio, idPatrocinante,
-        esApoderado, localidad },
-    }),
-  delete: (id) => ({ method: "delete", url: `/partes/${id}` }),
-  search: ({ q, currentPage, recordsPerPage = RECORDS_PER_PAGE }) => ({
-    method: "get",
-    url: `/partes/search?q=${q}&page=${currentPage}&limit=${recordsPerPage}`,
-  }),
 });
 
 export const Resoluciones = new HttpRepository({

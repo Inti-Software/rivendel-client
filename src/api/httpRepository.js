@@ -1,6 +1,6 @@
 import { http } from "./http";
 
-export class HttpRepository {
+export default class HttpRepository {
   constructor(configuration) {
     this.config = configuration;
   }
@@ -23,8 +23,8 @@ export class HttpRepository {
     }
   }
 
-  async findAll(query, currentPage, recordsPerPage) {
-    const config = this.config.findAll({query, currentPage, recordsPerPage});
+  async findAll(params = {}) {
+    const config = this.config.findAll(params);
     const result = await this.request(config);
 
     if (!result.ok) {
@@ -32,7 +32,7 @@ export class HttpRepository {
     }
 
     const totalRecords = result.data.totalRecords || 0;
-    const totalPages = Math.ceil(totalRecords / recordsPerPage);
+    const totalPages = Math.ceil(totalRecords / params.recordsPerPage);
 
     return {
       data: result.data.data || result.data,

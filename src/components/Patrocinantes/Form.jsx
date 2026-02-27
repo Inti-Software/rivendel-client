@@ -154,29 +154,29 @@ export default function Form() {
 
 	return (
 		<div className="w-50 m-auto">
-			<form onSubmit={handleSubmit} >
+			<form onSubmit={handleSubmit}>
 				<h3 className="mb-3">{isNaN(id)? "Nuevo " : "Edición de "} Patrocinante</h3>
 				{state.errors.length > 0 && <ValidationErrors errors={state.errors} />}
 
 				<div className="mb-3">
 					<label htmlFor="nombre" className="form-label">Nombre</label>
-					<input id="nombre" className="form-control" type="text" value={state.nombre} onChange={setField} required />
+					<input id="nombre" className="form-control" type="text" value={state.nombre} onChange={setField} required autoComplete="off" />
 				</div>
 				<div className="mb-3">
 					<label htmlFor="nroMatricula" className="form-label">Nº Matrícula</label>
-					<input id="nroMatricula" type="number" className="form-control" value={state.nroMatricula} onChange={setField} />
+					<input id="nroMatricula" type="number" className="form-control" value={state.nroMatricula} onChange={setField} autoComplete="off" />
 				</div>
 				<div className="mb-3">
 					<label htmlFor="domicilio" className="form-label">Domicilio</label>
-					<input id="domicilio" className="form-control" value={state.domicilio} onChange={setField} />
+					<input id="domicilio" className="form-control" value={state.domicilio} onChange={setField} autoComplete="off" />
 				</div>
 				<div className="mb-3">
 					<label htmlFor="localidad" className="form-label">Localidad</label>
-					<input id="localidad" className="form-control" value={state.localidad} onChange={setField} />
+					<input id="localidad" className="form-control" value={state.localidad} onChange={setField}  autoComplete="on"/>
 				</div>
 				<div className="mb-3">
 					<label htmlFor="nroCasillero" className="form-label">Nº Casillero</label>
-					<input id="nroCasillero" type="number" className="form-control" value={state.nroCasillero} onChange={setField} />
+					<input id="nroCasillero" type="number" className="form-control" value={state.nroCasillero} onChange={setField} autoComplete="off" />
 				</div>				
 				<div className="mb-3 d-flex justify-content-end border-top pt-2 border-primary-subtle">
 						<button disabled={state.loading} type="submit" className="btn btn-primary me-2">{state.loading? "Grabando...":"Grabar"}</button>
