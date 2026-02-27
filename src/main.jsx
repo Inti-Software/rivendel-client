@@ -5,7 +5,7 @@ import { StrictMode } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import App from "./App.jsx";
 import ListTiposDocumentos from "./components/TiposDocumentos/List.jsx";
-import NewTipoDocumento from "./components/TiposDocumentos/New.jsx";
+import TipoDocumentoForm from "./components/TiposDocumentos/Form.jsx";
 import NotificationProvider from "./contexts/NotificationContext.jsx";
 import EditTipoDocumento from "./components/TiposDocumentos/Edit.jsx";
 import ListPatrocinantes from "./components/Patrocinantes/List.jsx";
@@ -37,8 +37,9 @@ root.render(
               <Route path="/reclamos/reporte/:id" element={<Reporte root={root} />} />
               <Route element={<LayoutRoutes />}>
                 <Route path="/tipos-documentos" element={<ListTiposDocumentos />} />
-                <Route path="/tipos-documentos/new" element={<NewTipoDocumento />} />
+                <Route path="/tipos-documentos/new" element={<TipoDocumentoForm />} />
                 <Route path="/tipos-documentos/edit/:id" element={<EditTipoDocumento />} />
+
                 <Route path="/patrocinantes" element={<ListPatrocinantes />} />
                 <Route path="/patrocinantes/new" element={<PatrocinantesForm />} />
                 <Route path="/patrocinantes/edit/:id" element={<PatrocinantesForm />} />

@@ -2,12 +2,12 @@ import { useReducer, useEffect } from "react";
 import { useNavigate, Link, useParams } from "react-router-dom";
 import ValidationErrors from "../Shared/ValidationErrors";
 import { useNotification } from "../../contexts/Constants";
-import { Resoluciones } from "../../api/endpoints/resoluciones";
+import { TiposDocumento } from "../../api/endpoints/tiposDocumentos";
 
 const initialState = {
   id: 0,
+  sintetico: "",
   descripcion: "",
-  detalle: "",
   initializing: true,
   loading: false,
   errors: [],
@@ -74,13 +74,13 @@ export default function Form() {
 
 		try {
 			const fetchData = async () => {
-				const response = await Resoluciones.get(id);
+				const response = await TiposDocumento.get(id);
 				let payload = initialState;
 				if (response.ok) {
 					payload = {
 						id: response.data.id,
-						descripcion: response.data.descripcion,
-						detalle: response.data.detalle
+						sintetico: response.data.sintetico,
+						descripcion: response.data.descripcion
 					};
 				}
 				dispatch({ type: "INITIAL_LOAD", payload });
@@ -94,8 +94,8 @@ export default function Form() {
 
 	const validate = () => {
 		const errors = [];
-		if (state.descripcion.trim() === "") errors.push("Ingrese la descripción.");
-		if (state.detalle.trim() === "") errors.push("Ingrese un detalle.")
+		if (state.sintetico.trim() === "") errors.push("Ingrese un sintético.");
+		if (state.descripcion.trim() === "") errors.push("Ingrese una descripción.")
 		return errors;
 	};
 
@@ -111,24 +111,22 @@ export default function Form() {
 		dispatch({ type: "SUBMIT_START" });
 
 		try {
-			const patrocinante = {
+			const tipoDocumento = {
 				id: state.id, 
-				descripcion: state.descripcion,
-				detalle: state.detalle
+				sintetico: state.sintetico,
+				descripcion: state.descripcion
 			};
 
 			let result;
 			if (isNaN(id))
-				result = await Resoluciones.create(patrocinante);
+				result = await TiposDocumento.create(tipoDocumento);
 			else
-				result = await	Resoluciones.update(patrocinante);
+				result = await	TiposDocumento.update(tipoDocumento);
 
 			if (result.ok) {
-				const descripcion = state.descripcion.substring(0, 25) +
-						(state.descripcion.length > 25 ? "..." : "");
-				showSuccess(`La resolución ${descripcion} se ${state.isUpdate ? "actualizó" : "creó"} correctamente.`);
+				showSuccess(`El tipo de documento "${state.sintetico}" ha sido ${isNaN(id) ? "creado" : "actualizado"} exitosamente.`);
 				dispatch({ type: "SUBMIT_SUCCESS" });
-				navigate("/resoluciones");
+				navigate("/tipos-documentos");
 			} else {				
 				dispatch({ type: "SUBMIT_FAIL", errors: result.error });
 			}
@@ -142,23 +140,25 @@ export default function Form() {
 	}
 
 	return (
-		<form onSubmit={handleSubmit} style={{ padding: 20 }} autoComplete="off">
-		  <h3 className="mb-3">{isNaN(id)? "Nuevo " : "Edición de "} Reclamo</h3>
-			{state.errors.length > 0 && <ValidationErrors errors={state.errors} />}
-				
-			<div className="mb-3">
-				<label htmlFor="descripcion" className="form-label">Descripción</label>
-				<input id="descripcion" className="form-control" value={state.descripcion} onChange={setField} />
-			</div>
-			<div className="mb-3">
-				<label htmlFor="detalle" className="form-label">Detalle</label>
-				<textarea id="detalle" className="form-control" type="memo" value={state.detalle} onChange={setField} required rows={7} />
-			</div>
+		<div className="w-50 m-auto">
+			<form onSubmit={handleSubmit} style={{ padding: 20 }} autoComplete="off">
+				<h3 className="mb-3">{isNaN(id)? "Nuevo " : "Edición de "} Tipo de Documento</h3>
+				{state.errors.length > 0 && <ValidationErrors errors={state.errors} />}
 
-			<div className="mb-3 d-flex justify-content-end border-top pt-2 border-primary-subtle">
-					<button disabled={state.loading} type="submit" className="btn btn-primary me-2">{state.loading? "Grabando...":"Grabar"}</button>
-					<Link to="/resoluciones" className="btn btn-outline-primary">Cancelar</Link>
-			</div>
-		</form>
+				<div className="mb-3">
+					<label htmlFor="sintetico" className="form-label">Sintético</label>
+					<input id="sintetico" className="form-control" type="text" value={state.sintetico} onChange={setField} required />
+				</div>
+				<div className="mb-3">
+					<label htmlFor="descripcion" className="form-label">Descripción</label>
+					<input id="descripcion" className="form-control" value={state.descripcion} onChange={setField} />
+				</div>
+				<div className="mb-3 d-flex justify-content-end border-top pt-2 border-primary-subtle">
+						<button disabled={state.loading} type="submit" className="btn btn-primary me-2">{state.loading? "Grabando...":"Grabar"}</button>
+						<Link to="/tipos-documentos" className="btn btn-outline-primary">Cancelar</Link>
+				</div>
+
+			</form>
+		</div>
 	);
 }
