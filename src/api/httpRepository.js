@@ -28,13 +28,14 @@ export default class HttpRepository {
     const result = await this.request(config);
 
     if (!result.ok) {
-      return { data: null, totalPages: 0, error: result.error };
+      return { ok: false, error: result.error };
     }
 
     const totalRecords = result.data.totalRecords || 0;
     const totalPages = Math.ceil(totalRecords / params.recordsPerPage);
 
     return {
+      ok: true,
       data: result.data.data || result.data,
       totalPages,
       error: null,

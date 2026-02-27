@@ -100,9 +100,8 @@ const SearchPatrocinanteDialog = ({ handleAccept, handleCancel }) => {
 		Patrocinantes
 			.findAll({ query: debouncedValue.trim() })
 			.then(response => {
-				console.log("Respuesta de búsqueda:", response);
-				if (response.error) {
-					throw new Error(`HTTP error! status: ${response.status}`);
+				if (!response.ok) {
+					throw new Error(`HTTP error! status: ${response.error}`);
 				}
 				dispatch({ type: "SEARCH_SUCCESS", data: response.data });
 			})

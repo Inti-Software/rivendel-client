@@ -103,7 +103,7 @@ export default function Form() {
   useEffect(() => {
 		const fetchTiposDocumento = async () => {
 			const response = await TiposDocumento.findAll()
-			if (response.error) {
+			if (!response.ok) {
 				throw new Error(`Error al obtener tipos de documentos: ${response.error}`);
 			}
 
