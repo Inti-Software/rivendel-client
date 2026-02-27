@@ -2,7 +2,7 @@ import { useReducer, useEffect } from "react";
 import { useNavigate, Link, useParams } from "react-router-dom";
 import ValidationErrors from "../Shared/ValidationErrors";
 import { useNotification } from "../../contexts/Constants";
-import { Resoluciones } from "../../api/endpoints";
+import { Resoluciones } from "../../api/endpoints/resoluciones";
 
 const initialState = {
   id: 0,
@@ -75,17 +75,15 @@ export default function Form() {
 		try {
 			const fetchData = async () => {
 				const response = await Resoluciones.get(id);
+				let payload = initialState;
 				if (response.ok) {
-					const data = await response.json();
-					dispatch({ type: "INITIAL_LOAD", payload: {
-						id: data.id,
-						descripcion: data.descripcion,
-						detalle: data.detalle
-					}});
-				} else {					
-					console.error(await response.json());
-					dispatch({ type: "INITIAL_LOAD", payload: {} });
+					payload = {
+						id: response.data.id,
+						descripcion: response.data.descripcion,
+						detalle: response.data.detalle
+					};
 				}
+				dispatch({ type: "INITIAL_LOAD", payload });
 			};
 			fetchData();
 		} catch (err) {
@@ -145,7 +143,7 @@ export default function Form() {
 	}
 
 	return (
-		<form onSubmit={handleSubmit} style={{ padding: 20 }}>
+		<form onSubmit={handleSubmit} style={{ padding: 20 }} autoComplete="off">
 		  <h3 className="mb-3">{isNaN(id)? "Nuevo " : "Edición de "} Reclamo</h3>
 			{state.errors.length > 0 && <ValidationErrors errors={state.errors} />}
 				

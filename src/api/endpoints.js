@@ -24,27 +24,6 @@ export const TiposDocumento = new HttpRepository({
   delete: (id) => ({ method: "delete", url: `/tipdocs/${id}` }),
 });
 
-export const Resoluciones = new HttpRepository({
-  get: (id) => ({ method: "get", url: `/resoluciones/${id}` }),
-  findAll: ({ currentPage, recordsPerPage = RECORDS_PER_PAGE }) => ({
-    method: "get",
-    url: `/resoluciones?page=${currentPage}&limit=${recordsPerPage}`,
-  }),
-  create: ({ descripcion, detalle }) => ({
-    method: "POST",
-    url: `/resoluciones`,
-    headers: { "Content-Type": "application/json" },
-    data: { descripcion, detalle },
-  }),
-  update: ({ id, descripcion, detalle }) => ({
-    method: "PATCH",
-    url: `/resoluciones/${id}`,
-    headers: { "Content-Type": "application/json" },
-    data: { descripcion, detalle },
-  }),
-  delete: (id) => ({ method: "delete", url: `/resoluciones/${id}` }),
-});
-
 export const Reclamos = new HttpRepository({
   get: (id) => ({ method: "get", url: `/reclamos/${id}` }),
   findAll: ({ currentPage, recordsPerPage = RECORDS_PER_PAGE }) => ({
