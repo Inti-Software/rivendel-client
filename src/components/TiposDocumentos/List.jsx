@@ -1,4 +1,4 @@
-import { TiposDocumento } from "../../api/endpoints";
+import { TiposDocumento } from "../../api/endpoints/tiposDocumentos";
 import { DATA_COLUMN, BUTTON_COLUMN, EDIT_BUTTON, DELETE_BUTTON } from "../Shared/constants";
 import Grid from "../Grid/Grid";
 import DeleteMessage from "../Shared/DeleteMessage.jsx"

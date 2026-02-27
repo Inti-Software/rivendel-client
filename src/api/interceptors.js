@@ -19,6 +19,7 @@ async function onResponseUseFullFilled(response) {
 }
 
 async function onResponseUseRejected(error) {
+  console.log("Error en respuesta:", error.response?.status);
   if (error.response?.status === 401) {
     return refresh()
       .then((data) => {

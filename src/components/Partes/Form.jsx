@@ -3,7 +3,7 @@ import { useNavigate, Link, useParams } from "react-router-dom";
 import ValidationErrors from "../Shared/ValidationErrors";
 import { useNotification } from "../../contexts/Constants";
 import { Partes } from "../../api/endpoints/partes";
-import { TiposDocumento } from "../../api/endpoints";
+import { TiposDocumento } from "../../api/endpoints/tiposDocumentos";
 import DataBindedSelect from "../Forms/DataBindedSelect";
 import { SEARCH } from "../Shared/Icons";
 import SearchPatrocinanteDialog from "../Patrocinantes/SearchPatrocinanteDialog";

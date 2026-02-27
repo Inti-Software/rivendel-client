@@ -6,24 +6,6 @@ export const ACTION_CREATE = "create";
 
 export const ACTION_UPDATE = "update";
 
-export const TiposDocumento = new HttpRepository({
-  get: (id) => ({ method: "get", url: `/tipdocs/${id}` }),
-  findAll: () => ({ method: "get", url: `/tipdocs` }),
-  create: ({ sintetico, descripcion }) => ({
-    method: "POST",
-    url: `/tipdocs`,
-    headers: { "Content-Type": "application/json" },
-    data: { sintetico, descripcion },
-  }),
-  update: ({ id, sintetico, descripcion }) => ({
-    method: "PATCH",
-    url: `/tipdocs/${id}`,
-    headers: { "Content-Type": "application/json" },
-    data: { sintetico, descripcion },
-  }),
-  delete: (id) => ({ method: "delete", url: `/tipdocs/${id}` }),
-});
-
 export const Reclamos = new HttpRepository({
   get: (id) => ({ method: "get", url: `/reclamos/${id}` }),
   findAll: ({ currentPage, recordsPerPage = RECORDS_PER_PAGE }) => ({

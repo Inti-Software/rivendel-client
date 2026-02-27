@@ -34,7 +34,7 @@ const Grid = ({ columnBuilder, recordsPerPage = RECORDS_PER_PAGE, headers = [],
 	useEffect(() => {
     async function fetchData() {
       const { ok, data, totalPages, error } = await endpoints.findAll(debouncedValue.trim(), currentPage, recordsPerPage);
-      if (ok) {        
+      if (!ok) {
         showError(error);
         //setError(error);
       } else {
