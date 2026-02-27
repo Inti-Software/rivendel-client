@@ -38,7 +38,7 @@ root.render(
               <Route element={<LayoutRoutes />}>
                 <Route path="/tipos-documentos" element={<ListTiposDocumentos />} />
                 <Route path="/tipos-documentos/new" element={<TipoDocumentoForm />} />
-                <Route path="/tipos-documentos/edit/:id" element={<EditTipoDocumento />} />
+                <Route path="/tipos-documentos/edit/:id" element={<TipoDocumentoForm />} />
 
                 <Route path="/patrocinantes" element={<ListPatrocinantes />} />
                 <Route path="/patrocinantes/new" element={<PatrocinantesForm />} />
