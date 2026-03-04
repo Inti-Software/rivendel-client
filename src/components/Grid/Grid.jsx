@@ -6,19 +6,20 @@ import { SEARCH } from "../Shared/Icons";
 import DeleteDialog from "../Modals/DeleteDialog";
 import { DATA_COLUMN, BUTTON_COLUMN, CUSTOM_COLUMN, EDIT_BUTTON, DELETE_BUTTON } from "../Shared/constants";
 import { RECORDS_PER_PAGE } from "../../api/endpoints";
+import { useApi } from "../../hooks/useApi";
 
 const Grid = ({ columnBuilder, recordsPerPage = RECORDS_PER_PAGE, headers = [], 
   showSearchBar = false, searchPlaceHolder, endpoints, debug = false }) => {
-    
-	const [data, setData] = useState([]);
+   
 	const [currentPage, setCurrentPage] = useState(1);
-	const [totalPages, setTotalPages] = useState(0);
-	const [loading, setLoading] = useState(true);
 	const [userInput, setUserInput] = useState("");
 	const debouncedValue = useDebounce(userInput, 300)
 	const [onDeleteId, setOnDeleteId] = useState(null);
 	const [deleteDialog, setDeleteDialog] = useState({ show: false, message: "" });
 	const { showSuccess, showError } = useNotification();
+  const { data, loading, error, execute, setData } = useApi(endpoints.findAll);
+  const items = data?.data || [];
+  const totalPages = data?.totalPages || 0;
 
   const handleDelete = async () => {
     const result = await endpoints.delete(onDeleteId);
@@ -31,25 +32,15 @@ const Grid = ({ columnBuilder, recordsPerPage = RECORDS_PER_PAGE, headers = [],
     }
   };
   
-	useEffect(() => {
-    async function fetchData() {
-      const { ok, data, totalPages, error } = await endpoints.findAll(debouncedValue.trim(), currentPage, recordsPerPage);
-      if (!ok) {
-        showError(error);
-        //setError(error);
-      } else {
-        setData(data);
-        setTotalPages(totalPages || 1);
-        let pager = document.getElementById('selectPager');
-        if (pager) {
-          pager.value = currentPage;
-        }
-      }
+  useEffect(() => {
+    execute({ currentPage, recordsPerPage, search: debouncedValue.trim() })
+  }, [execute, currentPage, debouncedValue, recordsPerPage]);
+
+  useEffect(() => {
+    if (error) {
+      showError(error);
     }
-    
-    setLoading(true);
-    fetchData().finally(() => setLoading(false));
-	}, [currentPage, debouncedValue, endpoints, recordsPerPage, showError]);
+  }, [error, showError]);
 
   const onDeleteRecord = (e, id, msg) => {
     e.preventDefault();
@@ -61,7 +52,7 @@ const Grid = ({ columnBuilder, recordsPerPage = RECORDS_PER_PAGE, headers = [],
     const p = parseInt(page)
     if (p > 0) {
       setCurrentPage(p)
-    } else if (forward && (currentPage < totalPages)) {
+    } else if (forward && (currentPage < data.totalPages)) {
       setCurrentPage((prev) => prev + 1);
     } else if (!forward && (currentPage > 1)) {
       setCurrentPage((prev) => prev - 1);
@@ -118,13 +109,14 @@ const Grid = ({ columnBuilder, recordsPerPage = RECORDS_PER_PAGE, headers = [],
   const pager = (
     <div className="d-flex justify-content-between align-items-center">
       <button className="btn btn-primary" onClick={() => paginate({forward: false})}
-        disabled={currentPage === 1 || totalPages === 0}>
+        disabled={currentPage === 1}>
         Anterior
       </button>
       <span>          
         Página
-        <select id="selectPager" onChange={(e) => { paginate({ page: e.target.value })}} className="mx-2 text-center">
-          {[...Array(totalPages).keys()].map((i) => (
+        <select id="selectPager" onChange={(e) => { paginate({ page: e.target.value })}} className="mx-2 text-center"
+          value={currentPage}>
+          {totalPages > 0 && [...Array(totalPages).keys()].map((i) => (
             <option key={i + 1} value={i + 1} defaultValue={currentPage}>
               {i + 1}
             </option>
@@ -133,7 +125,7 @@ const Grid = ({ columnBuilder, recordsPerPage = RECORDS_PER_PAGE, headers = [],
         de {totalPages}
       </span>
       <button className="btn btn-primary" onClick={() => paginate({forward: true})}
-        disabled={currentPage === totalPages || totalPages === 0}>
+        disabled={currentPage === totalPages}>
         Siguiente
       </button>
     </div>
@@ -155,7 +147,7 @@ const Grid = ({ columnBuilder, recordsPerPage = RECORDS_PER_PAGE, headers = [],
       </thead>
     ) }
       <tbody>
-        {(!data || data.length === 0) ? (renderNoHayDatos) : (data.map(getRow))}
+        {(!items || items.length === 0) ? (renderNoHayDatos) : (items.map(getRow))}
       </tbody>
     </table>
   );
@@ -177,11 +169,12 @@ const Grid = ({ columnBuilder, recordsPerPage = RECORDS_PER_PAGE, headers = [],
     </div>
   );
   
+  if (loading) {
+    return spinner;
+  }
   
 	return (
     <>
-      {loading && spinner}
-
       {showSearchBar && (searchBar)}
 
       {table}

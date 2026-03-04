@@ -2,6 +2,20 @@ import { http } from "./http.js";
 import { refresh } from "../auth/auth.api.js";
 import { getToken, clearAuthData, setAuthData } from "./tokenStore.js";
 
+let isRefreshing = false;
+let failedQueue = [];
+
+function processQueue(error, token = null) {
+  failedQueue.forEach((prom) => {
+    if (error) {
+      prom.reject(error);
+    } else {
+      prom.resolve(token);
+    }
+  });
+  failedQueue = [];
+}
+
 async function onRequestUseFullFilled(config) {
   const token = getToken();
   if (token) {
@@ -19,20 +33,50 @@ async function onResponseUseFullFilled(response) {
 }
 
 async function onResponseUseRejected(error) {
-  console.log("Error en respuesta:", error.response?.status);
-  if (error.response?.status === 401) {
-    return refresh()
-      .then((data) => {
-        setAuthData(data);
-        error.config.headers.Authorization = `Bearer ${data.accessToken}`;
-        return http(error.config);
-      })
-      .catch((err) => {
-        clearAuthData();
-        window.location.href = "/";
-        return Promise.reject(err);
-      });
+  const originalRequest = error.config;
+
+  if (!error.response) {
+    return Promise.reject(error);
   }
+
+  const isAuthRefreshCall = originalRequest.url.includes("/auth/refresh");
+
+  if (error.response.status === 401 && !originalRequest._retry && !isAuthRefreshCall) {
+    if (isRefreshing) {
+      return new Promise((resolve, reject) => {
+        failedQueue.push({ resolve, reject });
+      })
+        .then((token) => {
+          originalRequest.headers.Authorization = `Bearer ${token}`;
+          return http(originalRequest);
+        })
+        .catch((err) => Promise.reject(err));
+    }
+
+    originalRequest._retry = true;
+    isRefreshing = true;
+
+    try {
+      const data = await refresh();
+
+      setAuthData(data);
+
+      processQueue(null, data.accessToken);
+
+      originalRequest.headers.Authorization = `Bearer ${data.accessToken}`;
+      return http(originalRequest);
+
+    } catch (err) {
+      processQueue(err, null);
+      clearAuthData();
+      window.location.href = "/";
+      return Promise.reject(err);
+
+    } finally {
+      isRefreshing = false;
+    }
+  }
+
   return Promise.reject(error);
 }
 

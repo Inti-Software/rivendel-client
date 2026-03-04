@@ -5,7 +5,8 @@ export default class HttpRepository {
     this.config = configuration;
   }
 
-  async request(config) {
+  request = async (config) => {
+    console.log("Ejecutando request con config:", config);
     try {
       const response = await http(config);
       return { ok: true, data: response.data, status: response.status };
@@ -15,47 +16,39 @@ export default class HttpRepository {
         err.response?.data?.message ??
         `Error ${status} al procesar la solicitud.`;
 
-      return {
-        ok: false,
-        error: message,
-        status,
-      };
+      return { ok: false, error: message, status };
     }
   }
 
-  async findAll(params = {}) {
+  findAll = async (params = {}) => {
     const config = this.config.findAll(params);
     const result = await this.request(config);
 
     if (!result.ok) {
-      return { ok: false, error: result.error };
+      return { ...result, data: [], totalPages: 0 };
     }
 
     const totalRecords = result.data.totalRecords || 0;
     const totalPages = Math.ceil(totalRecords / params.recordsPerPage);
 
-    return {
-      ok: true,
-      data: result.data.data || result.data,
-      totalPages,
-      error: null,
-    };
+    return { ...result, data: { data: result.data.data || result.data, totalPages } };
   }
-  
-  async delete(id) {
+
+  delete = async (id) => {
     return await this.request(this.config.delete(id));
   }
 
-  async create(payload) {
+  create = async (payload) => {
     return await this.request(this.config.create(payload));
   }
 
-  async update(payload) {
+  update = async (payload) => {
     return await this.request(this.config.update(payload));
   }
-  async get(id) {
+
+  get = async (id) => {
     const result = await this.request(this.config.get(id));
     if (!result.ok) return result;
-    return { ok: true, data: result.data };
+    return { ...result, data: result.data };
   }
 }

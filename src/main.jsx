@@ -6,7 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import App from "./App.jsx";
 import ListTiposDocumentos from "./components/TiposDocumentos/List.jsx";
 import TipoDocumentoForm from "./components/TiposDocumentos/Form.jsx";
-import NotificationProvider from "./contexts/NotificationContext.jsx";
+import NotificationProvider from "./contexts/NotificationProvider.jsx";
 import ListPatrocinantes from "./components/Patrocinantes/List.jsx";
 import ListPartes from "./components/Partes/List.jsx";
 import ListResoluciones from "./components/Resoluciones/List.jsx";
