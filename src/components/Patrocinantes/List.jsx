@@ -3,7 +3,6 @@ import { Patrocinantes } from "../../api/endpoints/patrocinantes";
 import Grid from "../Grid/Grid";
 import DeleteMessage from "../Shared/DeleteMessage.jsx"
 import Container from "../Shared/Container.jsx";
-import NotificationDisplay from "../Shared/NotificationDisplay.jsx";
 
 export default function List() {
 	const headers = ["Nombre", "Matrícula", "Domicilio", "Localidad", "Casillero", ""];	
@@ -35,7 +34,6 @@ export default function List() {
 
 	return (
 		<Container pathToNew="/patrocinantes/new">
-			<NotificationDisplay />
 			<Grid columnBuilder={rowGenerator} recordsPerPage={50} headers={headers} 
 				showSearchBar={true} searchPlaceHolder={searchPlaceHolder} endpoints={Patrocinantes} />
 		</Container>

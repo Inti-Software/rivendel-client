@@ -1,7 +1,6 @@
 import { useReducer, useEffect } from "react";
 import { useNavigate, Link, useParams } from "react-router-dom";
 import ValidationErrors from "../Shared/ValidationErrors";
-import { useNotification } from "../../contexts/Constants";
 import { Resoluciones } from "../../api/endpoints/resoluciones";
 
 const initialState = {
@@ -67,7 +66,6 @@ export default function Form() {
   const [state, dispatch] = useReducer(formReducer, initialState);
 	const navigate = useNavigate();
 	const { id } = useParams();
-	const { showSuccess } = useNotification();
 
 	useEffect(() => {
 		if (isNaN(id)) return;
@@ -126,9 +124,9 @@ export default function Form() {
 			if (result.ok) {
 				const descripcion = state.descripcion.substring(0, 25) +
 						(state.descripcion.length > 25 ? "..." : "");
-				showSuccess(`La resolución ${descripcion} se ${state.isUpdate ? "actualizó" : "creó"} correctamente.`);
+				const mensaje = `La resolución ${descripcion} se ${state.isUpdate ? "actualizó" : "creó"} correctamente.`;
 				dispatch({ type: "SUBMIT_SUCCESS" });
-				navigate("/resoluciones");
+				navigate("/resoluciones", { state: { successMsg: mensaje }});
 			} else {				
 				dispatch({ type: "SUBMIT_FAIL", errors: result.error });
 			}

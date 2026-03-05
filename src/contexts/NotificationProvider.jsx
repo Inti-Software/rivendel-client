@@ -1,20 +1,9 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo } from 'react';
 import { NotificationContext } from './Constants';
 import { toast } from 'react-toastify';
 
 const NotificationProvider = ({ children }) => {
-  const [notification, setNotification] = useState({
-    message: '',
-    visible: false,
-    duration: 5000,
-  });
-
-  const setInvisible = () => {
-    setNotification(prev => ({ ...prev, visible: false }));
-  }
-
-  const properties = useMemo(() => ({ 
-    onClose: setInvisible, 
+  const defaultOptions = useMemo(() => ({ 
     style: { 
       fontSize: "12px",
       lineHeight: "12px",
@@ -23,16 +12,14 @@ const NotificationProvider = ({ children }) => {
   }), []);
 
   const showSuccess = useCallback((message, duration = 5000) => {
-    setNotification({ message, visible: true, duration });
-    toast.success(message, properties);
-  }, [properties]);
+    toast.success(message, { ...defaultOptions, autoClose: duration, toastId: message });
+  }, [defaultOptions]);
 
   const showError = useCallback((message, duration = 5000) => {
-    setNotification({ message, visible: true, duration });
-    toast.error(message, properties);
-  }, [properties]);
+    toast.error(message, { ...defaultOptions, autoClose: duration, toastId: message });
+  }, [defaultOptions]);
 
-  const value = useMemo(() => ({ notification, showSuccess, showError }), [notification, showSuccess, showError]);
+  const value = useMemo(() => ({ showSuccess, showError }), [showSuccess, showError]);
  
   return (
     <NotificationContext.Provider value={value}>

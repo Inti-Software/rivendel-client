@@ -1,7 +1,6 @@
 import { useReducer, useEffect, useState } from "react";
 import { useNavigate, Link, useParams } from "react-router-dom";
 import ValidationErrors from "../Shared/ValidationErrors";
-import { useNotification } from "../../contexts/Constants";
 import { Partes } from "../../api/endpoints/partes";
 import { TiposDocumento } from "../../api/endpoints/tiposDocumentos";
 import DataBindedSelect from "../Forms/DataBindedSelect";
@@ -97,7 +96,6 @@ export default function Form() {
   const [state, dispatch] = useReducer(formReducer, initialState);
 	const navigate = useNavigate();
 	const { id } = useParams();
-	const { showSuccess } = useNotification();
 	const [tiposDocumento, setTiposDocumento] = useState([]);
 
   useEffect(() => {
@@ -197,9 +195,9 @@ export default function Form() {
 				result = await	Partes.update(parte);
 
 			if (result.ok) {
-				showSuccess(`La parte ${state.nombre} se ${state.isUpdate ? "actualizó" : "creó"} correctamente.`);				
+				const mensaje = `La parte ${state.nombre} se ${state.isUpdate ? "actualizó" : "creó"} correctamente.`;
 				dispatch({ type: "SUBMIT_SUCCESS" });
-				navigate("/partes");
+				navigate("/partes", { state: { successMsg: mensaje }});
 			} else {				
 				const errorData = await result.json();
 				dispatch({ type: "SUBMIT_FAIL", errors: errorData.message });

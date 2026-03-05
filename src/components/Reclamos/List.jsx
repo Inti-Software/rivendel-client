@@ -3,7 +3,6 @@ import { CUSTOM_COLUMN } from "../Shared/constants";
 import Grid from "../Grid/Grid";
 import ListCell from "./ListCell.jsx";
 import Container from "../Shared/Container.jsx";
-import NotificationDisplay from "../Shared/NotificationDisplay.jsx";
 
 const ListReclamos = () => {
 	const rowGenerator = ({ data, onDelete }) => {
@@ -17,7 +16,6 @@ const ListReclamos = () => {
 
   return (
     <Container pathToNew="/reclamos/new">
-      <NotificationDisplay />
       <Grid columnBuilder={rowGenerator} endpoints={Reclamos} />
     </Container>
   );

@@ -3,7 +3,6 @@ import { BUTTON_COLUMN, DATA_COLUMN, EDIT_BUTTON, DELETE_BUTTON } from "../Share
 import Grid from "../Grid/Grid";
 import DeleteMessage from "../Shared/DeleteMessage.jsx"
 import Container from "../Shared/Container.jsx";
-import NotificationDisplay from "../Shared/NotificationDisplay.jsx";
 
 const ListResoluciones = () => {
 	const getDeleteMessage = (r) =>
@@ -26,7 +25,6 @@ const ListResoluciones = () => {
 
   return (
     <Container pathToNew="/resoluciones/new">
-      <NotificationDisplay />
       <Grid columnBuilder={rowGenerator} endpoints={Resoluciones} />
     </Container>
   );

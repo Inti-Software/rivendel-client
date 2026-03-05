@@ -7,7 +7,6 @@ import { Resoluciones } from "../../api/endpoints/resoluciones";
 import DataBindedSelect from "../Forms/DataBindedSelect";
 import ValidationErrors from "../Shared/ValidationErrors";
 import dayjs from "dayjs";
-import { useNotification } from "../../contexts/Constants";
 import { DELETE, PLUSCIRCLE } from "../Shared/Icons";
 import { NO_ESPECIFICADO } from "../Shared/constants";
 
@@ -28,8 +27,7 @@ const initialState = {
 	},
 	initializing: true,
   loading: false,
-  errors: [],
-	isUpdate: false
+  errors: []
 };
 
 function formReducer(state, action) {
@@ -94,7 +92,6 @@ export default function Form() {
 	const [resoluciones, setResoluciones] = useState([]);
 	const navigate = useNavigate();
 	const { id } = useParams();
-	const { showSuccess } = useNotification();
 
 	useEffect(() => {
 		const fetchResoluciones = async () => {
@@ -240,10 +237,10 @@ export default function Form() {
 				result = await	Reclamos.update(reclamo);
 
 			if (result.ok) {
-				showSuccess("El reclamo Nº " + state.numero + 
-					` se ${state.isUpdate ? "actualizó" : "creó"} correctamente.`);
+				const mensaje = "El reclamo Nº " + state.numero + 
+					` se ${isNaN(id) ? "actualizó" : "creó"} correctamente.`;
 				dispatch({ type: "SUBMIT_SUCCESS" });
-				navigate("/reclamos");
+				navigate("/reclamos", { state: { successMsg: mensaje }});
 			} else {				
 				const errorData = await result.json();
 				dispatch({ type: "SUBMIT_FAIL", errors: errorData.message });

@@ -2,7 +2,6 @@ import { useEffect, useReducer } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import { Patrocinantes } from "../../api/endpoints/patrocinantes";
 import ValidationErrors from "../Shared/ValidationErrors";
-import { useNotification } from "../../contexts/Constants";
 
 const initialState = {
   id: 0,
@@ -13,8 +12,7 @@ const initialState = {
   nroCasillero: 0,
   initializing: true,
   loading: false,
-  errors: [],
-	isUpdate: false
+  errors: []
 };
 
 function formReducer(state, action) {
@@ -57,8 +55,7 @@ function formReducer(state, action) {
 			return { 
 				...state,
 				...action.payload,
-				initializing: false,
-				isUpdate: action.payload.id !== undefined
+				initializing: false
 			};
 
     default:
@@ -71,7 +68,6 @@ export default function Form() {
   const [state, dispatch] = useReducer(formReducer, initialState);
 	const navigate = useNavigate();
 	const { id } = useParams();
-	const { showSuccess } = useNotification();
 
 	useEffect(() => {
 		if (isNaN(id)) return;
@@ -135,11 +131,9 @@ export default function Form() {
 				result = await	Patrocinantes.update(patrocinante);
 
 			if (result.ok) {
-				showSuccess(
-					`El patrocinante ${state.nombre} se ${state.isUpdate ? "actualizó" : "creó"} correctamente.`
-				);
+				const mensaje = `El patrocinante ${state.nombre} se ${isNaN(id) ? "actualizó" : "creó"} correctamente.`;
 				dispatch({ type: "SUBMIT_SUCCESS" });
-				navigate("/patrocinantes");
+				navigate("/patrocinantes", { state: { successMsg: mensaje }});
 			} else {				
 				dispatch({ type: "SUBMIT_FAIL", errors: result.error });
 			}

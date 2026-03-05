@@ -7,6 +7,7 @@ import DeleteDialog from "../Modals/DeleteDialog";
 import { DATA_COLUMN, BUTTON_COLUMN, CUSTOM_COLUMN, EDIT_BUTTON, DELETE_BUTTON } from "../Shared/constants";
 import { RECORDS_PER_PAGE } from "../../api/endpoints";
 import { useApi } from "../../hooks/useApi";
+import { useLocation } from "react-router-dom";
 
 const Grid = ({ columnBuilder, recordsPerPage = RECORDS_PER_PAGE, headers = [], 
   showSearchBar = false, searchPlaceHolder, endpoints, debug = false }) => {
@@ -16,8 +17,9 @@ const Grid = ({ columnBuilder, recordsPerPage = RECORDS_PER_PAGE, headers = [],
 	const debouncedValue = useDebounce(userInput, 300)
 	const [onDeleteId, setOnDeleteId] = useState(null);
 	const [deleteDialog, setDeleteDialog] = useState({ show: false, message: "" });
+  const location = useLocation();
 	const { showSuccess, showError } = useNotification();
-  const { data, loading, error: errorFindAll, execute: findAll } = useApi(endpoints.findAll);
+  const { data, loading, error: errorFindAll, setData, execute: findAll } = useApi(endpoints.findAll);
   const { error: errorDelete, execute: deleteItem } = useApi(endpoints.delete);
   const items = data?.data || [];
   const totalPages = data?.totalPages || 0;
@@ -25,7 +27,7 @@ const Grid = ({ columnBuilder, recordsPerPage = RECORDS_PER_PAGE, headers = [],
   const handleDelete = async () => {   
     const result = await deleteItem(onDeleteId);
     if (result.ok) {
-      data.data = data?.data.filter((t) => t.id !== onDeleteId);
+      setData(prev => ({ ...prev, data: prev.data.filter((t) => t.id !== onDeleteId) }));
       setDeleteDialog({show: false});
       showSuccess("Se eliminó correctamente el registro.");
     }
@@ -46,6 +48,13 @@ const Grid = ({ columnBuilder, recordsPerPage = RECORDS_PER_PAGE, headers = [],
       showError(errorFindAll);
     }
   }, [errorFindAll, showError]);
+
+  useEffect(() => {
+    if (location.state?.successMsg) {
+      showSuccess(location.state.successMsg);
+      window.history.replaceState({}, document.title);
+    }
+  }, [location, showSuccess])
 
   const onDeleteRecord = (e, id, msg) => {
     e.preventDefault();

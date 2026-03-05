@@ -1,7 +1,6 @@
 import { useReducer, useEffect } from "react";
 import { useNavigate, Link, useParams } from "react-router-dom";
 import ValidationErrors from "../Shared/ValidationErrors";
-import { useNotification } from "../../contexts/Constants";
 import { TiposDocumento } from "../../api/endpoints/tiposDocumentos";
 
 const initialState = {
@@ -67,7 +66,6 @@ export default function Form() {
   const [state, dispatch] = useReducer(formReducer, initialState);
 	const navigate = useNavigate();
 	const { id } = useParams();
-	const { showSuccess } = useNotification();
 
 	useEffect(() => {
 		if (isNaN(id)) return;
@@ -124,9 +122,10 @@ export default function Form() {
 				result = await	TiposDocumento.update(tipoDocumento);
 
 			if (result.ok) {
-				showSuccess(`El tipo de documento "${state.sintetico}" ha sido ${isNaN(id) ? "creado" : "actualizado"} exitosamente.`);
+				const mensaje = `El tipo de documento "${state.sintetico}" ha sido ${isNaN(id) ? 
+					"creado" : "actualizado"} exitosamente.`;
 				dispatch({ type: "SUBMIT_SUCCESS" });
-				navigate("/tipos-documentos");
+				navigate("/tipos-documentos", { state: { successMsg: mensaje }});
 			} else {				
 				dispatch({ type: "SUBMIT_FAIL", errors: result.error });
 			}

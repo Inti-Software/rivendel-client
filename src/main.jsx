@@ -21,6 +21,7 @@ import PageTitle from "./components/PageTitle/PageTitle.jsx";
 import { setupInterceptors } from "./api/interceptors.js";
 import ProtectedRoute from "./components/Auth/ProtectedRoute.jsx";
 import { initializeAuth } from "./auth/auth.bootstrap.js";
+import NotificationDisplay from "./components/Shared/NotificationDisplay.jsx";
 
 await initializeAuth();
 setupInterceptors();
@@ -30,6 +31,7 @@ root.render(
     <NotificationProvider>
       <BrowserRouter>
         <PageTitle />
+        <NotificationDisplay />
         <Routes>
             <Route path="/" element={<App />} />
             <Route element={<ProtectedRoute />}>

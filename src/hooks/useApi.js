@@ -25,5 +25,5 @@ export function useApi(repositoryMethod) {
     }
   }, [repositoryMethod]);
 
-  return { data, loading, error, execute };
+  return { data, loading, error, setData, execute };
 }
