@@ -6,7 +6,6 @@ export default class HttpRepository {
   }
 
   request = async (config) => {
-    console.log("Ejecutando request con config:", config);
     try {
       const response = await http(config);
       return { ok: true, data: response.data, status: response.status };

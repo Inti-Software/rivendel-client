@@ -17,30 +17,35 @@ const Grid = ({ columnBuilder, recordsPerPage = RECORDS_PER_PAGE, headers = [],
 	const [onDeleteId, setOnDeleteId] = useState(null);
 	const [deleteDialog, setDeleteDialog] = useState({ show: false, message: "" });
 	const { showSuccess, showError } = useNotification();
-  const { data, loading, error, execute, setData } = useApi(endpoints.findAll);
+  const { data, loading, error: errorFindAll, execute: findAll } = useApi(endpoints.findAll);
+  const { error: errorDelete, execute: deleteItem } = useApi(endpoints.delete);
   const items = data?.data || [];
   const totalPages = data?.totalPages || 0;
 
-  const handleDelete = async () => {
-    const result = await endpoints.delete(onDeleteId);
-    setDeleteDialog({show: false});
-    if (result?.error) {
-      showError(result.error);
-    } else {
-      setData((prevData) => prevData.filter((doc) => doc.id !== onDeleteId));
+  const handleDelete = async () => {   
+    const result = await deleteItem(onDeleteId);
+    if (result.ok) {
+      data.data = data?.data.filter((t) => t.id !== onDeleteId);
+      setDeleteDialog({show: false});
       showSuccess("Se eliminó correctamente el registro.");
     }
   };
-  
-  useEffect(() => {
-    execute({ currentPage, recordsPerPage, search: debouncedValue.trim() })
-  }, [execute, currentPage, debouncedValue, recordsPerPage]);
 
   useEffect(() => {
-    if (error) {
-      showError(error);
+    if (errorDelete) {
+      showError(errorDelete)
     }
-  }, [error, showError]);
+  }, [errorDelete, showError])
+  
+  useEffect(() => {
+    findAll({ currentPage, recordsPerPage, search: debouncedValue.trim() })
+  }, [findAll, currentPage, debouncedValue, recordsPerPage]);
+
+  useEffect(() => {
+    if (errorFindAll) {
+      showError(errorFindAll);
+    }
+  }, [errorFindAll, showError]);
 
   const onDeleteRecord = (e, id, msg) => {
     e.preventDefault();

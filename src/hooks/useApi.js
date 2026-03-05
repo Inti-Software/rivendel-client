@@ -6,19 +6,14 @@ export function useApi(repositoryMethod) {
   const [error, setError] = useState(null);
 
   const execute = useCallback(async (args) => {
-
-    console.log("Ejecutando useApi.execute con args:", args);
     setLoading(true);
     setError(null);
-
     try {
-      const result = await repositoryMethod(args);
-      
-      if (result.error) {
+      const result = await repositoryMethod(args);      
+      if (!result.ok) {
         setError(result.error);
-        return result; // Devolvemos el resultado por si el componente quiere hacer algo más
+        return result;
       }
-
       setData(result.data || result);
       return result;
     } catch {
@@ -30,5 +25,5 @@ export function useApi(repositoryMethod) {
     }
   }, [repositoryMethod]);
 
-  return { data, loading, error, execute, setData };
+  return { data, loading, error, execute };
 }
