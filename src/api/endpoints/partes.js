@@ -3,12 +3,13 @@ import { RECORDS_PER_PAGE } from "../endpoints";
 
 export const Partes = new HttpRepository({
 	get: (id) => ({ method: "get", url: `/partes/${id}` }),
-	findAll: ({ currentPage, recordsPerPage = RECORDS_PER_PAGE }) => ({
+	findAll: ({ query, currentPage, recordsPerPage = RECORDS_PER_PAGE }) => ({
 		method: "get",
 		url: `/partes`,
 		params: {
 			page: currentPage || 1,
 			limit: recordsPerPage,
+			query
 		}
 	}),
 	create: ({ nombre, idTipoDocumento, nroDocumento, cuil, domicilio, idPatrocinante,
@@ -28,8 +29,4 @@ export const Partes = new HttpRepository({
 				esApoderado, localidad },
 		}),
 	delete: (id) => ({ method: "delete", url: `/partes/${id}` }),
-	search: ({ q, currentPage, recordsPerPage = RECORDS_PER_PAGE }) => ({
-		method: "get",
-		url: `/partes/search?q=${q}&page=${currentPage}&limit=${recordsPerPage}`,
-	}),
 });

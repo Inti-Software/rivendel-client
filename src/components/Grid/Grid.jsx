@@ -8,6 +8,7 @@ import { DATA_COLUMN, BUTTON_COLUMN, CUSTOM_COLUMN, EDIT_BUTTON, DELETE_BUTTON }
 import { RECORDS_PER_PAGE } from "../../api/endpoints";
 import { useApi } from "../../hooks/useApi";
 import { useLocation } from "react-router-dom";
+import Spinner from "../Shared/Spinner";
 
 const Grid = ({ columnBuilder, recordsPerPage = RECORDS_PER_PAGE, headers = [], 
   showSearchBar = false, searchPlaceHolder, endpoints, debug = false }) => {
@@ -145,12 +146,6 @@ const Grid = ({ columnBuilder, recordsPerPage = RECORDS_PER_PAGE, headers = [],
     </div>
   );
 
-  const spinner = (
-    <div className="spinner-border text-success h4 m-auto d-block" role="status">
-      <span className="visually-hidden">Cargando...</span>
-    </div>
-  );
-
   const table = (
     <table className="table table-striped table-hover">
     { headers && (
@@ -184,7 +179,7 @@ const Grid = ({ columnBuilder, recordsPerPage = RECORDS_PER_PAGE, headers = [],
   );
   
   if (loading) {
-    return spinner;
+    return <Spinner />
   }
   
 	return (

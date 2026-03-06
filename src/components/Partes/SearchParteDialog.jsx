@@ -1,8 +1,10 @@
-import { useEffect, useReducer } from 'react';
+import { useCallback, useEffect, useReducer } from 'react';
 import { Partes } from '../../api/endpoints/partes';
 import { SEARCH } from '../Shared/Icons';
 import { NO_ESPECIFICADO } from '../Shared/constants';
 import useDebounce from '../../hooks/useDebounce';
+import { useApi } from '../../hooks/useApi';
+import Spinner from '../Shared/Spinner';
 
 const initialState = {
 	term: "",
@@ -13,8 +15,7 @@ const initialState = {
 		nombre: ""
 	},
 	done: false,
-	error: "",
-	loading: false
+	error: ""
 }
 
 function formReducer(state, action) {
@@ -29,8 +30,7 @@ function formReducer(state, action) {
     case "SEARCH_START":
       return { 
 				...state, 
-				error: "",
-				loading: true 
+				error: ""
 			};
 
     case "SEARCH_SUCCESS": 
@@ -50,6 +50,15 @@ function formReducer(state, action) {
 			};
 		}
 
+		case "RESET_SEARCH": {
+			return {
+				...state,
+				term: action.value,
+				done: false,
+				data: []
+			}
+		}
+
     default:
       return state;
   }
@@ -58,30 +67,33 @@ function formReducer(state, action) {
 const SearchParteDialog = ({ title, handleAccept, handleCancel }) => {
 	const [state, dispatch] = useReducer(formReducer, initialState);
 	const debouncedValue = useDebounce(state.term, 300)
+	const { data, error, execute: findAll } = useApi(Partes.findAll);
 
-	const buscar = () => {
+	const buscar = useCallback(() => {
 		if (debouncedValue.trim().length < 3) {			
 			return;
 		}
 
-		Partes
-			.search({ q: debouncedValue.trim(), currentPage: 1, recordsPerPage: 100 })
-			.then(response => {
-				if (!response.ok) {
-					throw new Error(`HTTP error! status: ${response.status}`);
-				}
-				return response.json();
-			})
-			.then(data => { dispatch({ type: "SEARCH_SUCCESS", data: data.data }) })
-			.catch(error => {
-				console.error("Error al buscar partes:", error);
-				dispatch({ type: "SEARCH_FAIL", error: "Ocurrió un error al realizar la búsqueda. Por favor, inténtelo de nuevo." })
-			});
-	}
+		dispatch({ type: "SEARCH_START" });
+		findAll({ query: debouncedValue.trim(), currentPage: 1, recordsPerPage: 100 });
+	}, [debouncedValue, findAll]);
 
 	useEffect(() => {
-		state.term ? buscar() : dispatch({ type: "SET_FIELD", field: "term", value: "" })
-	}, [debouncedValue])
+		if (data) {
+			dispatch({ type: "SEARCH_SUCCESS", data: data.data });
+		}
+	}, [data])
+
+	useEffect(() => {
+		if (error) {
+			console.error("Error al buscar partes:", error);
+			dispatch({ type: "SEARCH_FAIL", error: "Ocurrió un error al realizar la búsqueda. Por favor, inténtelo de nuevo." });
+		}
+	}, [error])
+
+	useEffect(() => {
+		debouncedValue.trim() ? buscar() : dispatch({ type: "SET_FIELD", field: "term", value: "" })
+	}, [debouncedValue, buscar])
 
 	const onSelectRow = (event) => {
 		const row = event.target.closest("tr");
@@ -124,9 +136,7 @@ const SearchParteDialog = ({ title, handleAccept, handleCancel }) => {
 	}
 
 	const handleChange = (e) => {
-		dispatch({ type: "SET_FIELD", field: "term", value: e.target.value })
-		dispatch({ type: "SET_FIELD", field: "done", value: false })
-		dispatch({ type: "SET_FIELD", field: "data", value: [] })
+		dispatch({ type: "RESET_SEARCH", value: e.target.value })
 	}
 
 	return (
@@ -206,6 +216,9 @@ const SearchParteDialog = ({ title, handleAccept, handleCancel }) => {
 								</span>)
 							)}
 						</div>
+					</div>
+					<div>
+						{state.loading && <Spinner />}
 					</div>
 					<div className="modal-footer">
 						<button type="button" className="btn btn-success" onClick={(e) => handleAccept(e, state.selected)}
