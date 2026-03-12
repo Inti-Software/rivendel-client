@@ -2,17 +2,16 @@ import axios from "axios";
 import { http } from "../api/http";
 
 export async function login(email, password) {
-  const response = await axios
-    .post("http://localhost:3000/auth/login", { email, password })
-    .then((response) => {
-      const { data } = response;
-      return { data: data };
-    })
-    .catch(() => {
-      return { error: true };
+  try {
+    const response = await axios.post("http://localhost:3000/auth/login", {
+      email,
+      password,
     });
-
-  return response;
+    const { data } = response;
+    return { data: data };
+  } catch {
+    return { error: true };
+  }
 }
 
 export async function refresh() {

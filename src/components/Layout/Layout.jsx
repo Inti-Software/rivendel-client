@@ -91,7 +91,9 @@ function Layout({ children }) {
         <p className="text-body-secondary ps-2 mb-0">© 2025 Inti Software</p>
         <p className="mb-0 text-success fw-bold">
           <span className="pe-1"><PERSON size="20px" /></span>
-          { getUserName() }
+          <Link to={"/user/form"} title="Configurar datos" className="text-success text-decoration-none">
+              {getUserName()} 
+          </Link>
         </p>
       </footer>
     </>

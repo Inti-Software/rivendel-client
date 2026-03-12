@@ -22,6 +22,7 @@ import { setupInterceptors } from "./api/interceptors.js";
 import ProtectedRoute from "./components/Auth/ProtectedRoute.jsx";
 import { initializeAuth } from "./auth/auth.bootstrap.js";
 import NotificationDisplay from "./components/Shared/NotificationDisplay.jsx";
+import UserForm from "./components/Users/Form.jsx";
 
 await initializeAuth();
 setupInterceptors();
@@ -37,6 +38,8 @@ root.render(
             <Route element={<ProtectedRoute />}>
               <Route path="/reclamos/reporte/:id" element={<Reporte root={root} />} />
               <Route element={<LayoutRoutes />}>
+                <Route path="/user/form" element={<UserForm />} />
+                
                 <Route path="/tipos-documentos" element={<ListTiposDocumentos />} />
                 <Route path="/tipos-documentos/new" element={<TipoDocumentoForm />} />
                 <Route path="/tipos-documentos/edit/:id" element={<TipoDocumentoForm />} />
