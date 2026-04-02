@@ -74,7 +74,6 @@ function Layout({ children }) {
                   <NavLink relativeUrl={item.relativeUrl} text={item.text} />
                 </li>
               )) }
-              | 
               <li className="nav-item">
                 <Link to={"/logout"} className="nav-link" title="Cerrar sesión" onClick={handleLogout}>
                   {BOXARROWLEFT}

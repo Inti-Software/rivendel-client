@@ -58,20 +58,15 @@ async function onResponseUseRejected(error) {
 
     try {
       const data = await refresh();
-
       setAuthData(data);
-
       processQueue(null, data.accessToken);
-
       originalRequest.headers.Authorization = `Bearer ${data.accessToken}`;
       return http(originalRequest);
-
     } catch (err) {
       processQueue(err, null);
       clearAuthData();
       window.location.href = "/";
       return Promise.reject(err);
-
     } finally {
       isRefreshing = false;
     }

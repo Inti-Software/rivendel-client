@@ -1,14 +1,9 @@
-import axios from "axios";
-import { http } from "../api/http";
+import { http, publicHttp } from "../api/http";
 
 export async function login(email, password) {
   try {
-    const response = await axios.post("http://localhost:3000/auth/login", {
-      email,
-      password,
-    });
-    const { data } = response;
-    return { data: data };
+    const response = await publicHttp.post("/auth/login", { email, password });
+    return { data: response.data };
   } catch (error) {
     const msg = "Error al iniciar sesión. Por favor, inténtelo de nuevo.";
     if (error.response) {
@@ -26,8 +21,12 @@ export async function login(email, password) {
 }
 
 export async function refresh() {
-  const res = await http({ method: "post", url: "/auth/refresh" });
-  return res.data;
+  try {
+    const res = await http({ method: "post", url: "/auth/refresh" });
+    return res.data;    
+  } catch {
+    return Promise.reject("No se pudo refrescar el token. Por favor, inicie sesión nuevamente.");
+  }
 }
 
 export async function logout() {

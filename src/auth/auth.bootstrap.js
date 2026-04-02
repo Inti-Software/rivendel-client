@@ -7,5 +7,6 @@ export async function initializeAuth() {
     setAuthData(data);
   } catch {
     clearAuthData();
+    window.location.href = "/";
   }
 }
