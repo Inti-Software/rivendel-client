@@ -1,4 +1,4 @@
-import { http } from "./http.js";
+import { authHttp } from "./http.js";
 import { refresh } from "../auth/auth.api.js";
 import { getToken, clearAuthData, setAuthData } from "./tokenStore.js";
 
@@ -48,7 +48,7 @@ async function onResponseUseRejected(error) {
       })
         .then((token) => {
           originalRequest.headers.Authorization = `Bearer ${token}`;
-          return http(originalRequest);
+          return authHttp(originalRequest);
         })
         .catch((err) => Promise.reject(err));
     }
@@ -61,7 +61,7 @@ async function onResponseUseRejected(error) {
       setAuthData(data);
       processQueue(null, data.accessToken);
       originalRequest.headers.Authorization = `Bearer ${data.accessToken}`;
-      return http(originalRequest);
+      return authHttp(originalRequest);
     } catch (err) {
       processQueue(err, null);
       clearAuthData();
@@ -76,6 +76,6 @@ async function onResponseUseRejected(error) {
 }
 
 export function setupInterceptors() {
-  http.interceptors.request.use(onRequestUseFullFilled, onRequestUseRejected);
-  http.interceptors.response.use(onResponseUseFullFilled, onResponseUseRejected);
+  authHttp.interceptors.request.use(onRequestUseFullFilled, onRequestUseRejected);
+  authHttp.interceptors.response.use(onResponseUseFullFilled, onResponseUseRejected);
 }

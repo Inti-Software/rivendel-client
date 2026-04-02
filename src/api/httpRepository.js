@@ -1,4 +1,4 @@
-import { http } from "./http";
+import { authHttp } from "./http";
 
 export default class HttpRepository {
   constructor(configuration) {
@@ -7,7 +7,7 @@ export default class HttpRepository {
 
   request = async (config) => {
     try {
-      const response = await http(config);
+      const response = await authHttp(config);
       return { ok: true, data: response.data, status: response.status };
     } catch (err) {
       const status = err.response?.status ?? "inesperado";

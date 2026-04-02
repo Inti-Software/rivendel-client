@@ -1,4 +1,4 @@
-import { http, publicHttp } from "../api/http";
+import { authHttp, publicHttp } from "../api/http";
 
 export async function login(email, password) {
   try {
@@ -22,7 +22,7 @@ export async function login(email, password) {
 
 export async function refresh() {
   try {
-    const res = await http({ method: "post", url: "/auth/refresh" });
+    const res = await authHttp({ method: "post", url: "/auth/refresh" });
     return res.data;    
   } catch {
     return Promise.reject("No se pudo refrescar el token. Por favor, inicie sesión nuevamente.");
@@ -30,5 +30,5 @@ export async function refresh() {
 }
 
 export async function logout() {
-  await http.post("/auth/logout");
+  await authHttp.post("/auth/logout");
 }
