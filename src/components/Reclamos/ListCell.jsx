@@ -2,11 +2,17 @@ import dayjs from "dayjs";
 import { RECLAMANTE, RECLAMADO } from "../Shared/constants";
 import DeleteMessage from "../Shared/DeleteMessage.jsx"
 import { GridEditButton, GridDeleteButton, GridPrintButton } from "../Grid/GridButtons.jsx";
+import createPDF from "./pdfBuilders.js";
 
 const getDeleteMessage = (rec) => {
 	const s = `¿Está seguro que desea eliminar el reclamo Nº ${rec.numero}?`;
 	return (<DeleteMessage message={s} />)
 }
+
+const handlePrint = (e, id) => {
+	e.preventDefault();
+	createPDF(id);
+};
 
 export default function ListCell(rec, onDeleteRecord) {
 	return (
@@ -55,7 +61,7 @@ export default function ListCell(rec, onDeleteRecord) {
 									<GridEditButton path={`/reclamos/edit/${rec.id}`} className={"w-100"} />
 								</div>
 								<div className="col mb-1">
-									<GridPrintButton path={`/reclamos/reporte/${rec.id}`} className={"w-100"} />
+									<GridPrintButton path={`/reclamos/reporte/${rec.id}`} className={"w-100"} onClick={(e) => handlePrint(e, rec.id)} />
 								</div>
 								<div className="col">
 									<GridDeleteButton path={`/reclamos/delete/${rec.id}`} onDelete={(e) => onDeleteRecord(e, rec.id, getDeleteMessage(rec))}

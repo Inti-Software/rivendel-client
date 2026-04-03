@@ -131,6 +131,6 @@ export default function ReportData(data) {
 		reclamados: getPartes(data.reclamados),
 	}
 
-	console.log("reportData", JSON.stringify(result, null, " "))
+	//console.log("reportData", JSON.stringify(result, null, " "))
 	return result
 }
