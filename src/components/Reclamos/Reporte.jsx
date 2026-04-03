@@ -1,9 +1,10 @@
 import { Document, Page, Text, View, StyleSheet, PDFViewer } from '@react-pdf/renderer';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Reclamos } from '../../api/endpoints';
 import ReportData from './DTOs/ReportData';
 import { NO_ESPECIFICADO } from '../Shared/constants';
+import Spinner from '../Shared/Spinner';
 
 const SIZE_OFICIO_LA = {
   width: 609.5, // 21.5 cm
@@ -57,7 +58,15 @@ const styles = StyleSheet.create({
     width: '50%', // Definición explícita del 50%
     paddingLeft: 8,
 		borderTop: '1px solid #000',
-  }
+  },
+	error: {
+		fontSize: "14pt",
+		fontFamily: "Helvetica",
+		fontWeight: 'bold',
+		textAlign: 'center',
+		color: 'red',
+		marginTop: "50px"
+	}
 });
 
 const declaracionPartes = (reclamantes, reclamados) => (
@@ -132,7 +141,6 @@ const getParte = (partes) => {
 	});
 
 	return s.trim();
-
 }
 
 const lineaFirma = (label1, label2) => (
@@ -148,10 +156,10 @@ const lineaFirma = (label1, label2) => (
 
 const panelFirmas = () => (
 	<View style={styles.firmas}>
-		({lineaFirma("Firma Reclamante", "Firma Reclamado")})
-		({lineaFirma("Aclaración Reclamante", "Aclaración Reclamado")})
-		({lineaFirma("Tipo y Nro. Documento Reclamante", "Tipo y Nro. Documento Reclamado")})		
-		({lineaFirma("Firma Letrado Reclamante", "Firma Letrado Reclamado")})
+		{lineaFirma("Firma Reclamante", "Firma Reclamado")}
+		{lineaFirma("Aclaración Reclamante", "Aclaración Reclamado")}
+		{lineaFirma("Tipo y Nro. Documento Reclamante", "Tipo y Nro. Documento Reclamado")}
+		{lineaFirma("Firma Letrado Reclamante", "Firma Letrado Reclamado")}
 	</View>
 )
 
@@ -162,7 +170,7 @@ const Acta = ({ data = ReportData }) => (
 				<Page style={styles.page}>
 					<View>
 						<Text style={styles.header}>{data?.titulo}</Text>
-						({declaracionPartes(data?.nombresReclamantes, data?.nombresReclamados)})
+						{declaracionPartes(data?.nombresReclamantes, data?.nombresReclamados)}
 						<Text style={styles.rubros}>
 							<Text>OBJETO DEL RECLAMO/RUBROS Y PERÍODOS: </Text>
 							<Text>{data?.rubros}</Text>
@@ -177,37 +185,65 @@ const Acta = ({ data = ReportData }) => (
 							- Y ABIERTO EL ACTO: {data?.resolucion} Siendo las {data?.horaFin} horas, se da por finalizado el 
 							acto de conciliación, previa lectura, firmando los comparecientes al pie de la presente, ante mí conciliadora autorizante.
 						</Text>
-					</View>
-
-					({panelFirmas()})
-					
+						{panelFirmas()}
+					</View>					
 				</Page>
 			</Document>
 		</PDFViewer>
 	</div>
 )
 
-const Reporte = ({ root }) => {
+const ActaError = ({ message }) => (
+	<div id='reporte'>
+		<PDFViewer>
+			<Document>
+				<Page style={{...styles.page, backgroundColor: "#f8d7da", border: "1px solid red"}}>
+					<View>
+						<Text style={styles.error}>{message}</Text>
+					</View>
+				</Page>
+			</Document>
+		</PDFViewer>
+	</div>
+)
+
+const Reporte = () => {
 	const { id } = useParams();
+	const [data, setData] = useState(null);
+	const [error, setError] = useState(null);
 
 	useEffect(() => {
 		try {
 			const fetchData = async () => {
 				const response = await Reclamos.get(id);
-				if (response.ok) {
-					const data = await response.json();
-					root.render(<Acta data={new ReportData(data)} />)
-				} else {
-					const msg = await response.json();
-					root.render(<div>Error: {msg.code} - {msg.message}</div>);
+				if (!response.ok) {
+					setError("Error: Se produjo un error al obtener los datos del reclamo.");
+					return;
 				}
+
+				const data = response.data;
+				if (!data || Object.keys(data).length === 0) {
+					setError("Error: No existe el reclamo.");
+					return;
+				}
+
+				setData(new ReportData(data));
 			};
 			fetchData();
 		} catch (err) {
-			root.render(<div>Error: {err.message}</div>);
+			setError(`Error: ${err.message}`);
 		}
-
 	}, [id])
+
+	if (error) {
+		return <ActaError message={error} />;
+	}
+
+	if (!data) {
+		return <Spinner />;
+	}
+
+	return <Acta data={data} />;
 }
 
 export default Reporte;

@@ -36,7 +36,7 @@ root.render(
         <Routes>
             <Route path="/" element={<App />} />
             <Route element={<ProtectedRoute />}>
-              <Route path="/reclamos/reporte/:id" element={<Reporte root={root} />} />
+              <Route path="/reclamos/reporte/:id" element={<Reporte />} />
               <Route element={<LayoutRoutes />}>
                 <Route path="/user/form" element={<UserForm />} />
                 
