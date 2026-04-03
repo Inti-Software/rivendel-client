@@ -1,249 +1,266 @@
-import { Document, Page, Text, View, StyleSheet, PDFViewer } from '@react-pdf/renderer';
-import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { Reclamos } from '../../api/endpoints';
-import ReportData from './DTOs/ReportData';
-import { NO_ESPECIFICADO } from '../Shared/constants';
-import Spinner from '../Shared/Spinner';
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import pdfMake from "pdfmake/build/pdfmake";
+//import pdfFonts from "pdfmake/build/vfs_fonts";
+import vfs from "../../assets/vfs_fonts.js";
+import { Reclamos } from "../../api/endpoints";
+import ReportData from "./DTOs/ReportData";
+import { NO_ESPECIFICADO } from "../Shared/constants";
+import Spinner from "../Shared/Spinner";
 
-const SIZE_OFICIO_LA = {
-  width: 609.5, // 21.5 cm
-  height: 935.5, // 33.0 cm
+//pdfMake.vfs = pdfFonts.vfs;
+pdfMake.vfs = vfs; // 👈 este suele ser el correcto
+pdfMake.fonts = {
+  Times: {
+    normal: "LiberationSerif-Regular.ttf",
+    bold: "LiberationSerif-Bold.ttf",
+    italics: "LiberationSerif-Italic.ttf",
+    bolditalics: "LiberationSerif-BoldItalic.ttf",
+  },
 };
 
-const styles = StyleSheet.create({
-	page: { 
-		size: SIZE_OFICIO_LA,
-		paddingTop: "2.5cm",
-		paddingBottom: "2.5cm",
-		paddingLeft: "3cm",
-		paddingRight: "3cm",
-		fontSize: "12pt",
-		fontFamily: 'Times-Roman' 
-	},
-	header: { 
-		fontWeight: 'bold',
-		marginBottom: 20, 
-		textAlign: 'center',
-		textDecoration: 'underline'
-	},
-	partes: { 
-		marginBottom: 10,
-	},
-	declaracionParte: { 
-		fontWeight: 'bold'
-	},
-	rubros: { 
-		marginBottom: 10,
-		textAlign: 'justify',
-		lineHeight: "18pt"
-	},
-	cuerpo: { 
-		textAlign: 'justify',
-		lineHeight: "18pt"
-	},
-	firmas: {
-		fontSize: "8pt",
-		fontFamily: "Helvetica",
-		textAlign: 'center',		
-    width: '100%',
-  },
-  filaFirmas: {
-    flexDirection: 'row', // Organiza los elementos en fila (horizontal)
-    alignItems: 'center',
-		gap: 4,
-		marginTop: "25px",
-  },
-  colFirmas: {
-    width: '50%', // Definición explícita del 50%
-    paddingLeft: 8,
-		borderTop: '1px solid #000',
-  },
-	error: {
-		fontSize: "14pt",
-		fontFamily: "Helvetica",
-		fontWeight: 'bold',
-		textAlign: 'center',
-		color: 'red',
-		marginTop: "50px"
-	}
-});
-
-const declaracionPartes = (reclamantes, reclamados) => (
-	<>
-		<Text style={styles.partes}>
-			<Text>Reclamante: </Text>
-			<Text style={styles.declaracionParte} >{reclamantes}</Text>
-		</Text>
-		<Text style={styles.partes}>
-			<Text>Reclamados: </Text>
-			<Text style={styles.declaracionParte} >{reclamados}</Text>
-		</Text>
-	</>
-)
+/* =========================
+   Helpers (reutilizados)
+========================= */
 
 const getParte = (partes) => {
-	// {data?.reclamante.nombre} {data?.reclamante.tipoDocumento.sintetico} {data?.reclamante.nroDocumento}, 
-	// CUIL {data?.reclamante.cuil}, con domicilio en {data?.reclamante.domicilio}, Localidad: {data?.reclamante.localidad}, 
-	// con el patrocinio letrado del Dr. {data?.reclamante.patrocinante.nombre} MP Nº {data?.reclamante.patrocinante.nroMatricula},
-	// ratificando domicilio en {data?.reclamante.patrocinante.domicilio}, Localidad: {data?.reclamante.patrocinante.localidad} y
-	// constituyendo domicilio en casillero de notificaciones Nº {data?.reclamante.patrocinante.nroCasillero} y 
-	
-	// {data?.reclamado.nombre} {data?.reclamado.tipoDocumento.sintetico} {data?.reclamado.nroDocumento}, 
-	// CUIL {data?.reclamado.cuil}, con domicilio en {data?.reclamado.domicilio}, Localidad: {data?.reclamado.localidad}, 
-	// con el patrocinio letrado del Dr. {data?.reclamado.patrocinante.nombre} MP Nº {data?.reclamado.patrocinante.nroMatricula},
-	// ratificando domicilio en {data?.reclamado.patrocinante.domicilio}, Localidad: {data?.reclamado.patrocinante.localidad} y
-	// constituyendo domicilio en casillero de notificaciones Nº {data?.reclamado.patrocinante.nroCasillero}.
+  let s = "";
+  partes.forEach((parte) => {
+    const nombre = parte.nombre;
+    const sintetico = parte.sintetico;
+    const nroDocumento = parte.nroDocumento;
+    const cuil = parte.cuil;
+    const domicilio = parte.domicilio || "";
+    const localidad = parte.localidad || "";
+    const patrocinante = parte.patrocinante || {};
 
-	let s = "";
-	partes.forEach(parte => {
-		const nombre = parte.nombre;
-		const sintetico = parte.sintetico;
-		const nroDocumento = parte.nroDocumento
-		const cuil = parte.cuil
-		const domicilio = parte.domicilio || "";
-		const localidad = parte.localidad || "";
-		const patrocinante = parte.patrocinante || {};
-	
-		s += ((s === "")? " " : ", ") + 
-					`${nombre} ${sintetico} ${nroDocumento}`
-		if (parte.cuil !== "0") {
-			s += `, CUIL ${cuil}`
-		}
-		s += `, con domicilio en ${domicilio}`;
-		if (localidad && localidad.trim() !== "") {
-			s += `, de la localidad ${localidad}`;
-		}
+    s += (s === "" ? " " : ", ") + `${nombre} ${sintetico} ${nroDocumento}`;
 
-		if (parte.nroWhatsappParte) {
-			s += `, quien comparece virtualmente por videollamada de Whatsapp desde el número ${parte.nroWhatsappParte}`;
-		}
-	
-		if (Object.keys(patrocinante || {}).length > 0) {
-			if (parte.esApoderado) {
-				s += `, representado por su apoderado el Dr. ${patrocinante.nombre} MP Nº ${patrocinante.nroMatricula},`
-			} else {
-				s += `, con el patrocinio letrado del Dr. ${patrocinante.nombre} MP Nº ${patrocinante.nroMatricula},`
-			}
-			if (patrocinante.domicilio !== NO_ESPECIFICADO) {
-				s += ` ratificando domicilio en ${patrocinante.domicilio}`;
-			}
-			if (patrocinante.localidad !== NO_ESPECIFICADO) {
-				s += ` de la ciudad ${patrocinante.localidad}`
-			}
-			if (patrocinante.nroCasillero !== NO_ESPECIFICADO) {
-				s += `, casillero Nº ${patrocinante.nroCasillero}`;
-			}
-			if (parte.nroWhatsappPatrocinante) {
-				s += `, quien comparece virtualmente por videollamada de Whatsapp desde el número ${parte.nroWhatsappPatrocinante}`;
-			}
-		}		
-	});
+    if (parte.cuil !== "0") {
+      s += `, CUIL ${cuil}`;
+    }
 
-	return s.trim();
-}
+    s += `, con domicilio en ${domicilio}`;
 
-const lineaFirma = (label1, label2) => (
-	<View style={styles.filaFirmas}>
-		<View style={styles.colFirmas}>
-			<Text>{label1}</Text>
-		</View>
-		<View style={styles.colFirmas}>
-			<Text>{label2}</Text>
-		</View>
-	</View>
-)
+    if (localidad && localidad.trim() !== "") {
+      s += `, de la localidad ${localidad}`;
+    }
 
-const panelFirmas = () => (
-	<View style={styles.firmas}>
-		{lineaFirma("Firma Reclamante", "Firma Reclamado")}
-		{lineaFirma("Aclaración Reclamante", "Aclaración Reclamado")}
-		{lineaFirma("Tipo y Nro. Documento Reclamante", "Tipo y Nro. Documento Reclamado")}
-		{lineaFirma("Firma Letrado Reclamante", "Firma Letrado Reclamado")}
-	</View>
-)
+    if (parte.nroWhatsappParte) {
+      s += `, quien comparece virtualmente por videollamada de Whatsapp desde el número ${parte.nroWhatsappParte}`;
+    }
 
-const Acta = ({ data = ReportData }) => (
-	<div id='reporte'>
-		<PDFViewer>
-			<Document>
-				<Page style={styles.page}>
-					<View>
-						<Text style={styles.header}>{data?.titulo}</Text>
-						{declaracionPartes(data?.nombresReclamantes, data?.nombresReclamados)}
-						<Text style={styles.rubros}>
-							<Text>OBJETO DEL RECLAMO/RUBROS Y PERÍODOS: </Text>
-							<Text>{data?.rubros}</Text>
-						</Text>
-						<Text style={styles.cuerpo}>
-							En la ciudad de Santiago del Estero, provincia del mismo nombre, a los {data?.fechaInicio.dia} días 
-							del mes de {data?.fechaInicio.mes} del año {data?.fechaInicio.anio}, siendo las {data?.fechaInicio.hora} horas,
-							ante mí María Cristina Lavaisse Beck, en mi calidad de Conciliador Laboral, habilitación Nº 7, en ejercicio de las
-							funciones conferidas por la ley 7.330 y el decreto reglamentario 2.230/22. En el Marco del trámite de referencia,
-							comparecen por una parte {getParte(data?.reclamantes)} y por la otra parte reclamada/empleadora {getParte(data?.reclamados)}.
+    if (Object.keys(patrocinante || {}).length > 0) {
+      if (parte.esApoderado) {
+        s += `, representado por su apoderado el Dr. ${patrocinante.nombre} MP Nº ${patrocinante.nroMatricula},`;
+      } else {
+        s += `, con el patrocinio letrado del Dr. ${patrocinante.nombre} MP Nº ${patrocinante.nroMatricula},`;
+      }
 
-							- Y ABIERTO EL ACTO: {data?.resolucion} Siendo las {data?.horaFin} horas, se da por finalizado el 
-							acto de conciliación, previa lectura, firmando los comparecientes al pie de la presente, ante mí conciliadora autorizante.
-						</Text>
-						{panelFirmas()}
-					</View>					
-				</Page>
-			</Document>
-		</PDFViewer>
-	</div>
-)
+      if (patrocinante.domicilio !== NO_ESPECIFICADO) {
+        s += ` ratificando domicilio en ${patrocinante.domicilio}`;
+      }
 
-const ActaError = ({ message }) => (
-	<div id='reporte'>
-		<PDFViewer>
-			<Document>
-				<Page style={{...styles.page, backgroundColor: "#f8d7da", border: "1px solid red"}}>
-					<View>
-						<Text style={styles.error}>{message}</Text>
-					</View>
-				</Page>
-			</Document>
-		</PDFViewer>
-	</div>
-)
+      if (patrocinante.localidad !== NO_ESPECIFICADO) {
+        s += ` de la ciudad ${patrocinante.localidad}`;
+      }
+
+      if (patrocinante.nroCasillero !== NO_ESPECIFICADO) {
+        s += `, casillero Nº ${patrocinante.nroCasillero}`;
+      }
+
+      if (parte.nroWhatsappPatrocinante) {
+        s += `, quien comparece virtualmente por videollamada de Whatsapp desde el número ${parte.nroWhatsappPatrocinante}`;
+      }
+    }
+  });
+
+  return s.trim();
+};
+
+/* =========================
+   PDF Builder
+========================= */
+
+const buildActaDocDefinition = (data) => {
+  const lineaFirma = (label1, label2) => ({
+    columns: [
+      {
+        width: "50%",
+        text: label1,
+        margin: [0, 25, 10, 0],
+        decoration: "overline",
+        alignment: "center",
+        fontSize: 8,
+      },
+      {
+        width: "50%",
+        text: label2,
+        margin: [10, 25, 0, 0],
+        decoration: "overline",
+        alignment: "center",
+        fontSize: 8,
+      },
+    ],
+  });
+
+  return {
+    pageSize: {
+      width: 609.5,
+      height: 935.5,
+    },
+    pageMargins: [85, 70, 85, 70],
+
+    defaultStyle: {
+      font: "Times",
+      fontSize: 12,
+    },
+
+    content: [
+      {
+        text: data?.titulo,
+        style: "header",
+      },
+
+      {
+        margin: [0, 10],
+        text: [
+          { text: "Reclamante: " },
+          { text: data?.nombresReclamantes, bold: true },
+        ],
+      },
+      {
+        margin: [0, 0, 0, 10],
+        text: [
+          { text: "Reclamados: " },
+          { text: data?.nombresReclamados, bold: true },
+        ],
+      },
+
+      {
+        margin: [0, 0, 0, 10],
+        text: [
+          { text: "OBJETO DEL RECLAMO/RUBROS Y PERÍODOS: " },
+          { text: data?.rubros },
+        ],
+        alignment: "justify",
+        lineHeight: 1.2,
+      },
+
+      {
+        text: `En la ciudad de Santiago del Estero, provincia del mismo nombre, a los ${data?.fechaInicio.dia} días del mes de ${data?.fechaInicio.mes} del año ${data?.fechaInicio.anio}, siendo las ${data?.fechaInicio.hora} horas, ante mí María Cristina Lavaisse Beck, en mi calidad de Conciliador Laboral, habilitación Nº 7, en ejercicio de las funciones conferidas por la ley 7.330 y el decreto reglamentario 2.230/22. En el Marco del trámite de referencia, comparecen por una parte ${getParte(
+          data?.reclamantes,
+        )} y por la otra parte reclamada/empleadora ${getParte(
+          data?.reclamados,
+        )}.
+
+- Y ABIERTO EL ACTO: ${data?.resolucion} Siendo las ${data?.horaFin} horas, se da por finalizado el acto de conciliación, previa lectura, firmando los comparecientes al pie de la presente, ante mí conciliadora autorizante.`,
+        alignment: "justify",
+        lineHeight: 1.2,
+      },
+
+      { text: "\n\n" },
+
+      lineaFirma("Firma Reclamante", "Firma Reclamado"),
+      lineaFirma("Aclaración Reclamante", "Aclaración Reclamado"),
+      lineaFirma(
+        "Tipo y Nro. Documento Reclamante",
+        "Tipo y Nro. Documento Reclamado",
+      ),
+      lineaFirma("Firma Letrado Reclamante", "Firma Letrado Reclamado"),
+    ],
+
+    styles: {
+      header: {
+        bold: true,
+        alignment: "center",
+        decoration: "underline",
+        margin: [0, 0, 0, 20],
+      },
+    },
+  };
+};
+
+const buildErrorDoc = (message) => ({
+  content: [
+    {
+      text: message,
+      color: "red",
+      bold: true,
+      fontSize: 14,
+      alignment: "center",
+      margin: [0, 50, 0, 0],
+    },
+  ],
+});
+
+/* =========================
+   Componente principal
+========================= */
 
 const Reporte = () => {
-	const { id } = useParams();
-	const [data, setData] = useState(null);
-	const [error, setError] = useState(null);
+  const { id } = useParams();
+  const [data, setData] = useState(null);
+  const [error, setError] = useState(null);
 
-	useEffect(() => {
-		try {
-			const fetchData = async () => {
-				const response = await Reclamos.get(id);
-				if (!response.ok) {
-					setError("Error: Se produjo un error al obtener los datos del reclamo.");
-					return;
-				}
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await Reclamos.get(id);
 
-				const data = response.data;
-				if (!data || Object.keys(data).length === 0) {
-					setError("Error: No existe el reclamo.");
-					return;
-				}
+        if (!response.ok) {
+          setError(
+            "Error: Se produjo un error al obtener los datos del reclamo.",
+          );
+          return;
+        }
 
-				setData(new ReportData(data));
-			};
-			fetchData();
-		} catch (err) {
-			setError(`Error: ${err.message}`);
-		}
-	}, [id])
+        const data = response.data;
 
-	if (error) {
-		return <ActaError message={error} />;
-	}
+        if (!data || Object.keys(data).length === 0) {
+          setError("Error: No existe el reclamo.");
+          return;
+        }
 
-	if (!data) {
-		return <Spinner />;
-	}
+        setData(new ReportData(data));
+      } catch (err) {
+        setError(`Error: ${err.message}`);
+      }
+    };
 
-	return <Acta data={data} />;
-}
+    fetchData();
+  }, [id]);
+
+  const handleOpen = () => {
+    if (error) {
+      pdfMake.createPdf(buildErrorDoc(error)).open();
+      return;
+    }
+
+    const docDefinition = buildActaDocDefinition(data);
+    pdfMake.createPdf(docDefinition).open();
+  };
+
+  const handleDownload = () => {
+    if (error) {
+      pdfMake.createPdf(buildErrorDoc(error)).download("error.pdf");
+      return;
+    }
+
+    const docDefinition = buildActaDocDefinition(data);
+    pdfMake.createPdf(docDefinition).download("acta.pdf");
+  };
+
+  if (!data && !error) {
+    return <Spinner />;
+  }
+
+  return (
+    <div>
+      <button onClick={handleOpen}>Ver PDF</button>
+      <button onClick={handleDownload}>Descargar PDF</button>
+    </div>
+  );
+};
 
 export default Reporte;
