@@ -29,7 +29,6 @@ const PageTitle = () => {
       { path: "/reclamos", title: "Reclamos" },
       { path: "/reclamos/new", title: "Nuevo reclamo" },
       { path: "/reclamos/edit/:id", title: "Edición de reclamo" },
-      { path: "/reclamos/reporte/:id", title: "Acta de Reclamo" },
     ];
 
     const currentRoute = routeTitles.find(route => 

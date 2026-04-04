@@ -12,7 +12,6 @@ import ListPartes from "./components/Partes/List.jsx";
 import ListResoluciones from "./components/Resoluciones/List.jsx";
 import ResolucionesForm from "./components/Resoluciones/Form.jsx";
 import ListReclamos from "./components/Reclamos/List.jsx";
-import Reporte from "./components/Reclamos/Reporte.jsx";
 import LayoutRoutes from "./components/Layout/LayoutRoutes.jsx";
 import ReclamosForm  from "./components/Reclamos/Form.jsx";
 import PatrocinantesForm from "./components/Patrocinantes/Form.jsx";
@@ -36,7 +35,6 @@ root.render(
         <Routes>
             <Route path="/" element={<App />} />
             <Route element={<ProtectedRoute />}>
-              <Route path="/reclamos/reporte/:id" element={<Reporte />} />
               <Route element={<LayoutRoutes />}>
                 <Route path="/user/form" element={<UserForm />} />
                 

@@ -61,7 +61,7 @@ export default function ListCell(rec, onDeleteRecord) {
 									<GridEditButton path={`/reclamos/edit/${rec.id}`} className={"w-100"} />
 								</div>
 								<div className="col mb-1">
-									<GridPrintButton path={`/reclamos/reporte/${rec.id}`} className={"w-100"} onClick={(e) => handlePrint(e, rec.id)} />
+									<GridPrintButton path={`/reclamos/acta/${rec.id}`} className={"w-100"} onClick={(e) => handlePrint(e, rec.id)} />
 								</div>
 								<div className="col">
 									<GridDeleteButton path={`/reclamos/delete/${rec.id}`} onDelete={(e) => onDeleteRecord(e, rec.id, getDeleteMessage(rec))}
