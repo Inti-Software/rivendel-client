@@ -41,7 +41,7 @@ const Grid = ({ columnBuilder, recordsPerPage = RECORDS_PER_PAGE, headers = [],
   }, [errorDelete, showError])
   
   useEffect(() => {
-    findAll({ currentPage, recordsPerPage, search: debouncedValue.trim() })
+    findAll({ currentPage, recordsPerPage, query: debouncedValue.trim() })
   }, [findAll, currentPage, debouncedValue, recordsPerPage]);
 
   useEffect(() => {
@@ -177,15 +177,9 @@ const Grid = ({ columnBuilder, recordsPerPage = RECORDS_PER_PAGE, headers = [],
       </div>
     </div>
   );
-  
-  if (loading) {
-    return <Spinner />
-  }
-  
-	return (
-    <>
-      {showSearchBar && (searchBar)}
 
+  const showData = (
+    <>
       {table}
 
       {totalPages > 1 && (pager)}
@@ -197,6 +191,14 @@ const Grid = ({ columnBuilder, recordsPerPage = RECORDS_PER_PAGE, headers = [],
           handleCancel={() => setDeleteDialog({ show: false, message: "" })}
         />
       }
+    </>
+  )
+  
+	return (
+    <>
+      {showSearchBar && (searchBar)}
+
+      {(loading) ? (<Spinner />) : (showData)}
 
       {debug && (<pre>{JSON.stringify(data, null, " ")}</pre>)}
     </>

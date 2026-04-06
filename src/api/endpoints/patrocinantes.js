@@ -1,14 +1,15 @@
 import HttpRepository from "../httpRepository";
+import { RECORDS_PER_PAGE } from "../endpoints";
 
 export const Patrocinantes = new HttpRepository({
   get: (id) => ({ method: "get", url: `/patrocinantes/${id}` }),
-  findAll: (params) => ({
+  findAll: ({ query, currentPage, recordsPerPage = RECORDS_PER_PAGE }) => ({
     method: "get",
     url: `/patrocinantes`,
     params: {
-      query: params.query,
-      page: params.currentPage || 1,
-      limit: params.recordsPerPage,
+      query,
+      page: currentPage || 1,
+      limit: recordsPerPage,
     },
   }),
   create: ({ nombre, nroMatricula, domicilio, localidad, nroCasillero }) => ({
