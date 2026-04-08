@@ -1,6 +1,6 @@
 import pdfMake from "pdfmake/build/pdfmake";
 import vfs from "../../assets/vfs_fonts.js";
-import { Reclamos } from "../../api/endpoints";
+import { Reclamos } from "../../api/endpoints/reclamos";
 import ReportData from "./DTOs/ReportData";
 import { NO_ESPECIFICADO } from "../Shared/constants";
 

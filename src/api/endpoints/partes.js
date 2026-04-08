@@ -1,5 +1,5 @@
 import HttpRepository from "../httpRepository";
-import { RECORDS_PER_PAGE } from "../endpoints";
+import { RECORDS_PER_PAGE } from "../constants";
 
 export const Partes = new HttpRepository({
 	get: (id) => ({ method: "get", url: `/partes/${id}` }),

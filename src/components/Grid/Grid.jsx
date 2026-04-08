@@ -5,7 +5,7 @@ import { GridEditButton, GridDeleteButton } from "./GridButtons";
 import { SEARCH } from "../Shared/Icons";
 import DeleteDialog from "../Modals/DeleteDialog";
 import { DATA_COLUMN, BUTTON_COLUMN, CUSTOM_COLUMN, EDIT_BUTTON, DELETE_BUTTON } from "../Shared/constants";
-import { RECORDS_PER_PAGE } from "../../api/endpoints";
+import { RECORDS_PER_PAGE } from "../../api/constants";
 import { useApi } from "../../hooks/useApi";
 import { useLocation } from "react-router-dom";
 import Spinner from "../Shared/Spinner";
