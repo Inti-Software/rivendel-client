@@ -1,7 +1,7 @@
 import { useReducer, useEffect, useState } from "react";
 import { useNavigate, Link, useParams } from "react-router-dom";
 import SearchParteDialog from "../Partes/SearchParteDialog";
-import { Reclamos } from "../../api/endpoints";
+import { Reclamos } from "../../api/endpoints/reclamos";
 import { Partes } from "../../api/endpoints/partes";
 import { Resoluciones } from "../../api/endpoints/resoluciones";
 import DataBindedSelect from "../Forms/DataBindedSelect";
@@ -95,13 +95,12 @@ export default function Form() {
 
 	useEffect(() => {
 		const fetchResoluciones = async () => {
-			const response = await Resoluciones.findAll({currentPage: 1, recordsPerPage: 100});
-			if (!response.ok) {
-				throw new Error(`HTTP error! status: ${response.status}`);
+			const result = await Resoluciones.findAll({currentPage: 1, recordsPerPage: 100});
+			if (!result.ok) {
+				throw new Error(`HTTP error! status: ${result.status}`);
 			}
 
-			const data = await response.json();
-			const resolucionesData = data.data.map((r) => ({
+			const resolucionesData = result.data.data.map((r) => ({
 				value: r.id,
 				text: r.descripcion
 			}));
@@ -116,9 +115,9 @@ export default function Form() {
 
 		try {
 			const fetchData = async () => {
-				const response = await Reclamos.get(id);
-				if (response.ok) {
-					const data = await response.json();
+				const result = await Reclamos.get(id);
+				if (result.ok) {
+					const data = await result.data;
 					const fechaHoraInicio = dayjs(data.fechaHoraInicio, "DD/MM/YYYY HH:mm", true).isValid()? 
 						dayjs(data.fechaHoraInicio, "DD/MM/YYYY HH:mm").format("YYYY-MM-DDTHH:mm") : "";
 					const horafin = data.horaFin == null ? "" : dayjs(data.horaFin, "HH:mm", true).isValid() ?

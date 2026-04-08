@@ -100,12 +100,12 @@ export default function Form() {
 
   useEffect(() => {
 		const fetchTiposDocumento = async () => {
-			const response = await TiposDocumento.findAll()
-			if (!response.ok) {
-				throw new Error(`Error al obtener tipos de documentos: ${response.error}`);
+			const result = await TiposDocumento.findAll()
+			if (!result.ok) {
+				throw new Error(`Error al obtener tipos de documentos: ${result.error}`);
 			}
 
-			const td = response.data.map(d => ({
+			const td = result.data.data.map(d => ({
 				value: d.id,
 				text: d.descripcion
 			}));
