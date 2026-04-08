@@ -3,7 +3,7 @@ import { RECLAMANTE, RECLAMADO } from "../Shared/constants";
 import DeleteMessage from "../Shared/DeleteMessage.jsx"
 import { GridEditButton, GridDeleteButton, GridPrintButton } from "../Grid/GridButtons.jsx";
 import createPDF from "./pdfBuilders.js";
-import { CON_ARREGLO, INCOMPARECENCIA_EMPLEADOR, INCOMPARECENCIA_RECLAMANTE, PENDIENTE, SIN_ARREGLO } from "./constants.js";
+import { CON_ARREGLO, INCOMPARECENCIA_EMPLEADOR, INCOMPARECENCIA_RECLAMANTE, PENDIENTE, SIN_ARREGLO } from "../Resoluciones/tiposResoluciones";
 
 const getDeleteMessage = (rec) => {
 	const s = `¿Está seguro que desea eliminar el reclamo Nº ${rec.numero}?`;
@@ -21,9 +21,9 @@ const getBadgeColor = (resolucionId) => {
 			return "badge bg-warning text-dark fs-very-small";
 		case CON_ARREGLO:
 			return "badge bg-success fs-very-small";
-		case INCOMPARECENCIA_RECLAMANTE:
-			return "badge bg-light text-dark fs-very-small";
 		case INCOMPARECENCIA_EMPLEADOR:
+			return "badge bg-primary fs-very-small";
+		case INCOMPARECENCIA_RECLAMANTE:
 			return "badge bg-info text-dark fs-very-small";		
 		default:
 			return "badge bg-secondary fs-very-small";

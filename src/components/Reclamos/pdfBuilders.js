@@ -1,7 +1,7 @@
 import pdfMake from "pdfmake/build/pdfmake";
 import vfs from "../../assets/vfs_fonts.js";
 import { Reclamos } from "../../api/endpoints/reclamos";
-import ReportData from "./DTOs/ReportData";
+import ReportData from "./DTOs/reportData.js";
 import { NO_ESPECIFICADO } from "../Shared/constants";
 
 pdfMake.vfs = vfs; // 👈 este suele ser el correcto
