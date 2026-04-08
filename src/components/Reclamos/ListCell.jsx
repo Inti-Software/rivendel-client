@@ -3,6 +3,7 @@ import { RECLAMANTE, RECLAMADO } from "../Shared/constants";
 import DeleteMessage from "../Shared/DeleteMessage.jsx"
 import { GridEditButton, GridDeleteButton, GridPrintButton } from "../Grid/GridButtons.jsx";
 import createPDF from "./pdfBuilders.js";
+import { CON_ARREGLO, INCOMPARECENCIA_EMPLEADOR, INCOMPARECENCIA_RECLAMANTE, PENDIENTE, SIN_ARREGLO } from "./constants.js";
 
 const getDeleteMessage = (rec) => {
 	const s = `¿Está seguro que desea eliminar el reclamo Nº ${rec.numero}?`;
@@ -13,6 +14,21 @@ const handlePrint = (e, id) => {
 	e.preventDefault();
 	createPDF(id);
 };
+
+const getBadgeColor = (resolucionId) => {
+	switch (resolucionId) {
+		case SIN_ARREGLO:
+			return "badge bg-warning text-dark fs-very-small";
+		case CON_ARREGLO:
+			return "badge bg-success fs-very-small";
+		case INCOMPARECENCIA_RECLAMANTE:
+			return "badge bg-light text-dark fs-very-small";
+		case INCOMPARECENCIA_EMPLEADOR:
+			return "badge bg-info text-dark fs-very-small";		
+		default:
+			return "badge bg-secondary fs-very-small";
+	}
+}
 
 export default function ListCell(rec, onDeleteRecord) {
 	return (
@@ -25,19 +41,16 @@ export default function ListCell(rec, onDeleteRecord) {
 								<div className="col-2 d-flex align-items-center text-success">
 									<h3 className="fw-bold">Nº {rec.numero}</h3>
 								</div>
-								<div className="col-3">
-									<h6>Inicio</h6>
+								<div className="col-6 d-flex align-items-center small">
 									<span>{dayjs(rec.fechaHoraInicio).format("DD [de] MMMM [de] YYYY - HH:mm [hs]")}</span>
+									{(dayjs(rec.horaFin).isValid()) && (
+									<>
+										<span className="ms-1 me-1">hasta</span>
+										<span>{dayjs(rec.horaFin).format("HH:mm [hs]")}</span>
+									</>)}
 								</div>
-								<div className="col-3">
-									<h6>Fin</h6>
-									<span>
-										{dayjs(rec.horaFin).isValid() ? dayjs(rec.horaFin).format("HH:mm [hs]") : "-"}
-									</span>
-								</div>
-								<div className="col-4">
-									<h6>Resolución</h6>
-									<span>{rec.resolucion.descripcion}</span>
+								<div className="col-4 d-flex align-items-center justify-content-end">
+									<span className={getBadgeColor(rec.resolucion.id)}>{rec.resolucion.descripcion}</span>
 								</div>
 							</div>
 							<div className="row">
@@ -60,9 +73,10 @@ export default function ListCell(rec, onDeleteRecord) {
 								<div className="col mb-1">
 									<GridEditButton path={`/reclamos/edit/${rec.id}`} className={"w-100"} />
 								</div>
+								{(rec.resolucion.id !== 4) && (
 								<div className="col mb-1">
 									<GridPrintButton path={`/reclamos/acta/${rec.id}`} className={"w-100"} onClick={(e) => handlePrint(e, rec.id)} />
-								</div>
+								</div>)}
 								<div className="col">
 									<GridDeleteButton path={`/reclamos/delete/${rec.id}`} onDelete={(e) => onDeleteRecord(e, rec.id, getDeleteMessage(rec))}
 										className={"w-100"}/>

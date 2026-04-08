@@ -1,5 +1,7 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import 'bootstrap/dist/js/bootstrap.bundle.min.js'; // Contiene la lógica JS del modal
+import dayjs from "dayjs";
+import 'dayjs/locale/es';
 import { createRoot } from "react-dom/client";
 import { StrictMode } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -25,6 +27,7 @@ import UserForm from "./components/Users/Form.jsx";
 
 await initializeAuth();
 setupInterceptors();
+dayjs.locale("es");
 const root = createRoot(document.getElementById("root"))
 root.render(
   <StrictMode>
