@@ -60,7 +60,10 @@ function getReclamo(data) {
 	return {
 		numero: data.numero,
 		rubros: data.rubros,
-		resolucion: data.resolucion,
+		resolucion: {
+			id: data.idResolucion,
+			detalle: data.resolucion
+		},
 		fechaInicio: {
 			dia: String(new Date(data.fechaHoraInicio).getDate()).padStart(2, '0'),
 			mes: new Date(data.fechaHoraInicio).toLocaleString('es-AR', { month: 'long' }),
@@ -131,6 +134,6 @@ export default function ReportData(data) {
 		reclamados: getPartes(data.reclamados),
 	}
 
-	//console.log("reportData", JSON.stringify(result, null, " "))
+	console.log("reportData", JSON.stringify(result, null, " "))
 	return result
 }

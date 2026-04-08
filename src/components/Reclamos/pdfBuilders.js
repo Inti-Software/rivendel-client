@@ -3,6 +3,7 @@ import vfs from "../../assets/vfs_fonts.js";
 import { Reclamos } from "../../api/endpoints/reclamos";
 import ReportData from "./DTOs/reportData.js";
 import { NO_ESPECIFICADO } from "../Shared/constants";
+import { INCOMPARECENCIA_EMPLEADOR, INCOMPARECENCIA_RECLAMANTE, SIN_ARREGLO } from "../Resoluciones/tiposResoluciones.js";
 
 pdfMake.vfs = vfs; // 👈 este suele ser el correcto
 pdfMake.fonts = {
@@ -69,6 +70,48 @@ const getParte = (partes) => {
   return s.trim();
 };
 
+const getComparecientes = (data) => {
+  if (data.resolucion.id === SIN_ARREGLO) {
+    return `comparecen por una parte ${getParte(data?.reclamantes)} ` +
+           `y por la otra parte reclamada/empleadora ${getParte(data?.reclamados)}`;
+  }
+  
+  if (data.resolucion.id === INCOMPARECENCIA_EMPLEADOR) {
+    return `comparece por una parte ${getParte(data?.reclamantes)} `;
+  }
+
+  if (data.resolucion.id === INCOMPARECENCIA_RECLAMANTE) {
+    return `comparece por una parte reclamada/empleadora ${getParte(data?.reclamados)}`;
+  }
+
+  return "";
+}
+
+const getDeclaracion = (data) => {
+  if (data.resolucion.id === SIN_ARREGLO) {    
+    return data?.resolucion.detalle;
+  }
+  
+  if (data.resolucion.id === INCOMPARECENCIA_EMPLEADOR) {
+    return data?.resolucion.detalle + ' ' + getParte(data?.reclamados);
+  }
+
+  if (data.resolucion.id === INCOMPARECENCIA_RECLAMANTE) {
+    return "declaran que no han arribado a un acuerdo conciliatorio en el marco del presente trámite, debido a la incomparecencia de la parte reclamante";
+  }
+
+  return "";
+}
+
+const getCuerpo = (data) => {
+  return  `En la ciudad de Santiago del Estero, provincia del mismo nombre, a los ${data?.fechaInicio.dia} días ` +
+          `del mes de ${data?.fechaInicio.mes} del año ${data?.fechaInicio.anio}, siendo las ${data?.fechaInicio.hora} ` + 
+          `horas, ante mí María Cristina Lavaisse Beck, en mi calidad de Conciliador Laboral, habilitación Nº 7, en ` + 
+          `ejercicio de las funciones conferidas por la ley 7.330 y el decreto reglamentario 2.230/22. En el Marco del ` + 
+          `trámite de referencia, ${getComparecientes(data)}.- Y ABIERTO EL ACTO: ${getDeclaracion(data)} Siendo las ${data?.horaFin} horas, ` + 
+          `se da por finalizado el acto, previa lectura, firmando los comparecientes al pie de la presente, ` + 
+          `ante mí conciliadora autorizante.`  
+}
 const line = (margins) => ({
   table: {
     widths: ["*"],
@@ -150,14 +193,7 @@ const buildActaDoc = (data) => {
       },
 
       {
-        text: `En la ciudad de Santiago del Estero, provincia del mismo nombre, a los ${data?.fechaInicio.dia} días` +
-          ` del mes de ${data?.fechaInicio.mes} del año ${data?.fechaInicio.anio}, siendo las ${data?.fechaInicio.hora}` + 
-          ` horas, ante mí María Cristina Lavaisse Beck, en mi calidad de Conciliador Laboral, habilitación Nº 7, en ` + 
-          `ejercicio de las funciones conferidas por la ley 7.330 y el decreto reglamentario 2.230/22. En el Marco del ` + 
-          `trámite de referencia, comparecen por una parte ${getParte(data?.reclamantes)} y por la otra parte reclamada/empleadora` + 
-          ` ${getParte(data?.reclamados)}.- Y ABIERTO EL ACTO: ${data?.resolucion} Siendo las ${data?.horaFin} horas, ` + 
-          `se da por finalizado el acto, previa lectura, firmando los comparecientes al pie de la presente, ` + 
-          `ante mí conciliadora autorizante.`,
+        text: getCuerpo(data),
         alignment: "justify",
         lineHeight: 1.5,
       },
