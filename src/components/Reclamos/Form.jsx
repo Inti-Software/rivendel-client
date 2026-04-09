@@ -238,7 +238,7 @@ export default function Form() {
 
 			if (result.ok) {
 				const mensaje = "El reclamo Nº " + state.numero + 
-					` se ${isNaN(id) ? "creó" : "actualizó"} correctamente.`;
+					` se ${isNaN(id) ? "creó" : "actualizó" } correctamente.`;
 				dispatch({ type: "SUBMIT_SUCCESS" });
 				navigate("/reclamos", { state: { successMsg: mensaje }});
 			} else {				

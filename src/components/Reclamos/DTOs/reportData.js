@@ -100,6 +100,7 @@ function getPartes(partes) {
 		const localidad = partes[i].localidad;
 		const nroWhatsappParte = partes[i].nroWhatsappParte || null
 		const nroWhatsappPatrocinante = partes[i].nroWhatsappPatrocinante || null
+		const postergo = partes[i].postergo || false
 
 		if (patrocinante) {
 			patrocinante.domicilio = patrocinante?.domicilio || NO_ESPECIFICADO
@@ -117,7 +118,8 @@ function getPartes(partes) {
 			nroWhatsappParte: nroWhatsappParte,
 			nroWhatsappPatrocinante: nroWhatsappPatrocinante,
 			patrocinante: patrocinante,
-			esApoderado: partes[i].esApoderado
+			esApoderado: partes[i].esApoderado,
+			postergo: postergo
 		}
 		result.push(parte)
 	}

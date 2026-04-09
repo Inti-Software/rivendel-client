@@ -42,6 +42,10 @@ const getParte = (partes) => {
       s += `, quien comparece virtualmente por videollamada de Whatsapp desde el número ${parte.nroWhatsappParte}`;
     }
 
+    if (parte.postergo) {
+      s += " la cual solicitó el cambio de fecha original para el día de hoy, pese a lo cual no compareció";
+    }
+
     if (Object.keys(patrocinante || {}).length > 0) {
       if (parte.esApoderado) {
         s += `, representado por su apoderado el Dr. ${patrocinante.nombre} MP Nº ${patrocinante.nroMatricula},`;
@@ -77,7 +81,7 @@ const getComparecientes = (data) => {
   }
   
   if (data.resolucion.id === INCOMPARECENCIA_EMPLEADOR) {
-    return `comparece por una parte ${getParte(data?.reclamantes)} `;
+    return `comparece por una parte ${getParte(data?.reclamantes)}`;
   }
 
   if (data.resolucion.id === INCOMPARECENCIA_RECLAMANTE) {
@@ -93,7 +97,7 @@ const getDeclaracion = (data) => {
   }
   
   if (data.resolucion.id === INCOMPARECENCIA_EMPLEADOR) {
-    return data?.resolucion.detalle + ' ' + getParte(data?.reclamados);
+    return data?.resolucion.detalle + ' ' + getParte(data?.reclamados) + '.\n';
   }
 
   if (data.resolucion.id === INCOMPARECENCIA_RECLAMANTE) {
