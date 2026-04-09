@@ -9,12 +9,12 @@ import ValidationErrors from "../Shared/ValidationErrors";
 import dayjs from "dayjs";
 import { DELETE, PLUSCIRCLE } from "../Shared/Icons";
 import { NO_ESPECIFICADO } from "../Shared/constants";
+import { INCOMPARECENCIA_EMPLEADOR, INCOMPARECENCIA_RECLAMANTE } from "../Resoluciones/tiposResoluciones";
 
 const initialState = {
   id: 0,
   numero: 0,
   fechaHoraInicio: "",
-	pospuesto: false,
   horaFin: "",
   idResolucion: 0,
 	proxFecha: "",
@@ -148,9 +148,6 @@ export default function Form() {
 			case "numero":
 				v = parseInt(e.target.value.replace(/\D/g, ''));
 				break;
-			case "pospuesto":
-				v = !state.pospuesto;
-				break;
 			default:
 				if (e.target.type === "checkbox") {
 					v = e.target.checked
@@ -223,7 +220,6 @@ export default function Form() {
 				rubros: state.rubros, 
 				idResolucion: state.idResolucion,
 				fechaHoraInicio: state.fechaHoraInicio, 
-				pospuesto: state.pospuesto,
 				horaFin: state.horaFin === "" ? null : combinarHoraConFecha(state.horaFin, dayjs(state.fechaHoraInicio)),
 				proxFecha: state.proxFecha === "" ? null : state.proxFecha,
 				reclamantes: state.reclamantes.map(parteToParteDTO),
@@ -304,7 +300,11 @@ export default function Form() {
 			input.disabled = "";
 			input.style.backgroundColor = "#fff";
 			input.focus();
+			input.hidden = false;
+			input.display = "inline";
 		} else {
+			input.hidden = "hidden";
+			input.display = "none";
 			input.disabled = "disabled";
 			input.style.backgroundColor = "#aaa";
 			input.value = "";
@@ -340,7 +340,7 @@ export default function Form() {
 		const disabled = hasValue? "" : "disabled";
 		const style = hasValue? { backgroundColor: "#fff" } : { backgroundColor: "#aaa" };
 		return (
-			<div className={esPatrocinante ? "col-6" : "col-5"}>
+			<div className={(esPatrocinante ? "col-6" : "col-5") + " d-flex align-items-center gap-2 mb-1"}>
 				<label className="me-2">
 						<input 	type="checkbox" 
 										defaultChecked={hasValue}
@@ -348,10 +348,12 @@ export default function Form() {
 						/> &nbsp;{esPatrocinante ? "Patrocinio " : "Comparecencia "} Online
 				</label>
 				<input 	type="number" 
-								className="form-control-inline form-control-sm mt-1 mb-1 border-0" 
+								className="form-control-inline form-control-sm border-0" 
 								disabled={disabled}
 								placeholder={"Whatsapp " + (esPatrocinante ? "Patrocinante" : "Parte") }
 								style={style}
+								display={hasValue? "inline" : "none"}
+								hidden={!hasValue}
 								value={nroWhatsapp || undefined}
 								onChange={e => setFieldParte("nroWhatsapp", e.target.value, parte.id, esPatrocinante, esReclamante)} />
 			</div>
@@ -454,40 +456,36 @@ export default function Form() {
 		  <h3 className="mb-3">{isNaN(id)? "Nuevo " : "Edición de "} Reclamo</h3>
 			{state.errors.length > 0 && <ValidationErrors errors={state.errors} />}
 			<div className="row mb-3">
-				<div className="col">
+				<div className="col-4">
 					<label htmlFor="numero" className="form-label">Número</label>
 					<input id="numero" placeholder="Número" className="form-control text-end w-auto" type="number" value={state.numero} 
 						onChange={setField} required />
 				</div>
 				<div className="col">
-					<label htmlFor="fechaHoraInicio" className="form-label d-block">Fecha y Hora de Inicio</label>
+					<label htmlFor="fechaHoraInicio" className="form-label d-block">Fecha y Hora</label>
 					<input id="fechaHoraInicio" placeholder="AAAA-MM-DD HH:MM" className="form-control text-center d-inline-block w-auto" 
 						type="datetime-local" value={state.fechaHoraInicio} onChange={setField} />
-					<label htmlFor="cuil" id="pospuesto" className="form-label" onClick={setField}
-						title="Esta audiencia fue pospuesta en acuerdo con las partes.">
-							<input type="checkbox" className="ms-2" checked={state.pospuesto} onChange={(e) => {e.target.parentElement.click()}} /> Fue pospuesto.
-					</label>
-				</div>
-				<div className="col">
-					<label htmlFor="horaFin" className="form-label">Hora de Fin</label>
-					<input id="horaFin" placeholder="HH:MM" className="form-control text-center w-auto" type="time" value={state.horaFin} 
+					<span className="mx-3">hasta</span>
+					<input id="horaFin" placeholder="HH:MM" className="form-control d-inline text-center w-auto" type="time" value={state.horaFin} 
 						onChange={setField} />
 				</div>
 			</div>
 
 			<div className="row mb-3">
-				<div className="col">
+				<div className="col-4">
 					<label htmlFor="idResolucion" className="form-label">Resolución</label>
 					<DataBindedSelect data={resoluciones} selectedValue={state.idResolucion} 
 						setSelectedValue={(v) => dispatch({ type: "SET_FIELD", field: "idResolucion", value: parseInt(v) })} />
 				</div>
 
 				<div className="col">
+					{(state.idResolucion === INCOMPARECENCIA_EMPLEADOR || state.idResolucion === INCOMPARECENCIA_RECLAMANTE) && (
+					<>
 					<label htmlFor="proxFecha" className="form-label d-block">Próxima audiencia:</label>
 					<input id="proxFecha" placeholder="AAAA-MM-DD HH:MM" className="form-control text-center d-inline-block w-auto" 
 						type="datetime-local" value={state.proxFecha} onChange={setField} />
+					</>)}
 				</div>
-				<div className="col"></div>
 			</div>
 
 			<div className="mb-3">
