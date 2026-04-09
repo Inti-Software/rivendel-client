@@ -211,7 +211,8 @@ export default function Form() {
 			return {
 				idParte: p.id,
 				nroWhatsappParte: p.nroWhatsappParte || null,
-				nroWhatsappPatrocinante: p.nroWhatsappPatrocinante || null
+				nroWhatsappPatrocinante: p.nroWhatsappPatrocinante || null,
+				postergo: p.postergo || false
 			};
 		}
 
@@ -237,7 +238,7 @@ export default function Form() {
 
 			if (result.ok) {
 				const mensaje = "El reclamo Nº " + state.numero + 
-					` se ${isNaN(id) ? "actualizó" : "creó"} correctamente.`;
+					` se ${isNaN(id) ? "creó" : "actualizó"} correctamente.`;
 				dispatch({ type: "SUBMIT_SUCCESS" });
 				navigate("/reclamos", { state: { successMsg: mensaje }});
 			} else {				
@@ -310,15 +311,22 @@ export default function Form() {
 		}
 	}
 
-	const actualizarNroWhatsapp = (nro, parteId, esParte, esReclamante) => {
+	const setFieldParte = (field, nro, parteId, esPatrocinante, esReclamante) => {
 		const partes = esReclamante ? state.reclamantes : state.reclamados;
 		const f = esReclamante ? "reclamantes" : "reclamados";
 		const v = partes.map(p => {
 			if (p.id === parteId) {
-				if (esParte) {
-					return { ...p, nroWhatsappParte: nro };
-				} else {
-					return { ...p, nroWhatsappPatrocinante: nro };
+				switch (field) {
+					case "nroWhatsapp":
+						if (esPatrocinante) {
+							return { ...p, nroWhatsappPatrocinante: nro };
+						} else {
+							return { ...p, nroWhatsappParte: nro };
+						}
+					case "postergo":
+						return { ...p, postergo: !p.postergo };
+					default:
+						return p;
 				}
 			}
 			return p;
@@ -345,7 +353,7 @@ export default function Form() {
 								placeholder={"Whatsapp " + (esPatrocinante ? "Patrocinante" : "Parte") }
 								style={style}
 								value={nroWhatsapp || undefined}
-								onChange={e => actualizarNroWhatsapp(e.target.value, parte.id, !esPatrocinante, esReclamante)} />
+								onChange={e => setFieldParte("nroWhatsapp", e.target.value, parte.id, esPatrocinante, esReclamante)} />
 			</div>
 		)
 	}
@@ -371,11 +379,17 @@ export default function Form() {
 									<td id={p.id} key={p.id}>
 										<div className="bg-secondary-subtle mb-1 border border-secondary mx-0 rounded-1 px-2">
 											<div className='row'>
-												<div className="col-6">
+												<div className="col-4">
 													<span className="me-1 fw-bold">Parte:</span>{p.cuil === "0"? p.nroDocumento : p.cuil} - {p.nombre}
 												</div>
 												<div className="col-6">
 													<span className="me-1 fw-bold">Domicilio:</span> {p.domicilio}
+												</div>
+												<div className="col-2">
+													<label className="me-2">
+															<input type="checkbox" defaultChecked={p.postergo} 
+																onChange={e => setFieldParte("postergo", e.target.value, p.id, null, esReclamante) } /> Pidió postergación
+													</label>
 												</div>
 											</div>
 											<div>
