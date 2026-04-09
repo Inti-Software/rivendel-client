@@ -17,7 +17,7 @@ const initialState = {
   fechaHoraInicio: "",
   horaFin: "",
   idResolucion: 0,
-	proxFecha: "",
+	proxAudiencia: "",
   rubros: "",
   reclamantes: [],
   reclamados: [],
@@ -122,6 +122,8 @@ export default function Form() {
 						dayjs(data.fechaHoraInicio, "DD/MM/YYYY HH:mm").format("YYYY-MM-DDTHH:mm") : "";
 					const horafin = data.horaFin == null ? "" : dayjs(data.horaFin, "HH:mm", true).isValid() ?
 						dayjs(data.horaFin, "HH:mm").format("HH:mm") : ""; 
+					const proxAudiencia = data.proximaAudiencia == null ? "" : dayjs(data.proximaAudiencia, "DD/MM/YYYY HH:mm", true).isValid() ?
+						dayjs(data.proximaAudiencia, "DD/MM/YYYY HH:mm").format("YYYY-MM-DDTHH:mm") : "";
 					dispatch({ type: "INITIAL_LOAD", payload: {
 						id: data.id,
 						numero: data.numero,
@@ -129,6 +131,7 @@ export default function Form() {
 						idResolucion: isNaN(data.idResolucion)? 0 : parseInt(data.idResolucion),
 						fechaHoraInicio: fechaHoraInicio,
 						horaFin: horafin,
+						proxAudiencia: proxAudiencia,
 						reclamantes: data.reclamantes,
 						reclamados: data.reclamados
 					}});
@@ -166,11 +169,11 @@ export default function Form() {
     if (dayjs(state.horaFin, "HH:mm", true).isValid())
       errors.push("Ingrese una hora de fin válida");
 		if (state.idResolucion <= 0) errors.push("Seleccione una resolución válida");
-    if (state.proxFecha && !dayjs(state.proxFecha, "YYYY-MM-DDTHH:mm", true).isValid())
+    if (state.proxAudiencia && !dayjs(state.proxAudiencia, "YYYY-MM-DDTHH:mm", true).isValid())
       errors.push("Ingrese una próxima fecha válida");
 
 		const inicio = dayjs(state.fechaHoraInicio)
-		const prox = dayjs(state.proxFecha)
+		const prox = dayjs(state.proxAudiencia)
 		if (inicio.isAfter(prox)) {
 			errors.push("La próxima fecha no puede ser anterior a la fecha hora de inicio.")
 		}
@@ -221,7 +224,7 @@ export default function Form() {
 				idResolucion: state.idResolucion,
 				fechaHoraInicio: state.fechaHoraInicio, 
 				horaFin: state.horaFin === "" ? null : combinarHoraConFecha(state.horaFin, dayjs(state.fechaHoraInicio)),
-				proxFecha: state.proxFecha === "" ? null : state.proxFecha,
+				proximaAudiencia: state.proxAudiencia === "" ? null : state.proxAudiencia,
 				reclamantes: state.reclamantes.map(parteToParteDTO),
 				reclamados: state.reclamados.map(parteToParteDTO)
 			};
@@ -238,8 +241,8 @@ export default function Form() {
 				dispatch({ type: "SUBMIT_SUCCESS" });
 				navigate("/reclamos", { state: { successMsg: mensaje }});
 			} else {				
-				const errorData = await result.json();
-				dispatch({ type: "SUBMIT_FAIL", errors: errorData.message });
+				//const errorData = result.error || "Error en la solicitud";
+				dispatch({ type: "SUBMIT_FAIL", errors: result.error });
 			}
 		} catch (err) {
 			dispatch({ type: "SUBMIT_FAIL", errors: [err.message] });
@@ -481,9 +484,9 @@ export default function Form() {
 				<div className="col">
 					{(state.idResolucion === INCOMPARECENCIA_EMPLEADOR || state.idResolucion === INCOMPARECENCIA_RECLAMANTE) && (
 					<>
-					<label htmlFor="proxFecha" className="form-label d-block">Próxima audiencia:</label>
-					<input id="proxFecha" placeholder="AAAA-MM-DD HH:MM" className="form-control text-center d-inline-block w-auto" 
-						type="datetime-local" value={state.proxFecha} onChange={setField} />
+					<label htmlFor="proxAudiencia" className="form-label d-block">Próxima audiencia:</label>
+					<input id="proxAudiencia" placeholder="AAAA-MM-DD HH:MM" className="form-control text-center d-inline-block w-auto" 
+						type="datetime-local" value={state.proxAudiencia} onChange={setField} />
 					</>)}
 				</div>
 			</div>
