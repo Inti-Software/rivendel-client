@@ -3,7 +3,11 @@ import vfs from "../../assets/vfs_fonts.js";
 import { Reclamos } from "../../api/endpoints/reclamos";
 import ReportData from "./DTOs/reportData.js";
 import { NO_ESPECIFICADO } from "../Shared/constants";
-import { INCOMPARECENCIA_EMPLEADOR, INCOMPARECENCIA_RECLAMANTE, SIN_ARREGLO } from "../Resoluciones/tiposResoluciones.js";
+import {
+  INCOMPARECENCIA_EMPLEADOR,
+  INCOMPARECENCIA_RECLAMANTE,
+  SIN_ARREGLO,
+} from "../Resoluciones/tiposResoluciones.js";
 
 pdfMake.vfs = vfs; // 👈 este suele ser el correcto
 pdfMake.fonts = {
@@ -43,7 +47,8 @@ const getParte = (partes) => {
     }
 
     if (parte.postergo) {
-      s += " la cual solicitó el cambio de fecha original para el día de hoy, pese a lo cual no compareció";
+      s +=
+        " la cual solicitó el cambio de fecha original para el día de hoy, pese a lo cual no compareció";
     }
 
     if (Object.keys(patrocinante || {}).length > 0) {
@@ -76,10 +81,12 @@ const getParte = (partes) => {
 
 const getComparecientes = (data) => {
   if (data.resolucion.id === SIN_ARREGLO) {
-    return `comparecen por una parte ${getParte(data?.reclamantes)} ` +
-           `y por la otra parte reclamada/empleadora ${getParte(data?.reclamados)}`;
+    return (
+      `comparecen por una parte ${getParte(data?.reclamantes)} ` +
+      `y por la otra parte reclamada/empleadora ${getParte(data?.reclamados)}`
+    );
   }
-  
+
   if (data.resolucion.id === INCOMPARECENCIA_EMPLEADOR) {
     return `comparece por una parte ${getParte(data?.reclamantes)}`;
   }
@@ -89,15 +96,27 @@ const getComparecientes = (data) => {
   }
 
   return "";
-}
+};
+
+const getPostergacion = (data, reclamados) => {
+  const postergo = reclamados.some((r) => r.postergo);
+  if (postergo) {
+    return (
+      `Esta conciliadora le fija una SEGUNDA FECHA para el día ${data.proximaAudiencia.dia} de ${data.proximaAudiencia.mes}` +
+      ` de ${data.proximaAudiencia.anio} a las ${data.proximaAudiencia.hora} horas, bajo apercibimiento de requerir la aplicación` +
+      ` de la multa establecida en el Art.14 párrafo 5º de la ley 7330.`
+    );
+  }
+  return "";
+};
 
 const getDeclaracion = (data) => {
-  if (data.resolucion.id === SIN_ARREGLO) {    
-    return data?.resolucion.detalle;
+  if (data.resolucion.id === SIN_ARREGLO) {
+    return data?.resolucion.detalle + " ";
   }
-  
+
   if (data.resolucion.id === INCOMPARECENCIA_EMPLEADOR) {
-    return data?.resolucion.detalle + ' ' + getParte(data?.reclamados) + '.\n';
+    return `${data?.resolucion.detalle} ${getParte(data?.reclamados)}. ${getPostergacion(data, data?.reclamados)}\n`;
   }
 
   if (data.resolucion.id === INCOMPARECENCIA_RECLAMANTE) {
@@ -105,17 +124,22 @@ const getDeclaracion = (data) => {
   }
 
   return "";
+};
+
+const getFinalizacion = (data) => {
+  return `Siendo las ${data?.horaFin} horas, se da por finalizado el acto, previa lectura, firmando los comparecientes al pie ` + 
+    `de la presente, ante mí conciliadora autorizante.`
 }
 
 const getCuerpo = (data) => {
-  return  `En la ciudad de Santiago del Estero, provincia del mismo nombre, a los ${data?.fechaInicio.dia} días ` +
-          `del mes de ${data?.fechaInicio.mes} del año ${data?.fechaInicio.anio}, siendo las ${data?.fechaInicio.hora} ` + 
-          `horas, ante mí María Cristina Lavaisse Beck, en mi calidad de Conciliador Laboral, habilitación Nº 7, en ` + 
-          `ejercicio de las funciones conferidas por la ley 7.330 y el decreto reglamentario 2.230/22. En el Marco del ` + 
-          `trámite de referencia, ${getComparecientes(data)}.- Y ABIERTO EL ACTO: ${getDeclaracion(data)} Siendo las ${data?.horaFin} horas, ` + 
-          `se da por finalizado el acto, previa lectura, firmando los comparecientes al pie de la presente, ` + 
-          `ante mí conciliadora autorizante.`  
-}
+  return (
+    `En la ciudad de Santiago del Estero, provincia del mismo nombre, a los ${data?.fechaInicio.dia} días ` +
+    `del mes de ${data?.fechaInicio.mes} del año ${data?.fechaInicio.anio}, siendo las ${data?.fechaInicio.hora} ` +
+    `horas, ante mí María Cristina Lavaisse Beck, en mi calidad de Conciliador Laboral, habilitación Nº 7, en ` +
+    `ejercicio de las funciones conferidas por la ley 7.330 y el decreto reglamentario 2.230/22. En el Marco del ` +
+    `trámite de referencia, ${getComparecientes(data)}.- Y ABIERTO EL ACTO: ${getDeclaracion(data)}${getFinalizacion(data)}`
+  );
+};
 const line = (margins) => ({
   table: {
     widths: ["*"],
@@ -138,16 +162,10 @@ const text = (label, margins) => ({
 const firma = (label1, label2) => ({
   columns: [
     {
-      stack: [
-        line([0, 12, 10, 0]),
-        text(label1, [0, 5, 20, 0])
-      ],
+      stack: [line([0, 12, 10, 0]), text(label1, [0, 5, 20, 0])],
     },
     {
-      stack: [
-        line([10, 12, 0, 0]),
-        text(label2, [20, 0, 0, 0])
-      ],
+      stack: [line([10, 12, 0, 0]), text(label2, [20, 0, 0, 0])],
     },
   ],
 });
@@ -203,7 +221,10 @@ const buildActaDoc = (data) => {
       },
       firma("Firma Reclamante", "Firma Reclamado"),
       firma("Aclaración Reclamante", "Aclaración Reclamado"),
-      firma("Tipo y Nro. Documento Reclamante", "Tipo y Nro. Documento Reclamado"),
+      firma(
+        "Tipo y Nro. Documento Reclamante",
+        "Tipo y Nro. Documento Reclamado",
+      ),
       firma("Firma Letrado Reclamante", "Firma Letrado Reclamado"),
     ],
 

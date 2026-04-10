@@ -73,6 +73,13 @@ function getReclamo(data) {
 		},
 		horaFin: data.horaFin?	String(new Date(data.horaFin).getHours()).padStart(2, '0') + ':' +
 				  String(new Date(data.horaFin).getMinutes()).padStart(2, '0') : NO_ESPECIFICADO,
+		proximaAudiencia: data.proximaAudiencia? {
+			dia: String(new Date(data.proximaAudiencia).getDate()).padStart(2, '0'),
+			mes: new Date(data.proximaAudiencia).toLocaleString('es-AR', { month: 'long' }),
+			anio: new Date(data.proximaAudiencia).getFullYear(),
+			hora: String(new Date(data.proximaAudiencia).getHours()).padStart(2, '0') + ':' +
+				  String(new Date(data.proximaAudiencia).getMinutes()).padStart(2, '0')
+		} : null,
 		nombresReclamantes: nombresReclamantes,
 		nombresReclamados: nombresReclamados
 	}
