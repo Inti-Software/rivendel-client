@@ -103,9 +103,11 @@ const SearchParteDialog = ({ title, handleAccept, handleCancel }) => {
 
 	const handleKeyDown = (event) => {
 		if (event.keyCode === 13) {
+			event.preventDefault();
 			buscar();
 		}
 		if (event.keyCode === 27) {
+			event.preventDefault();
 			handleCancel(event)
 		}
 	}

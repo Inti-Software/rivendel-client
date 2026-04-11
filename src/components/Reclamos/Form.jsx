@@ -266,9 +266,8 @@ export default function Form() {
 				const response = await Partes.get(id);
 				if (!response.ok) {
 					throw new Error(`Error al obtener los datos de la parte seleccionada: ${response.status} - ${response.statusText}`);
-				}				
-				const data = await response.json();
-				const v = [...partes, data];
+				}
+				const v = [...partes, response.data];
 				dispatch({ type: "SET_FIELD", field: field, value: v });
 			}
 			await fetch();
