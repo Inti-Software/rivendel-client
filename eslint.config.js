@@ -1,49 +1,58 @@
 import js from '@eslint/js';
 import globals from 'globals';
+import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
 import prettierConfig from 'eslint-config-prettier';
 
 export default [
   { ignores: ['dist', 'node_modules'] },
-  js.configs.recommended,
   {
-    files: ['**/*.{js,jsx,ts,tsx}'],
+    files: ['**/*.{js,jsx}'],
     languageOptions: {
-      ecmaVersion: 2020,
-      globals: globals.browser,
+      ecmaVersion: 'latest',
+      sourceType: 'module',
+      globals: {
+        ...globals.browser,
+        ...globals.es2020,
+      },
       parserOptions: {
-        ecmaFeatures: { jsx: true },
+        ecmaFeatures: { jsx: true }, // Permite entender JSX
       },
     },
     plugins: {
+      react,
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh,
     },
     rules: {
+      ...js.configs.recommended.rules,
+      ...react.configs.recommended.rules,
       ...reactHooks.configs.recommended.rules,
-      'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
-      
-      // --- REGLAS DE ESTILO PERSONALIZADAS ---
-      
-      // Control de longitud de línea (aviso si pasa de 100)
-      'max-len': ['warn', { 'code': 100, 'ignoreUrls': true, 'ignoreStrings': true }],
 
-      // Lo que pediste: Mantener objetos en una sola línea si son razonables
+      // --- LA SOLUCIÓN A TUS IMPORTACIONES ---
+      // Estas dos reglas le dicen a ESLint que las variables usadas en JSX SÍ están en uso
+      'react/jsx-uses-react': 'error',
+      'react/jsx-uses-vars': 'error',
+      
+      // Si usas React 17+, esta regla evita que te pida "import React" en cada archivo
+      'react/react-in-jsx-scope': 'off',
+
+      // --- TUS REGLAS DE ESTILO ---
+      'max-len': ['warn', { 'code': 100 }], // Margen de 100
       'object-curly-newline': ['error', { 
-        'ObjectExpression': { 'multiline': true, 'minProperties': 8 }, // Solo rompe si hay 8+ propiedades
+        'ObjectExpression': { 'multiline': true, 'minProperties': 8 }, 
         'ObjectPattern': { 'multiline': true, 'minProperties': 8 },
         'ImportDeclaration': 'never' 
       }],
-      
-      'object-property-newline': ['error', { 
-        'allowAllPropertiesOnSameLine': true 
-      }],
+      'object-property-newline': ['error', { 'allowAllPropertiesOnSameLine': true }],
 
-      // Evitar variables sin usar (clásico)
-      'no-unused-vars': ['warn', { 'argsIgnorePattern': '^_' }],
+      'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
+      'no-unused-vars': ['warn', { 'varsIgnorePattern': 'React' }],
+    },
+    settings: {
+      react: { version: 'detect' }, // Detecta automáticamente tu versión de React
     },
   },
-  // Desactiva reglas de ESLint que choquen con Prettier
-  prettierConfig, 
+  prettierConfig, // Siempre al final para evitar conflictos
 ];
