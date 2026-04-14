@@ -3,7 +3,7 @@ import { RECLAMANTE, RECLAMADO } from "../Shared/constants";
 import DeleteMessage from "../Shared/DeleteMessage.jsx"
 import { GridEditButton, GridDeleteButton, GridPrintButton } from "../Grid/GridButtons.jsx";
 import createPDF from "./pdfBuilders.js";
-import { CON_ARREGLO, INCOMPARECENCIA_EMPLEADOR, INCOMPARECENCIA_RECLAMANTE, PENDIENTE, SIN_ARREGLO } from "../Resoluciones/tiposResoluciones";
+import { CON_ARREGLO, FRACASO, PENDIENTE, POSTERGADO, SIN_ARREGLO } from "../Resoluciones/tiposResoluciones";
 
 const getDeleteMessage = (rec) => {
 	const s = `¿Está seguro que desea eliminar el reclamo Nº ${rec.numero}?`;
@@ -17,14 +17,16 @@ const handlePrint = (e, id) => {
 
 const getBadgeColor = (resolucionId) => {
 	switch (resolucionId) {
+		case PENDIENTE:
+			return "badge bg-dark-subtle text-secondary fs-very-small rounded-pill";
 		case SIN_ARREGLO:
-			return "badge bg-warning text-dark fs-very-small";
+			return "badge bg-warning-subtle text-warning-emphasis fs-very-small rounded-pill";
 		case CON_ARREGLO:
-			return "badge bg-success fs-very-small";
-		case INCOMPARECENCIA_EMPLEADOR:
-			return "badge bg-primary fs-very-small";
-		case INCOMPARECENCIA_RECLAMANTE:
-			return "badge bg-info text-dark fs-very-small";		
+			return "badge bg-success fs-very-small rounded-pill";
+		case POSTERGADO:
+			return "badge bg-primary-subtle text-primary fs-very-small rounded-pill";
+		case FRACASO:
+			return "badge bg-danger-subtle text-danger fs-very-small rounded-pill";
 		default:
 			return "badge bg-secondary fs-very-small";
 	}
@@ -51,7 +53,7 @@ export default function ListCell(rec, onDeleteRecord) {
 								</div>
 								<div className="col-4 d-flex align-items-center justify-content-end">
 									{rec.proximaAudiencia && (
-										<span className="badge bg-dark-subtle text-primary-emphasis fs-very-small me-2 fw-lighter">
+										<span className="text-primary me-2 fw-light" style={{fontSize: "0.75em"}}>
 											Próxima audiencia: {dayjs(rec.resolucion.proximaAudiencia).format("DD/MM/YYYY HH:mm")}
 										</span>
 									)}

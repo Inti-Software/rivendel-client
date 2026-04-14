@@ -1,15 +1,14 @@
-import { useReducer, useEffect, useState } from "react";
+import { useReducer, useEffect } from "react";
 import { useNavigate, Link, useParams } from "react-router-dom";
 import SearchParteDialog from "../Partes/SearchParteDialog";
 import { Reclamos } from "../../api/endpoints/reclamos";
 import { Partes } from "../../api/endpoints/partes";
-import { Resoluciones } from "../../api/endpoints/resoluciones";
 import DataBindedSelect from "../Forms/DataBindedSelect";
 import ValidationErrors from "../Shared/ValidationErrors";
 import dayjs from "dayjs";
 import { DELETE, PLUSCIRCLE } from "../Shared/Icons";
 import { NO_ESPECIFICADO } from "../Shared/constants";
-import { INCOMPARECENCIA_EMPLEADOR, INCOMPARECENCIA_RECLAMANTE } from "../Resoluciones/tiposResoluciones";
+import { POSTERGADO, RESOLUCIONES } from "../Resoluciones/tiposResoluciones";
 
 const initialState = {
   id: 0,
@@ -89,26 +88,8 @@ function formReducer(state, action) {
 
 export default function Form() {
   const [state, dispatch] = useReducer(formReducer, initialState);
-	const [resoluciones, setResoluciones] = useState([]);
 	const navigate = useNavigate();
 	const { id } = useParams();
-
-	useEffect(() => {
-		const fetchResoluciones = async () => {
-			const result = await Resoluciones.findAll({currentPage: 1, recordsPerPage: 100});
-			if (!result.ok) {
-				throw new Error(`HTTP error! status: ${result.status}`);
-			}
-
-			const resolucionesData = result.data.data.map((r) => ({
-				value: r.id,
-				text: r.descripcion
-			}));
-			resolucionesData.unshift({ value: 0, text: "-- Seleccione una resolución --" });
-			setResoluciones(resolucionesData);
-		}
-		fetchResoluciones();
-	}, []);
 
 	useEffect(() => {
 		if (isNaN(id)) return;
@@ -212,7 +193,9 @@ export default function Form() {
 				idParte: p.id,
 				nroWhatsappParte: p.nroWhatsappParte || null,
 				nroWhatsappPatrocinante: p.nroWhatsappPatrocinante || null,
-				postergo: p.postergo || false
+				postergo: p.postergo || false,
+				incomparendo: p.incomparendo || false,
+				multado: p.multado || false
 			};
 		}
 
@@ -240,8 +223,7 @@ export default function Form() {
 					` se ${isNaN(id) ? "creó" : "actualizó" } correctamente.`;
 				dispatch({ type: "SUBMIT_SUCCESS" });
 				navigate("/reclamos", { state: { successMsg: mensaje }});
-			} else {				
-				//const errorData = result.error || "Error en la solicitud";
+			} else {
 				dispatch({ type: "SUBMIT_FAIL", errors: result.error });
 			}
 		} catch (err) {
@@ -327,6 +309,10 @@ export default function Form() {
 						}
 					case "postergo":
 						return { ...p, postergo: !p.postergo };
+					case "incomparendo":
+						return { ...p, incomparendo: !p.incomparendo };
+					case "multado":
+						return { ...p, multado: !p.multado };
 					default:
 						return p;
 				}
@@ -386,13 +372,21 @@ export default function Form() {
 												<div className="col-4">
 													<span className="me-1 fw-bold">Parte:</span>{p.cuil === "0"? p.nroDocumento : p.cuil} - {p.nombre}
 												</div>
-												<div className="col-6">
+												<div className="col">
 													<span className="me-1 fw-bold">Domicilio:</span> {p.domicilio}
 												</div>
-												<div className="col-2">
+												<div className="col d-flex align-items-start mt-1 gap-2" style={{ fontSize: "0.75em" }}>
 													<label className="me-2">
 															<input type="checkbox" defaultChecked={p.postergo} 
 																onChange={e => setFieldParte("postergo", e.target.value, p.id, null, esReclamante) } /> Pidió postergación
+													</label>
+													<label className="me-2">
+															<input type="checkbox" defaultChecked={p.incomparendo} 
+																onChange={e => setFieldParte("incomparendo", e.target.value, p.id, null, esReclamante) } /> Incomparendo
+													</label>
+													<label className="me-2">
+															<input type="checkbox" defaultChecked={p.multado} 
+																onChange={e => setFieldParte("multado", e.target.value, p.id, null, esReclamante) } /> Aplicar multa
 													</label>
 												</div>
 											</div>
@@ -476,12 +470,12 @@ export default function Form() {
 			<div className="row mb-3">
 				<div className="col-4">
 					<label htmlFor="idResolucion" className="form-label">Resolución</label>
-					<DataBindedSelect data={resoluciones} selectedValue={state.idResolucion} 
+					<DataBindedSelect data={RESOLUCIONES} selectedValue={state.idResolucion} 
 						setSelectedValue={(v) => dispatch({ type: "SET_FIELD", field: "idResolucion", value: parseInt(v) })} />
 				</div>
 
 				<div className="col">
-					{(state.idResolucion === INCOMPARECENCIA_EMPLEADOR || state.idResolucion === INCOMPARECENCIA_RECLAMANTE) && (
+					{(state.idResolucion === POSTERGADO) && (
 					<>
 					<label htmlFor="proxAudiencia" className="form-label d-block">Próxima audiencia:</label>
 					<input id="proxAudiencia" placeholder="AAAA-MM-DD HH:MM" className="form-control text-center d-inline-block w-auto" 

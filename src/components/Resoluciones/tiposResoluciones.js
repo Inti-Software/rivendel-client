@@ -1,5 +1,13 @@
-export const SIN_ARREGLO = 1;
-export const PENDIENTE = 2;
-export const INCOMPARECENCIA_RECLAMANTE = 3;
-export const INCOMPARECENCIA_EMPLEADOR = 4;
-export const CON_ARREGLO = 5;
+export const PENDIENTE = 1;
+export const SIN_ARREGLO = 2;
+export const CON_ARREGLO = 3;
+export const POSTERGADO = 4;
+export const FRACASO = 5;
+
+export const RESOLUCIONES = [
+	{ value: PENDIENTE, text: "Pendiente" },
+	{ value: SIN_ARREGLO, text: "Sin arreglo" },
+	{ value: CON_ARREGLO, text: "Con arreglo" },
+	{ value: POSTERGADO, text: "Postergado" },
+	{ value: FRACASO, text: "Fracaso" },
+]
