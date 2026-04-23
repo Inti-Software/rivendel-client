@@ -1,44 +1,5 @@
 import { NO_ESPECIFICADO } from "../../Shared/constants";
 
-/*
-const result = {
-	numero: 0,
-	rubros: "",
-	resolucion: "",
-	fechaHoraInicio: "",
-	horaFin: "",
-	nombres: "",
-	reclamantes: {
-		nombre: "",
-		dni: 0,
-		cuil: 0,
-		domicilio: "", //domicilio + localidad
-		nroWhatsapp: "",
-		patrocinante: {	//o null si coincide con el siguiente
-			nombre: "",
-			nroMatricula: "",
-			domicilio: "", //completo
-			nroCasillero: "",
-			cantidadPatrocinados: 0 //cantidad de partes que patrocina
-		}
-	},
-	reclamados: {
-		nombre: "",
-		dni: 0,
-		cuil: 0,
-		domicilio: "", //domicilio + localidad
-		nroWhatsapp: "",
-		patrocinante: {
-			nombre: "",
-			nroMatricula: "",
-			domicilio: "", //completo
-			nroCasillero: "",
-			cantidadPatrocinados: 0 //cantidad de partes que patrocina
-		}
-	}
-}
-*/
-
 function concatenarNombres(partes){
 	let nombres = ""
 	partes.forEach((d, i) => {
@@ -54,16 +15,17 @@ function concatenarNombres(partes){
 }
 
 function getReclamo(data) {
+	const unidades = [
+		"", "", "dos", "tres", "cuatro", 
+		"cinco", "seis", "siete", "ocho", "nueve"
+	];
 	let nombresReclamantes = concatenarNombres(data.reclamantes)
 	let nombresReclamados = concatenarNombres(data.reclamados)
 
 	return {
 		numero: data.numero,
 		rubros: data.rubros,
-		resolucion: {
-			id: data.idResolucion,
-			detalle: data.resolucion
-		},
+		idResolucion: data.idResolucion,
 		fechaInicio: {
 			dia: String(new Date(data.fechaHoraInicio).getDate()).padStart(2, '0'),
 			mes: new Date(data.fechaHoraInicio).toLocaleString('es-AR', { month: 'long' }),
@@ -81,7 +43,8 @@ function getReclamo(data) {
 				  String(new Date(data.proximaAudiencia).getMinutes()).padStart(2, '0')
 		} : null,
 		nombresReclamantes: nombresReclamantes,
-		nombresReclamados: nombresReclamados
+		nombresReclamados: nombresReclamados,
+		cantidad: unidades[data.cantidad]
 	}
 }
 
@@ -108,6 +71,8 @@ function getPartes(partes) {
 		const nroWhatsappParte = partes[i].nroWhatsappParte || null
 		const nroWhatsappPatrocinante = partes[i].nroWhatsappPatrocinante || null
 		const postergo = partes[i].postergo || false
+		const incomparendo = partes[i].incomparendo || false
+		const multado = partes[i].multado || false
 
 		if (patrocinante) {
 			patrocinante.domicilio = patrocinante?.domicilio || NO_ESPECIFICADO
@@ -126,7 +91,9 @@ function getPartes(partes) {
 			nroWhatsappPatrocinante: nroWhatsappPatrocinante,
 			patrocinante: patrocinante,
 			esApoderado: partes[i].esApoderado,
-			postergo: postergo
+			postergo: postergo,
+			incomparendo: incomparendo,
+			multado: multado
 		}
 		result.push(parte)
 	}
@@ -143,6 +110,5 @@ export default function ReportData(data) {
 		reclamados: getPartes(data.reclamados),
 	}
 
-	console.log("reportData", JSON.stringify(result, null, " "))
 	return result
 }
