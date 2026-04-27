@@ -503,8 +503,7 @@ export default function Form() {
 					<button disabled={state.loading || state.searchPartes.show } type="submit" className="btn btn-primary me-2">{state.loading? "Grabando...":"Grabar"}</button>
 					<Link to="/reclamos" className="btn btn-outline-primary">Cancelar</Link>
 			</div>
-
-    <pre>{JSON.stringify(state, null, 2)}</pre>
+    
     </form>
 
   );
