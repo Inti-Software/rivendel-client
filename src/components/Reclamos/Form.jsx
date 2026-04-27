@@ -1,23 +1,22 @@
-import { useReducer, useEffect, useState } from "react";
+import { useReducer, useEffect } from "react";
 import { useNavigate, Link, useParams } from "react-router-dom";
 import SearchParteDialog from "../Partes/SearchParteDialog";
 import { Reclamos } from "../../api/endpoints/reclamos";
 import { Partes } from "../../api/endpoints/partes";
-import { Resoluciones } from "../../api/endpoints/resoluciones";
 import DataBindedSelect from "../Forms/DataBindedSelect";
 import ValidationErrors from "../Shared/ValidationErrors";
 import dayjs from "dayjs";
 import { DELETE, PLUSCIRCLE } from "../Shared/Icons";
 import { NO_ESPECIFICADO } from "../Shared/constants";
+import { POSTERGADO, RESOLUCIONES } from "../Resoluciones/tiposResoluciones";
 
 const initialState = {
   id: 0,
   numero: 0,
   fechaHoraInicio: "",
-	pospuesto: false,
   horaFin: "",
   idResolucion: 0,
-	proxFecha: "",
+	proxAudiencia: "",
   rubros: "",
   reclamantes: [],
   reclamados: [],
@@ -89,26 +88,8 @@ function formReducer(state, action) {
 
 export default function Form() {
   const [state, dispatch] = useReducer(formReducer, initialState);
-	const [resoluciones, setResoluciones] = useState([]);
 	const navigate = useNavigate();
 	const { id } = useParams();
-
-	useEffect(() => {
-		const fetchResoluciones = async () => {
-			const result = await Resoluciones.findAll({currentPage: 1, recordsPerPage: 100});
-			if (!result.ok) {
-				throw new Error(`HTTP error! status: ${result.status}`);
-			}
-
-			const resolucionesData = result.data.data.map((r) => ({
-				value: r.id,
-				text: r.descripcion
-			}));
-			resolucionesData.unshift({ value: 0, text: "-- Seleccione una resolución --" });
-			setResoluciones(resolucionesData);
-		}
-		fetchResoluciones();
-	}, []);
 
 	useEffect(() => {
 		if (isNaN(id)) return;
@@ -122,6 +103,8 @@ export default function Form() {
 						dayjs(data.fechaHoraInicio, "DD/MM/YYYY HH:mm").format("YYYY-MM-DDTHH:mm") : "";
 					const horafin = data.horaFin == null ? "" : dayjs(data.horaFin, "HH:mm", true).isValid() ?
 						dayjs(data.horaFin, "HH:mm").format("HH:mm") : ""; 
+					const proxAudiencia = data.proximaAudiencia == null ? "" : dayjs(data.proximaAudiencia, "DD/MM/YYYY HH:mm", true).isValid() ?
+						dayjs(data.proximaAudiencia, "DD/MM/YYYY HH:mm").format("YYYY-MM-DDTHH:mm") : "";
 					dispatch({ type: "INITIAL_LOAD", payload: {
 						id: data.id,
 						numero: data.numero,
@@ -129,6 +112,7 @@ export default function Form() {
 						idResolucion: isNaN(data.idResolucion)? 0 : parseInt(data.idResolucion),
 						fechaHoraInicio: fechaHoraInicio,
 						horaFin: horafin,
+						proxAudiencia: proxAudiencia,
 						reclamantes: data.reclamantes,
 						reclamados: data.reclamados
 					}});
@@ -148,9 +132,6 @@ export default function Form() {
 			case "numero":
 				v = parseInt(e.target.value.replace(/\D/g, ''));
 				break;
-			case "pospuesto":
-				v = !state.pospuesto;
-				break;
 			default:
 				if (e.target.type === "checkbox") {
 					v = e.target.checked
@@ -169,11 +150,11 @@ export default function Form() {
     if (dayjs(state.horaFin, "HH:mm", true).isValid())
       errors.push("Ingrese una hora de fin válida");
 		if (state.idResolucion <= 0) errors.push("Seleccione una resolución válida");
-    if (state.proxFecha && !dayjs(state.proxFecha, "YYYY-MM-DDTHH:mm", true).isValid())
+    if (state.proxAudiencia && !dayjs(state.proxAudiencia, "YYYY-MM-DDTHH:mm", true).isValid())
       errors.push("Ingrese una próxima fecha válida");
 
 		const inicio = dayjs(state.fechaHoraInicio)
-		const prox = dayjs(state.proxFecha)
+		const prox = dayjs(state.proxAudiencia)
 		if (inicio.isAfter(prox)) {
 			errors.push("La próxima fecha no puede ser anterior a la fecha hora de inicio.")
 		}
@@ -211,7 +192,10 @@ export default function Form() {
 			return {
 				idParte: p.id,
 				nroWhatsappParte: p.nroWhatsappParte || null,
-				nroWhatsappPatrocinante: p.nroWhatsappPatrocinante || null
+				nroWhatsappPatrocinante: p.nroWhatsappPatrocinante || null,
+				postergo: p.postergo || false,
+				incomparendo: p.incomparendo || false,
+				multado: p.multado || false
 			};
 		}
 
@@ -222,9 +206,8 @@ export default function Form() {
 				rubros: state.rubros, 
 				idResolucion: state.idResolucion,
 				fechaHoraInicio: state.fechaHoraInicio, 
-				pospuesto: state.pospuesto,
 				horaFin: state.horaFin === "" ? null : combinarHoraConFecha(state.horaFin, dayjs(state.fechaHoraInicio)),
-				proxFecha: state.proxFecha === "" ? null : state.proxFecha,
+				proximaAudiencia: state.proxAudiencia === "" ? null : state.proxAudiencia,
 				reclamantes: state.reclamantes.map(parteToParteDTO),
 				reclamados: state.reclamados.map(parteToParteDTO)
 			};
@@ -237,12 +220,11 @@ export default function Form() {
 
 			if (result.ok) {
 				const mensaje = "El reclamo Nº " + state.numero + 
-					` se ${isNaN(id) ? "actualizó" : "creó"} correctamente.`;
+					` se ${isNaN(id) ? "creó" : "actualizó" } correctamente.`;
 				dispatch({ type: "SUBMIT_SUCCESS" });
 				navigate("/reclamos", { state: { successMsg: mensaje }});
-			} else {				
-				const errorData = await result.json();
-				dispatch({ type: "SUBMIT_FAIL", errors: errorData.message });
+			} else {
+				dispatch({ type: "SUBMIT_FAIL", errors: result.error });
 			}
 		} catch (err) {
 			dispatch({ type: "SUBMIT_FAIL", errors: [err.message] });
@@ -266,9 +248,8 @@ export default function Form() {
 				const response = await Partes.get(id);
 				if (!response.ok) {
 					throw new Error(`Error al obtener los datos de la parte seleccionada: ${response.status} - ${response.statusText}`);
-				}				
-				const data = await response.json();
-				const v = [...partes, data];
+				}
+				const v = [...partes, response.data];
 				dispatch({ type: "SET_FIELD", field: field, value: v });
 			}
 			await fetch();
@@ -303,22 +284,37 @@ export default function Form() {
 			input.disabled = "";
 			input.style.backgroundColor = "#fff";
 			input.focus();
+			input.hidden = false;
+			input.display = "inline";
 		} else {
+			input.hidden = "hidden";
+			input.display = "none";
 			input.disabled = "disabled";
 			input.style.backgroundColor = "#aaa";
 			input.value = "";
 		}
 	}
 
-	const actualizarNroWhatsapp = (nro, parteId, esParte, esReclamante) => {
+	const setFieldParte = (field, nro, parteId, esPatrocinante, esReclamante) => {
 		const partes = esReclamante ? state.reclamantes : state.reclamados;
 		const f = esReclamante ? "reclamantes" : "reclamados";
 		const v = partes.map(p => {
 			if (p.id === parteId) {
-				if (esParte) {
-					return { ...p, nroWhatsappParte: nro };
-				} else {
-					return { ...p, nroWhatsappPatrocinante: nro };
+				switch (field) {
+					case "nroWhatsapp":
+						if (esPatrocinante) {
+							return { ...p, nroWhatsappPatrocinante: nro };
+						} else {
+							return { ...p, nroWhatsappParte: nro };
+						}
+					case "postergo":
+						return { ...p, postergo: !p.postergo };
+					case "incomparendo":
+						return { ...p, incomparendo: !p.incomparendo };
+					case "multado":
+						return { ...p, multado: !p.multado };
+					default:
+						return p;
 				}
 			}
 			return p;
@@ -332,7 +328,7 @@ export default function Form() {
 		const disabled = hasValue? "" : "disabled";
 		const style = hasValue? { backgroundColor: "#fff" } : { backgroundColor: "#aaa" };
 		return (
-			<div className={esPatrocinante ? "col-6" : "col-5"}>
+			<div className={(esPatrocinante ? "col-6" : "col-5") + " d-flex align-items-center gap-2 mb-1"}>
 				<label className="me-2">
 						<input 	type="checkbox" 
 										defaultChecked={hasValue}
@@ -340,12 +336,14 @@ export default function Form() {
 						/> &nbsp;{esPatrocinante ? "Patrocinio " : "Comparecencia "} Online
 				</label>
 				<input 	type="number" 
-								className="form-control-inline form-control-sm mt-1 mb-1 border-0" 
+								className="form-control-inline form-control-sm border-0" 
 								disabled={disabled}
 								placeholder={"Whatsapp " + (esPatrocinante ? "Patrocinante" : "Parte") }
 								style={style}
+								display={hasValue? "inline" : "none"}
+								hidden={!hasValue}
 								value={nroWhatsapp || undefined}
-								onChange={e => actualizarNroWhatsapp(e.target.value, parte.id, !esPatrocinante, esReclamante)} />
+								onChange={e => setFieldParte("nroWhatsapp", e.target.value, parte.id, esPatrocinante, esReclamante)} />
 			</div>
 		)
 	}
@@ -371,11 +369,25 @@ export default function Form() {
 									<td id={p.id} key={p.id}>
 										<div className="bg-secondary-subtle mb-1 border border-secondary mx-0 rounded-1 px-2">
 											<div className='row'>
-												<div className="col-6">
+												<div className="col-4">
 													<span className="me-1 fw-bold">Parte:</span>{p.cuil === "0"? p.nroDocumento : p.cuil} - {p.nombre}
 												</div>
-												<div className="col-6">
+												<div className="col">
 													<span className="me-1 fw-bold">Domicilio:</span> {p.domicilio}
+												</div>
+												<div className="col d-flex align-items-start mt-1 gap-2" style={{ fontSize: "0.75em" }}>
+													<label className="me-2">
+															<input type="checkbox" defaultChecked={p.postergo} 
+																onChange={e => setFieldParte("postergo", e.target.value, p.id, null, esReclamante) } /> Pidió postergación
+													</label>
+													<label className="me-2">
+															<input type="checkbox" defaultChecked={p.incomparendo} 
+																onChange={e => setFieldParte("incomparendo", e.target.value, p.id, null, esReclamante) } /> Incomparendo
+													</label>
+													<label className="me-2">
+															<input type="checkbox" defaultChecked={p.multado} 
+																onChange={e => setFieldParte("multado", e.target.value, p.id, null, esReclamante) } /> Aplicar multa
+													</label>
 												</div>
 											</div>
 											<div>
@@ -440,40 +452,36 @@ export default function Form() {
 		  <h3 className="mb-3">{isNaN(id)? "Nuevo " : "Edición de "} Reclamo</h3>
 			{state.errors.length > 0 && <ValidationErrors errors={state.errors} />}
 			<div className="row mb-3">
-				<div className="col">
+				<div className="col-4">
 					<label htmlFor="numero" className="form-label">Número</label>
 					<input id="numero" placeholder="Número" className="form-control text-end w-auto" type="number" value={state.numero} 
 						onChange={setField} required />
 				</div>
 				<div className="col">
-					<label htmlFor="fechaHoraInicio" className="form-label d-block">Fecha y Hora de Inicio</label>
+					<label htmlFor="fechaHoraInicio" className="form-label d-block">Fecha y Hora</label>
 					<input id="fechaHoraInicio" placeholder="AAAA-MM-DD HH:MM" className="form-control text-center d-inline-block w-auto" 
 						type="datetime-local" value={state.fechaHoraInicio} onChange={setField} />
-					<label htmlFor="cuil" id="pospuesto" className="form-label" onClick={setField}
-						title="Esta audiencia fue pospuesta en acuerdo con las partes.">
-							<input type="checkbox" className="ms-2" checked={state.pospuesto} onChange={(e) => {e.target.parentElement.click()}} /> Fue pospuesto.
-					</label>
-				</div>
-				<div className="col">
-					<label htmlFor="horaFin" className="form-label">Hora de Fin</label>
-					<input id="horaFin" placeholder="HH:MM" className="form-control text-center w-auto" type="time" value={state.horaFin} 
+					<span className="mx-3">hasta</span>
+					<input id="horaFin" placeholder="HH:MM" className="form-control d-inline text-center w-auto" type="time" value={state.horaFin} 
 						onChange={setField} />
 				</div>
 			</div>
 
 			<div className="row mb-3">
-				<div className="col">
+				<div className="col-4">
 					<label htmlFor="idResolucion" className="form-label">Resolución</label>
-					<DataBindedSelect data={resoluciones} selectedValue={state.idResolucion} 
+					<DataBindedSelect data={RESOLUCIONES} selectedValue={state.idResolucion} 
 						setSelectedValue={(v) => dispatch({ type: "SET_FIELD", field: "idResolucion", value: parseInt(v) })} />
 				</div>
 
 				<div className="col">
-					<label htmlFor="proxFecha" className="form-label d-block">Próxima audiencia:</label>
-					<input id="proxFecha" placeholder="AAAA-MM-DD HH:MM" className="form-control text-center d-inline-block w-auto" 
-						type="datetime-local" value={state.proxFecha} onChange={setField} />
+					{(state.idResolucion === POSTERGADO) && (
+					<>
+					<label htmlFor="proxAudiencia" className="form-label d-block">Próxima audiencia:</label>
+					<input id="proxAudiencia" placeholder="AAAA-MM-DD HH:MM" className="form-control text-center d-inline-block w-auto" 
+						type="datetime-local" value={state.proxAudiencia} onChange={setField} />
+					</>)}
 				</div>
-				<div className="col"></div>
 			</div>
 
 			<div className="mb-3">
