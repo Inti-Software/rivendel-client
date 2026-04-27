@@ -71,7 +71,7 @@ export default function Form() {
 			const response = await Users.get(id);
 			if (response.ok) {
 				const data = response.data;
-				dispatch({ type: "INITIAL_LOAD", payload: { nombre: data }});
+				dispatch({ type: "INITIAL_LOAD", payload: { nombre: data.nombre }});
 			} else {					
 				dispatch({ type: "INITIAL_LOAD", payload: { errors: [response.error] } });
 			}
