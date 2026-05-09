@@ -1,14 +1,14 @@
 import { useReducer, useEffect } from "react";
 import { useNavigate, Link, useParams } from "react-router-dom";
-import SearchParteDialog from "../Partes/SearchParteDialog";
-import { Reclamos } from "../../api/endpoints/reclamos";
-import { Partes } from "../../api/endpoints/partes";
-import DataBindedSelect from "../Forms/DataBindedSelect";
-import ValidationErrors from "../Shared/ValidationErrors";
+import SearchParteDialog from "../../Partes/SearchParteDialog";
+import { Reclamos } from "../../../api/endpoints/reclamos";
+import { Partes } from "../../../api/endpoints/partes";
+import DataBindedSelect from "../../Forms/DataBindedSelect";
+import ValidationErrors from "../../Shared/ValidationErrors";
 import dayjs from "dayjs";
-import { DELETE, PLUSCIRCLE } from "../Shared/Icons";
-import { NO_ESPECIFICADO } from "../Shared/constants";
-import { POSTERGADO, RESOLUCIONES } from "../Resoluciones/tiposResoluciones";
+import { DELETE, PLUSCIRCLE } from "../../Shared/Icons";
+import { NO_ESPECIFICADO } from "../../Shared/constants";
+import { POSTERGADO, RESOLUCIONES } from "../../Resoluciones/tiposResoluciones";
 
 const initialState = {
   id: 0,

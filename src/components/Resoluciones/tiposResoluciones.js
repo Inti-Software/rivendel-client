@@ -13,3 +13,7 @@ export const RESOLUCIONES = [
 	{ value: FRACASO, text: "Fracaso" },
 	{ value: ANULADO, text: "Anulado" },
 ]
+
+export const isValidResolucion = (id) => {
+	return RESOLUCIONES.some(r => r.value === id);
+}

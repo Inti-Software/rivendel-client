@@ -1,0 +1,38 @@
+import dayjs from 'dayjs';
+
+export function apiDateToInput(date) {
+  if (date && dayjs(date, 'DD/MM/YYYY HH:mm', true).isValid()) {
+    return dayjs(date, 'DD/MM/YYYY HH:mm').format('YYYY-MM-DDTHH:mm');
+	}
+  return '';
+}
+
+export function apiHourToInput(hour) {
+  if (!hour) return '';
+  return dayjs(hour, 'HH:mm', true).isValid() ? dayjs(hour, 'HH:mm').format('HH:mm') : '';
+}
+
+export function combineDateAndHour(fecha = dayjs(), hora) {
+  if (!hora) return null;
+
+  const [h, m] = hora.split(':').map(Number);
+  if (isNaN(h) || isNaN(m)) {
+    throw new Error("Formato de hora inválido. Debe ser 'hh:mm'.");
+  }
+  return dayjs(fecha).hour(h).minute(m).second(0).millisecond(0).format('YYYY-MM-DDTHH:mm:ss');
+}
+
+export function isValidDateTime(dateTimeStr) {
+  return dayjs(dateTimeStr, 'YYYY-MM-DDTHH:mm', true).isValid();
+}
+
+export function isValidHour(hourStr) {
+  return dayjs(hourStr, 'HH:mm', true).isValid();
+}
+
+export const isChronological = (firstDate, secondDate) => {
+  if (!firstDate || !secondDate) return false;
+  const d1 = dayjs(firstDate);
+  const d2 = dayjs(secondDate);
+  return d1.isValid() && d2.isValid() && d1.isAfter(d2, 'days');
+};

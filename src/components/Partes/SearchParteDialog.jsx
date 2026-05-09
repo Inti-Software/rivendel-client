@@ -64,7 +64,7 @@ function formReducer(state, action) {
   }
 }
 
-const SearchParteDialog = ({ title, handleAccept, handleCancel }) => {
+const SearchParteDialog = ({ title, visible, handleAccept, handleCancel }) => {
 	const [state, dispatch] = useReducer(formReducer, initialState);
 	const debouncedValue = useDebounce(state.term, 300)
 	const { data, error, execute: findAll } = useApi(Partes.findAll);
@@ -113,8 +113,10 @@ const SearchParteDialog = ({ title, handleAccept, handleCancel }) => {
 	}
 
 	useEffect(() => {
-		document.getElementById("criterio").focus();
-	}, []);
+		if (visible) {
+			document.getElementById("criterio").focus();
+		}
+	}, [visible]);
 		
   const getDomicilio = (p) => {
     let s = NO_ESPECIFICADO
@@ -140,6 +142,8 @@ const SearchParteDialog = ({ title, handleAccept, handleCancel }) => {
 	const handleChange = (e) => {
 		dispatch({ type: "RESET_SEARCH", value: e.target.value })
 	}
+
+	if (!visible) return null;
 
 	return (
 		<div className={`modal show modal-backdrop-50 dialog-centered`} 
@@ -237,4 +241,4 @@ const SearchParteDialog = ({ title, handleAccept, handleCancel }) => {
 	)
 };
 
-	export default SearchParteDialog;
+export default SearchParteDialog;

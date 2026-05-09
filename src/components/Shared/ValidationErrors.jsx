@@ -1,5 +1,5 @@
 const ValidationErrors = ({ errors }) => {
-  if (!errors) return null;
+  if (!errors || errors.length == 0) return null;
 
   return (
     <div className="card border-danger p-2 m-md-4">

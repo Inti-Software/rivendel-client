@@ -49,6 +49,7 @@ export default [
 
       'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
       'no-unused-vars': ['warn', { 'varsIgnorePattern': 'React' }],
+      'react/prop-types': 'off'
     },
     settings: {
       react: { version: 'detect' }, // Detecta automáticamente tu versión de React
