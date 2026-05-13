@@ -13,10 +13,12 @@ const ListPartes = () => {
 			],
 		};
 	}
+  const searchPlaceHolder = "Nombre o CUIL/CUIT";
 
   return (
     <Container pathToNew="/partes/new">
-      <Grid columnBuilder={rowGenerator} endpoints={Partes} />
+      <Grid columnBuilder={rowGenerator} showSearchBar={true} searchPlaceHolder={searchPlaceHolder} 
+				endpoints={Partes} />
     </Container>
   );
 };
