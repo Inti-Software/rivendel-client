@@ -19,37 +19,39 @@ const getDomicilio = (p) => {
 	return s;
 }
 
-const setFieldParte = (state, field, nro, parteId, esPatrocinante, esReclamante, setField) => {
-	const partes = esReclamante ? state.reclamantes : state.reclamados;
-	const f = esReclamante ? "reclamantes" : "reclamados";
-	const v = partes.map(p => {
-		if (p.id === parteId) {
-			switch (field) {
-				case "nroWhatsapp":
-					if (esPatrocinante) {
-						return { ...p, nroWhatsappPatrocinante: nro };
-					} else {
-						return { ...p, nroWhatsappParte: nro };
-					}
-				case "postergo":
-					return { ...p, postergo: !p.postergo };
-				case "incomparendo":
-					return { ...p, incomparendo: !p.incomparendo };
-				case "multado":
-					return { ...p, multado: !p.multado };
-				default:
-					return p;
-			}
-		}
-		return p;
-	});
-	setField(f, v);
-}
-
-const onChangeNroWhatsapp = (e, id, esPatrocinante, esReclamante, setField) => 
-	setFieldParte("nroWhatsapp", e.target.value, id, esPatrocinante, esReclamante, setField);
-
 const PartesTable = ({ state, esReclamante, setField, onAddParte }) => {
+
+	const setFieldParte = (field, nro, parteId, esPatrocinante, esReclamante) => {
+		const partes = esReclamante ? state.reclamantes : state.reclamados;
+		if (!partes || partes.length === 0) return null;
+		const f = esReclamante ? "reclamantes" : "reclamados";
+		const v = partes.map(p => {
+			if (p.id === parteId) {
+				switch (field) {
+					case "nroWhatsapp":
+						if (esPatrocinante) {
+							return { ...p, nroWhatsappPatrocinante: nro };
+						} else {
+							return { ...p, nroWhatsappParte: nro };
+						}
+					case "postergo":
+						return { ...p, postergo: !p.postergo };
+					case "incomparendo":
+						return { ...p, incomparendo: !p.incomparendo };
+					case "multado":
+						return { ...p, multado: !p.multado };
+					default:
+						return p;
+				}
+			}
+			return p;
+		});
+		setField(f, v);
+	}
+	
+	const onChangeNroWhatsapp = (value, id, esPatrocinante, esReclamante, setField) => 
+		setFieldParte("nroWhatsapp", value, id, esPatrocinante, esReclamante, setField);
+	
 	const partes = esReclamante ? state.reclamantes : state.reclamados;
 	const title = esReclamante ? "Reclamantes" : "Reclamados";
 	return (
