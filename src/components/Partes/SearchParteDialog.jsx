@@ -227,7 +227,7 @@ const SearchParteDialog = ({ title, visible, handleAccept, handleCancel }) => {
 						{state.loading && <Spinner />}
 					</div>
 					<div className="modal-footer">
-						<button type="button" className="btn btn-success" onClick={(e) => handleAccept(e, state.selected)}
+						<button type="button" className="btn btn-success" onClick={(e) => handleAccept(e, state.selected.id)}
 							disabled={(state.data.length > 0 && !state.loading)? "" : "disabled"}>
 							Aceptar
 						</button>
