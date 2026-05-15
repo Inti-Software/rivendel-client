@@ -51,12 +51,12 @@ function App() {
         <form className="w-25" onSubmit={handleLogin} noValidate>
           <div className="mb-3">
             <label htmlFor="email" className="form-label">Correo electrónico</label>
-            <input type="email" className="form-control" id="email" placeholder="caperucita@enelbosque.com" required 
+            <input type="email" className="form-control" id="email" placeholder="usuario@example.com" required 
               onInvalid={(e) => e.target.setCustomValidity("Ingrese un email")} onInput={(e) => e.target.setCustomValidity("")} />
           </div>
           <div className="mb-3">
             <label htmlFor="password" className="form-label">Contraseña</label>
-            <input type="password" className="form-control" id="password" placeholder="el lobo feroz" required 
+            <input type="password" className="form-control" id="password" placeholder="123456" required 
               onInvalid={(e) => e.target.setCustomValidity("Ingrese una contraseña")} onInput={(e) => e.target.setCustomValidity("")} />
           </div>
           <button disabled={loading} type="submit" className="btn btn-primary w-100">{loading? "Iniciando...":"Iniciar"} sesión</button>
