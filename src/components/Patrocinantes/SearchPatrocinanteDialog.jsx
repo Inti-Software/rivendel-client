@@ -103,7 +103,7 @@ const SearchPatrocinanteDialog = ({ handleAccept, handleCancel }) => {
 				if (!response.ok) {
 					throw new Error(`HTTP error! status: ${response.error}`);
 				}
-				dispatch({ type: "SEARCH_SUCCESS", data: response.data });
+				dispatch({ type: "SEARCH_SUCCESS", data: response.data.data });
 			})
 			.catch(error => {
 				console.error("Error al buscar patrocinantes:", error);

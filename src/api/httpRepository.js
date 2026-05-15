@@ -10,11 +10,10 @@ export default class HttpRepository {
       const response = await authHttp(config);
       return { ok: true, data: response.data, status: response.status };
     } catch (err) {
-      const status = err.response?.status ?? "inesperado";
+      const { status } = err.response || { status: "inesperado" };
       const message =
         err.response?.data?.message ??
-        `Error ${status} al procesar la solicitud.`;
-
+        [`Error ${status} al procesar la solicitud.`];
       return { ok: false, error: message, status };
     }
   }

@@ -4,7 +4,7 @@ import ValidationErrors from "../Shared/ValidationErrors";
 import { Partes } from "../../api/endpoints/partes";
 import { TiposDocumento } from "../../api/endpoints/tiposDocumentos";
 import DataBindedSelect from "../Forms/DataBindedSelect";
-import { SEARCH } from "../Shared/Icons";
+import { DELETE, SEARCH } from "../Shared/Icons";
 import SearchPatrocinanteDialog from "../Patrocinantes/SearchPatrocinanteDialog";
 
 const initialState = {
@@ -199,8 +199,7 @@ export default function Form() {
 				dispatch({ type: "SUBMIT_SUCCESS" });
 				navigate("/partes", { state: { successMsg: mensaje }});
 			} else {				
-				const errorData = await result.json();
-				dispatch({ type: "SUBMIT_FAIL", errors: errorData.message });
+				dispatch({ type: "SUBMIT_FAIL", errors: result.error });
 			}
 		} catch (err) {
 			dispatch({ type: "SUBMIT_FAIL", errors: [err.message] });
@@ -296,14 +295,17 @@ export default function Form() {
 				<div className="mb-3">
 					<label htmlFor="patrocinante" className="form-label">Patrocinante</label>
 					<div className="row g-3">
-						<div className="col-11">
+						<div className="col-10">
 							<input id="patrocinante" className="form-control bg-dark-subtle" 
 								value={getPatrocinante(state.patrocinante)}
 								readOnly={true} tabIndex={-1}/>
 						</div>
-						<div className="col-1">
-							<button type="button" className="btn btn-outline-primary me-2" onClick={() => showSearchPatrocinante(true)} >
+						<div className="col">
+							<button type="button" className="btn btn-outline-primary me-1" onClick={() => showSearchPatrocinante(true)} >
 								{SEARCH}
+							</button>
+							<button type="button" className="btn btn-outline-secondary" onClick={() => dispatch({ type: "SET_FIELD", field: "patrocinante", value: { id: 0, nombre: "", nroMatricula: 0 } })} >
+								{DELETE}
 							</button>							
 						</div>
 					</div>

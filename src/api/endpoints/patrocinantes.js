@@ -18,14 +18,7 @@ export const Patrocinantes = new HttpRepository({
     headers: { "Content-Type": "application/json" },
     data: { nombre, nroMatricula, domicilio, localidad, nroCasillero },
   }),
-  update: ({
-    id,
-    nombre,
-    nroMatricula,
-    domicilio,
-    localidad,
-    nroCasillero,
-  }) => ({
+  update: ({ id, nombre, nroMatricula, domicilio, localidad, nroCasillero, }) => ({
     method: "PATCH",
     url: `/patrocinantes/${id}`,
     headers: { "Content-Type": "application/json" },
