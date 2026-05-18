@@ -2,7 +2,7 @@ import { useNavigate, Link, useParams } from "react-router-dom";
 import SearchParteDialog from "../../Partes/SearchParteDialog";
 import DataBindedSelect from "../../Forms/DataBindedSelect";
 import ValidationErrors from "../../Shared/ValidationErrors";
-import { POSTERGADO, RESOLUCIONES } from "../../Resoluciones/tiposResoluciones";
+import { POSTERGADO, RESOLUCIONES } from "../tiposResoluciones";
 import useReclamoForm from "../hooks/useReclamoForm";
 import PartesList from "./PartesList";
 import { handleOnChange, handleSubmit, onAcceptSearchParte } from '../eventHandlers.utils';

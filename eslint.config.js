@@ -49,7 +49,13 @@ export default [
 
       'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
       'no-unused-vars': ['warn', { 'varsIgnorePattern': 'React' }],
-      'react/prop-types': 'off'
+      'react/prop-types': 'off',
+      'no-unreachable': 'error',
+      "@typescript-eslint/no-unused-vars": ["error", {
+        "argsIgnorePattern": "^_", // Ignora variables que comienzan con "_
+        "varsIgnorePattern": "^_", // Si quieres ignorar variables también, descomenta esta línea
+      }],
+      "unused-imports/no-unused-imports": "error",
     },
     settings: {
       react: { version: 'detect' }, // Detecta automáticamente tu versión de React
