@@ -1,6 +1,6 @@
 import { useReducer, useEffect } from "react";
 import { reducer, initialState } from "../reducer";
-import { Reclamos } from "../../../../api/endpoints/reclamos";
+import { Reclamos } from "../../../api/endpoints/reclamos";
 import { mapApiToForm } from "../mappers";
 
 export default function useReclamoForm (id) {

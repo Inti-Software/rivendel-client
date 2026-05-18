@@ -1,4 +1,4 @@
-import { DELETE } from "../../../Shared/Icons";
+import { DELETE } from "../../Shared/Icons";
 import NroWhatsappInput from "./NroWhatsappInput";
 import { getDomicilio, removeParte, setFieldParte } from "../partes.utils";
 

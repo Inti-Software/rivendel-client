@@ -1,4 +1,4 @@
-import { NO_ESPECIFICADO } from "../../Shared/constants";
+import { NO_ESPECIFICADO } from "../Shared/constants";
 
 export const removeParte = (id, isReclamante, state, setField) => {
   const partes = isReclamante ? state.reclamantes : state.reclamados;
