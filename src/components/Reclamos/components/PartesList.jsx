@@ -1,4 +1,4 @@
-import { PLUSCIRCLE } from "../../../Shared/Icons";
+import { PLUSCIRCLE } from "../../Shared/Icons";
 import ParteItem from "./ParteItem";
 
 const PartesList = ({ state, esReclamante, setField, onAddParte }) => {

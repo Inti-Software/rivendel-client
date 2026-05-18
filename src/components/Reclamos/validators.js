@@ -1,4 +1,4 @@
-import { isValidResolucion } from '../../Resoluciones/tiposResoluciones';
+import { isValidResolucion } from '../Resoluciones/tiposResoluciones';
 import { isChronological, isValidDateTime, isValidHour } from './dateUtils';
 
 export const validateReclamo = (state) => {
