@@ -31,10 +31,8 @@ function Layout({ children }) {
   }, [error, showError]);
 
   const items = [
-    { relativeUrl: '/tipos-documentos', text: 'Tipos de documentos' },
     { relativeUrl: '/patrocinantes', text: 'Patrocinantes' },
     { relativeUrl: '/partes', text: 'Partes' },
-    { relativeUrl: '/resoluciones', text: 'Resoluciones' },
     { relativeUrl: '/reclamos', text: 'Reclamos' }
   ]
 
