@@ -3,7 +3,7 @@ import { RECLAMANTE, RECLAMADO } from "../../Shared/constants.js";
 import DeleteMessage from "../../Shared/DeleteMessage.jsx"
 import { GridEditButton, GridDeleteButton, GridPrintButton } from "../../Grid/GridButtons.jsx";
 import createPDF from "../pdfBuilders.js";
-import { CON_ARREGLO, FRACASO, PENDIENTE, POSTERGADO, SIN_ARREGLO } from "../../Resoluciones/tiposResoluciones.js";
+import { CON_ARREGLO, FRACASO, PENDIENTE, POSTERGADO, SIN_ARREGLO } from "../tiposResoluciones.js";
 
 const getDeleteMessage = (rec) => {
 	const s = `¿Está seguro que desea eliminar el reclamo Nº ${rec.numero}?`;
