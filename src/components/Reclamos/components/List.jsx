@@ -16,7 +16,8 @@ const ListReclamos = () => {
 
   return (
     <Container pathToNew="/reclamos/new">
-      <Grid columnBuilder={rowGenerator} endpoints={Reclamos} />
+      <Grid columnBuilder={rowGenerator} endpoints={Reclamos} showSearchBar={true}
+				searchPlaceHolder={"Número o fecha de reclamo, nombre de una parte o fecha"} />
     </Container>
   );
 };

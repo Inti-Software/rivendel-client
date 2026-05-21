@@ -3,9 +3,9 @@ import { RECORDS_PER_PAGE } from "./../constants";
 
 export const Reclamos = new HttpRepository({
 	get: (id) => ({ method: "get", url: `/reclamos/${id}` }),
-	findAll: ({ currentPage, recordsPerPage = RECORDS_PER_PAGE }) => ({
+	findAll: ({ query, currentPage, recordsPerPage = RECORDS_PER_PAGE }) => ({
 		method: "get",
-		url: `/reclamos?page=${currentPage}&limit=${recordsPerPage}`,
+		url: `/reclamos?query=${query}&page=${currentPage}&limit=${recordsPerPage}`,
 	}),
 	create: ({ numero, rubros, idResolucion, fechaHoraInicio, pospuesto,
 		horaFin, proximaAudiencia, reclamantes, reclamados }) => ({
