@@ -56,10 +56,10 @@ export default function ListCell(rec, onDeleteRecord) {
 								<div className="col-4 d-flex align-items-center justify-content-end">
 									{rec.proximaAudiencia && (
 										<span className="text-primary me-2 fw-light" style={{fontSize: "0.75em"}}>
-											Próxima audiencia: {dayjs(rec.resolucion.proximaAudiencia).format("DD/MM/YYYY HH:mm")}
+											Próxima audiencia: {dayjs(rec.proximaAudiencia).format("DD/MM/YYYY HH:mm")}
 										</span>
 									)}
-									<span className={getBadgeColor(rec.resolucion.id)}>{rec.resolucion.descripcion}</span>
+									<span className={getBadgeColor(rec.idResolucion)}>{rec.resolucion}</span>
 								</div>
 							</div>
 							<div className="row">
