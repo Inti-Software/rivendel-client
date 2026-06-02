@@ -114,7 +114,8 @@ const SearchParteDialog = ({ title, visible, handleAccept, handleCancel }) => {
 
 	useEffect(() => {
 		if (visible) {
-			document.getElementById("criterio").focus();
+			dispatch({ type: 'RESET_SEARCH', value: '' });
+			document.getElementById("criterio").focus();			
 		}
 	}, [visible]);
 		
@@ -177,8 +178,8 @@ const SearchParteDialog = ({ title, visible, handleAccept, handleCancel }) => {
 												<div className={'border border-secondary mx-0 rounded-1 p-2 mb-1 ' + ((p.id === state.selected.id)? 'bg-warning-subtle' : 'bg-secondary-subtle') }>
 													<div className='row'>
 														<div className='col-3'>
-															<span className="fw-bold">CUIL: </span>
-															<span aria-label='cuil'>{p.cuil === "0"? p.nroDocumento : p.cuil}</span>
+															<span className="fw-bold">{p.tipoDocumento}: </span>
+															<span aria-label='cuil'>{p.nroDocumento}</span>
 														</div>
 														<div className='col-9'>
 															<span className="fw-bold">Nombre: </span>
