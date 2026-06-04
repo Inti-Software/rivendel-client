@@ -3,7 +3,7 @@ import { RECLAMANTE, RECLAMADO } from "../../Shared/constants.js";
 import DeleteMessage from "../../Shared/DeleteMessage.jsx"
 import { GridEditButton, GridDeleteButton, GridPrintButton } from "../../Grid/GridButtons.jsx";
 import createPDF from "../pdfBuilders.js";
-import { ANULADO, CON_ARREGLO, FRACASO, PENDIENTE, POSTERGADO, SIN_ARREGLO } from "../tiposResoluciones.js";
+import { ANULADO, CON_ARREGLO, FRACASO, getResolucionText, PENDIENTE, POSTERGADO, RESOLUCIONES, SIN_ARREGLO } from "../tiposResoluciones.js";
 
 const getDeleteMessage = (rec) => {
 	const s = `¿Está seguro que desea eliminar el reclamo Nº ${rec.numero}?`;
@@ -18,9 +18,9 @@ const handlePrint = (e, id) => {
 const getBadgeColor = (resolucionId) => {
 	switch (resolucionId) {
 		case PENDIENTE:
-			return "badge bg-dark-subtle text-secondary fs-very-small rounded-pill";
-		case SIN_ARREGLO:
 			return "badge bg-warning-subtle text-warning-emphasis fs-very-small rounded-pill";
+		case SIN_ARREGLO:
+			return "badge bg-dark-subtle text-secondary fs-very-small rounded-pill";
 		case CON_ARREGLO:
 			return "badge bg-success fs-very-small rounded-pill";
 		case POSTERGADO:
@@ -59,7 +59,7 @@ export default function ListCell(rec, onDeleteRecord) {
 											Próxima audiencia: {dayjs(rec.proximaAudiencia).format("DD/MM/YYYY HH:mm")}
 										</span>
 									)}
-									<span className={getBadgeColor(rec.idResolucion)}>{rec.resolucion}</span>
+									<span className={getBadgeColor(rec.idResolucion)}>{getResolucionText(rec.idResolucion)}</span>
 								</div>
 							</div>
 							<div className="row">
