@@ -2,7 +2,7 @@ import dayjs from "dayjs";
 import { RECLAMANTE, RECLAMADO } from "../../Shared/constants.js";
 import DeleteMessage from "../../Shared/DeleteMessage.jsx"
 import { GridEditButton, GridDeleteButton, GridPrintButton } from "../../Grid/GridButtons.jsx";
-import createPDF from "../pdfBuilders.js";
+import createPDF from "../pdfBuilder.js";
 import { ANULADO, CON_ARREGLO, FRACASO, getResolucionText, PENDIENTE, POSTERGADO, RESOLUCIONES, SIN_ARREGLO } from "../tiposResoluciones.js";
 
 const getDeleteMessage = (rec) => {
