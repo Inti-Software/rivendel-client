@@ -1,9 +1,10 @@
 import HttpRepository from "../httpRepository";
 
 export const Users = new HttpRepository({
-	get: () => ({ method: "get", url: `/users/getCurrent` }),
+	get: () => ({ method: "GET", url: `/users` }),
 	update: ({
 		nombre,
+		nroHabilitacion,
 		currentPassword,
 		newPassword,
 		passwordConfirmation
@@ -11,6 +12,6 @@ export const Users = new HttpRepository({
 		method: "PATCH",
 		url: `/users`,
 		headers: { "Content-Type": "application/json" },
-		data: { nombre, currentPassword, newPassword, passwordConfirmation },
+		data: { nombre, nroHabilitacion, currentPassword, newPassword, passwordConfirmation },
 	})
 });
