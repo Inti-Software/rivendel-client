@@ -26,6 +26,8 @@ function getReclamo(data) {
 		numero: data.numero,
 		rubros: data.rubros,
 		idResolucion: data.idResolucion,
+		conciliador: data.conciliador.nombre,
+		nroHabilitacion: data.conciliador.nroHabilitacion,
 		fechaInicio: {
 			dia: String(new Date(data.fechaHoraInicio).getDate()).padStart(2, '0'),
 			mes: new Date(data.fechaHoraInicio).toLocaleString('es-AR', { month: 'long' }),

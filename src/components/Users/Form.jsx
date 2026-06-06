@@ -163,7 +163,7 @@ export default function Form() {
 				</div>
 				<div className="mb-3 d-flex justify-content-end border-top pt-2 border-primary-subtle">
 						<button disabled={state.loading} type="submit" className="btn btn-primary me-2">{state.loading? "Grabando...":"Grabar"}</button>
-						<Link to="/patrocinantes" className="btn btn-outline-primary">Cancelar</Link>
+						<Link to="/" className="btn btn-outline-primary">Cancelar</Link>
 				</div>
 			</form>
 		</div>

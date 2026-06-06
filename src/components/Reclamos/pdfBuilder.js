@@ -172,7 +172,7 @@ const getFinalizacion = (data) => {
 const getCuerpo = (data) => {
   let s = `En la ciudad de Santiago del Estero, provincia del mismo nombre, a los ${data?.fechaInicio.dia} días ` +
     `del mes de ${data?.fechaInicio.mes} del año ${data?.fechaInicio.anio}, siendo las ${data?.fechaInicio.hora} ` +
-    `horas, ante mí María Cristina Lavaisse Beck, en mi calidad de Conciliador Laboral, habilitación Nº 7, en ` +
+    `horas, ante mí ${data.conciliador}, en mi calidad de Conciliador Laboral, habilitación Nº ${data.nroHabilitacion}, en ` +
     `ejercicio de las funciones conferidas por la ley 7.330 y el decreto reglamentario 2.230/22. En el Marco del ` +
     `trámite de referencia, comparecen ${joinPartes(data, false)}.- Y ABIERTO EL ACTO: ${getDeclaracion(data)}`;
   s += `\n${getFinalizacion(data)}`;
