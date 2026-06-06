@@ -149,7 +149,7 @@ const getDeclaracion = (data) => {
       s = s.slice(0, -1);
     }
     s = "se deja constancia de la imposibilidad de celebrar la audiencia fijada para el día de " + 
-        `la fecha atento a la incomparencia ${s} ${getPostergacion(data.proximaAudiencia)}`;
+        `la fecha atento a la incomparencia ${s}. ${getPostergacion(data.proximaAudiencia)}`;
     return s;
   }
 

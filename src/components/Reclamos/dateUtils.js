@@ -34,6 +34,5 @@ export const isChronological = (firstDate, secondDate) => {
   if (!secondDate) return true;
   const d1 = dayjs(firstDate);
   const d2 = dayjs(secondDate);
-  console.log('Fechas parseadas:', d1.format(), d2.format(), d1.isValid(), d2.isValid(), d2.isAfter(d1, 'days'));
   return d1.isValid() && d2.isValid() && d2.isAfter(d1, 'days');
 };

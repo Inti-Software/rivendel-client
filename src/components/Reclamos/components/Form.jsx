@@ -73,9 +73,7 @@ export default function Form() {
 						{state.loading? "Grabando...":"Grabar"}
 					</button>
 					<Link to="/reclamos" className="btn btn-outline-primary">Cancelar</Link>
-			</div>
-    
-			<pre> {JSON.stringify(state, null, ' ')}</pre>
+			</div>    
     </form>
 
   );
