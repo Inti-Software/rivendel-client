@@ -1,8 +1,8 @@
 import pdfMake from 'pdfmake/build/pdfmake';
 import vfs from '../../assets/vfs_fonts.js';
-import { Reclamos } from '../../api/endpoints/reclamos';
+import { Reclamos } from '../../api/endpoints/reclamos.js';
 import ReportData from './DTOs/reportData.js';
-import { NO_ESPECIFICADO } from '../Shared/constants';
+import { NO_ESPECIFICADO } from '../Shared/constants.js';
 
 pdfMake.vfs = vfs;
 pdfMake.fonts = {
@@ -52,7 +52,7 @@ const getParte = (partes, esReclamado, cantidadReclamos) => {
 
     s += `${nombre} ${sintetico} ${nroDocumento}`;
 
-    if (parte.cuil !== '0') {
+    if (cuil !== NO_ESPECIFICADO) {
       s += `, CUIL ${cuil}`;
     }
 
@@ -72,9 +72,9 @@ const getParte = (partes, esReclamado, cantidadReclamos) => {
 
     if (Object.keys(patrocinante || {}).length > 0) {
       if (parte.esApoderado) {
-        s += `, representado por su apoderado el Dr. ${patrocinante.nombre} MP Nº ${patrocinante.nroMatricula},`;
+        s += `, representado por su apoderado el Dr. ${patrocinante.nombre} MP Nº ${patrocinante.nroMatricula}`;
       } else {
-        s += `, con el patrocinio letrado del Dr. ${patrocinante.nombre} MP Nº ${patrocinante.nroMatricula},`;
+        s += `, con el patrocinio letrado del Dr. ${patrocinante.nombre} MP Nº ${patrocinante.nroMatricula}`;
       }
 
       if (patrocinante.domicilio !== NO_ESPECIFICADO) {
@@ -149,7 +149,7 @@ const getDeclaracion = (data) => {
       s = s.slice(0, -1);
     }
     s = "se deja constancia de la imposibilidad de celebrar la audiencia fijada para el día de " + 
-        `la fecha atento a la incomparencia ${s} ${getPostergacion(data.proximaAudiencia)}`;
+        `la fecha atento a la incomparencia ${s}. ${getPostergacion(data.proximaAudiencia)}`;
     return s;
   }
 

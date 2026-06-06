@@ -7,8 +7,8 @@ export const ANULADO = 6;
 
 export const RESOLUCIONES = [
 	{ value: PENDIENTE, text: "Pendiente" },
-	{ value: SIN_ARREGLO, text: "Sin arreglo" },
-	{ value: CON_ARREGLO, text: "Con arreglo" },
+	{ value: SIN_ARREGLO, text: "Sin acuerdo" },
+	{ value: CON_ARREGLO, text: "Con acuerdo" },
 	{ value: POSTERGADO, text: "Postergado" },
 	{ value: FRACASO, text: "Fracaso" },
 	{ value: ANULADO, text: "Anulado" },
@@ -16,4 +16,9 @@ export const RESOLUCIONES = [
 
 export const isValidResolucion = (id) => {
 	return RESOLUCIONES.some(r => r.value === id);
+}
+
+export const getResolucionText = (id) => {
+	const resolucion = RESOLUCIONES.find(r => r.value === id);
+	return resolucion ? resolucion.text : "Desconocida";
 }

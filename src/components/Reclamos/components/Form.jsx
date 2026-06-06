@@ -21,7 +21,7 @@ export default function Form() {
     <form onSubmit={(e) => handleSubmit(e, isCreateOperation, state, setErrors, submitStart, 
 			submitSuccess, submitFail, navigate)} style={{ padding: 20 }}>
 			<SearchParteDialog title={searchDialogTitle} visible={state.searchPartes.show}
-				handleAccept={(e, id) => onAcceptSearchParte(e, id, state, hidePartesDialog)} handleCancel={hidePartesDialog} />
+				handleAccept={(e, id) => onAcceptSearchParte(e, id, state, hidePartesDialog, setField, setErrors)} handleCancel={hidePartesDialog} />
 		  <h3 className="mb-3">{formTitle}</h3>
 			
 			<ValidationErrors errors={state.errors} />
@@ -73,8 +73,7 @@ export default function Form() {
 						{state.loading? "Grabando...":"Grabar"}
 					</button>
 					<Link to="/reclamos" className="btn btn-outline-primary">Cancelar</Link>
-			</div>
-    
+			</div>    
     </form>
 
   );
