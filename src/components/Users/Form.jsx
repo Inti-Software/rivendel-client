@@ -5,6 +5,7 @@ import ValidationErrors from "../Shared/ValidationErrors";
 
 const initialState = {
   nombre: "",
+	nroHabilitacion: 0,
 	password: "",
 	newPassword: "",
 	newPasswordRepeated: "",
@@ -71,7 +72,7 @@ export default function Form() {
 			const response = await Users.get(id);
 			if (response.ok) {
 				const data = response.data;
-				dispatch({ type: "INITIAL_LOAD", payload: { nombre: data.nombre }});
+				dispatch({ type: "INITIAL_LOAD", payload: { nombre: data.nombre, nroHabilitacion: data.nroHabilitacion }});
 			} else {					
 				dispatch({ type: "INITIAL_LOAD", payload: { errors: [response.error] } });
 			}
@@ -99,6 +100,7 @@ export default function Form() {
 		try {
 			const user = {
 				nombre: state.nombre,
+				nroHabilitacion: state.nroHabilitacion,
 				currentPassword: state.password,
 				newPassword: state.newPassword,
 				passwordConfirmation: state.newPasswordRepeated
@@ -128,9 +130,19 @@ export default function Form() {
 			<form onSubmit={handleSubmit}>
 				<h3 className="mb-3">Configuración</h3>
 				{state.errors.length > 0 && <ValidationErrors errors={state.errors} />}
-				<div className="mb-3">
-					<label htmlFor="nombre" className="form-label">Nombre</label>
-					<input id="nombre" className="form-control" type="text" value={state.nombre} onChange={setField} required autoComplete="off" />
+				<div className="row">
+					<div className="col-9">
+						<div className="mb-3">
+							<label htmlFor="nombre" className="form-label">Nombre</label>
+							<input id="nombre" className="form-control" type="text" value={state.nombre} onChange={setField} required autoComplete="off" />
+						</div>
+					</div>
+					<div className="col-3">
+						<div className="mb-3">
+							<label htmlFor="nroHabilitacion" className="form-label">Nº Habilitación</label>
+							<input id="nroHabilitacion" className="form-control text-center" type="number" value={state.nroHabilitacion} onChange={setField} required autoComplete="off" />
+						</div>
+					</div>
 				</div>
 				<div className="card mb-2 border-danger">
 					<div className="card-header h6 fw-bold text-danger border-danger">Cambiar contraseña</div>
