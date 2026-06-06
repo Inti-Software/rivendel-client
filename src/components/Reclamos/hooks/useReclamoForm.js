@@ -2,6 +2,7 @@ import { useReducer, useEffect } from "react";
 import { reducer, initialState } from "../reducer";
 import { Reclamos } from "../../../api/endpoints/reclamos";
 import { mapApiToForm } from "../mappers";
+import { POSTERGADO } from "../tiposResoluciones.js";
 
 export default function useReclamoForm (id) {
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -33,6 +34,12 @@ export default function useReclamoForm (id) {
 		};
 		load();
 	}, [id]);
+
+	useEffect(() => {
+		if (state.idResolucion !== POSTERGADO) {
+			setField("proxAudiencia", "");
+		}
+	}, [state.idResolucion]);
 
 	return { state, setField, setErrors, submitStart, submitSuccess, submitFail, searchPartes, hidePartesDialog };
 }
