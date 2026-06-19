@@ -21,7 +21,7 @@ const Container = ({children, title = "", pathToNew}) => {
 						<h1>{headerTitle}</h1>
 				</div>
 				<div className="col-4 d-inline-flex justify-content-end">
-					<Link to={pathToNew} className="btn btn-outline-primary mb-2" title="Nuevo">
+					<Link to={pathToNew} className="btn btn-outline-primary mb-2 d-inline-flex align-items-center justify-content-center" title="Nuevo">
 						{FILEEARMARKPLUS}
 					</Link>
 				</div>
