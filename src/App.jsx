@@ -59,7 +59,7 @@ function App() {
             <input type="password" className="form-control" id="password" placeholder="123456" required 
               onInvalid={(e) => e.target.setCustomValidity("Ingrese una contraseña")} onInput={(e) => e.target.setCustomValidity("")} />
           </div>
-          <button disabled={loading} type="submit" className="btn btn-primary w-100">{loading? "Iniciando...":"Iniciar"} sesión</button>
+          <button disabled={loading} type="submit" className="btn btn-primary w-100">{loading? "Iniciando sesión...":"Iniciar sesión"}</button>
         </form>
         
       </div>
