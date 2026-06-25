@@ -1,5 +1,6 @@
 import { PLUSCIRCLE } from "../../Shared/Icons";
 import ParteItem from "./ParteItem";
+import { Fragment } from 'react';
 
 const PartesList = ({ state, esReclamante, setField, onAddParte }) => {
 
@@ -19,9 +20,9 @@ const PartesList = ({ state, esReclamante, setField, onAddParte }) => {
 				<table className="w-100">
 					<tbody>
 						{partes.map((p) => 
-							<>
+							<Fragment key={p.id}>
 								<ParteItem key={p.id} p={p} esReclamante={esReclamante} state={state} setField={setField} />
-							</>
+							</Fragment>
 						)}
 					</tbody>
 				</table>
