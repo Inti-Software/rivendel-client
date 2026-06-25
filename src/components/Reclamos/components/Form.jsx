@@ -2,11 +2,12 @@ import { useNavigate, Link, useParams } from "react-router-dom";
 import SearchParteDialog from "../../Partes/SearchParteDialog";
 import DataBindedSelect from "../../Forms/DataBindedSelect";
 import ValidationErrors from "../../Shared/ValidationErrors";
-import { POSTERGADO, RESOLUCIONES } from "../tiposResoluciones";
+import { CON_ARREGLO, POSTERGADO, RESOLUCIONES } from "../tiposResoluciones";
 import useReclamoForm from "../hooks/useReclamoForm";
 import PartesList from "./PartesList";
 import { handleOnChange, handleSubmit, onAcceptSearchParte } from '../eventHandlers.utils';
 import { ProximaAudienciaInput } from "./ProximaAudienciaInput";
+import { RichTextEditor } from '../../CustomTipTap/RichTextEditor';
 
 export default function Form() {
 	const navigate = useNavigate();
@@ -68,12 +69,28 @@ export default function Form() {
 				<PartesList state={state} esReclamante={false} setField={setField} onAddParte={searchPartes} />
 			</div>
 
+			{(state.idResolucion === CON_ARREGLO)?
+				<div className="mb-3">
+					<div className="mb-3">
+						<span className="h5 text-primary">Cláusulas</span>
+					</div>
+					<RichTextEditor initialContent={state.content} onChange={(doc) => setField('content', doc)} visible={state.idResolucion === CON_ARREGLO} />
+				</div>
+				:
+				<></>
+			}
+
 			<div className="mb-3 d-flex justify-content-end border-top pt-2 border-primary-subtle">
 					<button disabled={state.loading || state.searchPartes.show } type="submit" className="btn btn-primary me-2">
 						{state.loading? "Grabando...":"Grabar"}
 					</button>
 					<Link to="/reclamos" className="btn btn-outline-primary">Cancelar</Link>
 			</div>    
+			
+			<pre>
+				{JSON.stringify(state, null, ' ')}
+			</pre>
+
     </form>
 
   );
