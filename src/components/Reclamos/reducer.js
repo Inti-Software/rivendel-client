@@ -8,7 +8,7 @@ export const initialState = {
 	rubros: "",
 	reclamantes: [],
 	reclamados: [],
-	content: {},
+	clausulas: null,
 	searchPartes: {
 		show: false,
 		esReclamante: true

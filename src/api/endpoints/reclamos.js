@@ -8,20 +8,20 @@ export const Reclamos = new HttpRepository({
 		url: `/reclamos?query=${query}&page=${currentPage}&limit=${recordsPerPage}`,
 	}),
 	create: ({ numero, rubros, idResolucion, fechaHoraInicio, pospuesto,
-		horaFin, proximaAudiencia, reclamantes, reclamados }) => ({
+		horaFin, proximaAudiencia, reclamantes, reclamados, clausulas }) => ({
 			method: "POST",
 			url: `/reclamos`,
 			headers: { "Content-Type": "application/json" },
 			data: { numero, rubros, idResolucion, fechaHoraInicio, pospuesto,
-				horaFin, proximaAudiencia, reclamantes, reclamados },
+				horaFin, proximaAudiencia, reclamantes, reclamados, clausulas },
 		}),
 	update: ({ id, numero, rubros, idResolucion, fechaHoraInicio, horaFin, 
-		proximaAudiencia, reclamantes, reclamados }) => ({
+		proximaAudiencia, reclamantes, reclamados, clausulas }) => ({
 			method: "PATCH",
 			url: `/reclamos/${id}`,
 			headers: { "Content-Type": "application/json" },
 			data: { numero, rubros, idResolucion, fechaHoraInicio, horaFin, 
-				proximaAudiencia, reclamantes, reclamados },
+				proximaAudiencia, reclamantes, reclamados, clausulas },
 		}),
 	delete: (id) => ({ method: "delete", url: `/reclamos/${id}` }),
 });

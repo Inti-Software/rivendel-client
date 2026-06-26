@@ -28,23 +28,20 @@ export default function Form() {
 			<ValidationErrors errors={state.errors} />
 
 			<div className="row mb-3">
-				<div className="col-4">
+				<div className="col-2">
 					<label htmlFor="numero" className="form-label">Número</label>
-					<input id="numero" placeholder="Número" className="form-control text-end w-auto" type="number" value={state.numero} 
-						onChange={(e) => handleOnChange(e, setField)} required />
+					<input id="numero" placeholder="Número" className="form-control text-end" type="number" value={state.numero} 
+						onChange={(e) => handleOnChange(e, setField)} required autoFocus />
 				</div>
-				<div className="col">
+				<div className="col-4">
 					<label htmlFor="fechaHoraInicio" className="form-label d-block">Fecha y Hora</label>
 					<input id="fechaHoraInicio" placeholder="AAAA-MM-DD HH:MM" className="form-control text-center d-inline-block w-auto" 
 						type="datetime-local" value={state.fechaHoraInicio} onChange={(e) => handleOnChange(e, setField)} />
 					<span className="mx-3">hasta</span>
-					<input id="horaFin" placeholder="HH:MM" className="form-control d-inline text-center w-auto" type="time" value={state.horaFin} 
+					<input id="horaFin" placeholder="HH:MM" className="form-control d-inline text-center w-25" type="time" value={state.horaFin} 
 						onChange={(e) => handleOnChange(e, setField)} />
 				</div>
-			</div>
-
-			<div className="row mb-3">
-				<div className="col-4">
+				<div className="col-2">
 					<label htmlFor="idResolucion" className="form-label">Resolución</label>
 					<DataBindedSelect data={RESOLUCIONES} selectedValue={state.idResolucion} 
 						setSelectedValue={(v) => setField("idResolucion", parseInt(v))} />
@@ -74,7 +71,7 @@ export default function Form() {
 					<div className="mb-3">
 						<span className="h5 text-primary">Cláusulas</span>
 					</div>
-					<RichTextEditor initialContent={state.content} onChange={(doc) => setField('content', doc)} visible={state.idResolucion === CON_ARREGLO} />
+					<RichTextEditor initialContent={state.clausulas} onChange={(doc) => setField('clausulas', doc)} visible={state.idResolucion === CON_ARREGLO} />
 				</div>
 				:
 				<></>
