@@ -1,4 +1,13 @@
 import { NO_ESPECIFICADO } from "../../Shared/constants";
+import { CON_ARREGLO } from "../tiposResoluciones";
+
+function getTitulo(data) {
+	if (data.idResolucion === CON_ARREGLO) {
+		return { titulo : 'ACUERDO CONCILIATORIO' };
+	} else {
+		return { titulo: `CERTIFICACIÓN DE FRACASO RECLAMO ${data.numero}` };
+	}
+}
 
 function concatenarNombres(partes){
 	let nombres = ""
@@ -46,7 +55,8 @@ function getReclamo(data) {
 		} : null,
 		nombresReclamantes: nombresReclamantes,
 		nombresReclamados: nombresReclamados,
-		cantidad: unidades[data.cantidad]
+		cantidad: unidades[data.cantidad],
+		clausulas: data.clausulas
 	}
 }
 
@@ -106,7 +116,7 @@ function getPartes(partes) {
 
 export default function ReportData(data) {
 	const result = {
-		titulo: `CERTIFICACIÓN DE FRACASO RECLAMO ${data.numero}`,
+		...getTitulo(data),
 		...getReclamo(data),
 		reclamantes: getPartes(data.reclamantes),
 		reclamados: getPartes(data.reclamados),

@@ -83,10 +83,6 @@ export default function Form() {
 					</button>
 					<Link to="/reclamos" className="btn btn-outline-primary">Cancelar</Link>
 			</div>    
-			
-			<pre>
-				{JSON.stringify(state, null, ' ')}
-			</pre>
 
     </form>
 

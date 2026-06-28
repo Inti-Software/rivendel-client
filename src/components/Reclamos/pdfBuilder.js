@@ -3,6 +3,8 @@ import vfs from '../../assets/vfs_fonts.js';
 import { Reclamos } from '../../api/endpoints/reclamos.js';
 import ReportData from './DTOs/reportData.js';
 import { NO_ESPECIFICADO } from '../Shared/constants.js';
+import { CON_ARREGLO } from './tiposResoluciones.js';
+import { tiptapDocumentToPdfMake } from './tiptap-to-pdfmake.js';
 
 pdfMake.vfs = vfs;
 pdfMake.fonts = {
@@ -14,32 +16,56 @@ pdfMake.fonts = {
   },
 };
 
-const subHeader = (data) => {
+const PARAGRAPH_SPACING_PT = 10;
+const EMPTY_PARAGRAPH_HEIGHT_PT = 12;
+
+const preTitulo = (data) => {
+  return {
+    text: `RECLAMO Nº ${data.numero}`,
+    margin: [0, 0, 0, PARAGRAPH_SPACING_PT],
+  };
+};
+
+const titulo = (data) => {
+  return {
+    text: data?.titulo,
+    style: 'header',
+  };
+};
+
+const reclamantes = (data) => {
   const row = (value, label) => ({
     columns: [
       { text: label, width: 70 },
-      { text: value, bold: true }
-    ]
+      { text: value, bold: true },
+    ],
   });
 
   return {
-    margin: [0, 0, 0, 10],
+    margin: [0, 0, 0, PARAGRAPH_SPACING_PT],
     stack: [
-      row(data?.nombresReclamantes, "Reclamante/s: "),
-      row(data?.nombresReclamados, "Reclamado/s: ")
+      row(data?.nombresReclamantes, 'Reclamante/s: '),
+      row(data?.nombresReclamados, 'Reclamado/s: '),
     ],
-  }  
-}
+  };
+};
+
+const rubros = (data) => {
+  return {
+    margin: [0, 0, 0, PARAGRAPH_SPACING_PT],
+    text: [{ text: 'OBJETO DEL RECLAMO/RUBROS Y PERÍODOS: ' }, { text: data?.rubros }],
+  };
+};
 
 const getParte = (partes, esReclamado, cantidadReclamos) => {
-  let s = "";
+  let s = '';
   if (!partes || partes.length === 0) {
     return s;
   }
   if (partes.length === 1) {
-    s = `por la parte ${esReclamado? "reclamada/empleadora" : "reclamante/trabajadora"}: `;
+    s = `por la parte ${esReclamado ? 'reclamada/empleadora' : 'reclamante/trabajadora'}: `;
   } else {
-    s = `por las partes ${esReclamado? "reclamadas/empleadoras" : "reclamantes/trabajadoras"}: `;
+    s = `por las partes ${esReclamado ? 'reclamadas/empleadoras' : 'reclamantes/trabajadoras'}: `;
   }
   partes.forEach((parte) => {
     const nombre = parte.nombre;
@@ -67,7 +93,8 @@ const getParte = (partes, esReclamado, cantidadReclamos) => {
     }
 
     if (parte.postergo) {
-      s += ' la cual solicitó el cambio de fecha original para el día de hoy, pese a lo cual no compareció';
+      s +=
+        ' la cual solicitó el cambio de fecha original para el día de hoy, pese a lo cual no compareció';
     }
 
     if (Object.keys(patrocinante || {}).length > 0) {
@@ -99,9 +126,10 @@ const getParte = (partes, esReclamado, cantidadReclamos) => {
     }
 
     if (parte.multado) {
-      s += '.\nAsimismo se solicita la aplicación de la multa establecida  en el Artículo 8°, del Anexo II de la Ley Nacional ' + 
-           'N° 25.212 Régimen General de Sanciones por Infracciones Laborales por ser considerada la conducta de la patronal ' + 
-           'como obstructiva y, como tal, sancionable de conformidad a la  normativa nombrada anteriormente.';
+      s +=
+        '.\nAsimismo se solicita la aplicación de la multa establecida  en el Artículo 8°, del Anexo II de la Ley Nacional ' +
+        'N° 25.212 Régimen General de Sanciones por Infracciones Laborales por ser considerada la conducta de la patronal ' +
+        'como obstructiva y, como tal, sancionable de conformidad a la  normativa nombrada anteriormente.';
     }
   });
 
@@ -111,23 +139,23 @@ const getParte = (partes, esReclamado, cantidadReclamos) => {
 const joinPartes = (data, incomparendo) => {
   const reclamantes = data?.reclamantes?.filter((r) => r.incomparendo === incomparendo);
   const reclamados = data?.reclamados?.filter((r) => r.incomparendo === incomparendo);
-  
+
   const partesReclamantes = getParte(reclamantes, false, data?.cantidad);
   const partesReclamados = getParte(reclamados, true, data?.cantidad);
-  
-  let s = "";
+
+  let partes = '';
   if (partesReclamantes) {
-    s = partesReclamantes;
+    partes = partesReclamantes;
   }
 
   if (partesReclamados) {
-     if (s) {
-      s += " y ";
+    if (partes) {
+      partes += ' y ';
     }
-    s += partesReclamados;
+    partes += partesReclamados;
   }
 
-  return s;
+  return partes;
 };
 
 const getPostergacion = (proximaAudiencia) => {
@@ -143,14 +171,18 @@ const getPostergacion = (proximaAudiencia) => {
 };
 
 const getDeclaracion = (data) => {
-  let s = joinPartes(data, true);
-  if (s) {
-    if (s.endsWith('.')) {
-      s = s.slice(0, -1);
+  if (data.idResolucion === CON_ARREGLO) {
+    return 'las partes expresan lo siguiente:';
+  }
+  let partes = joinPartes(data, true);
+  if (partes) {
+    if (partes.endsWith('.')) {
+      partes = partes.slice(0, -1);
     }
-    s = "se deja constancia de la imposibilidad de celebrar la audiencia fijada para el día de " + 
-        `la fecha atento a la incomparencia ${s}. ${getPostergacion(data.proximaAudiencia)}`;
-    return s;
+    return (
+      'se deja constancia de la imposibilidad de celebrar la audiencia fijada para el día de ' +
+      `la fecha atento a la incomparencia ${partes}. ${getPostergacion(data.proximaAudiencia)}`
+    );
   }
 
   return (
@@ -163,20 +195,46 @@ const getDeclaracion = (data) => {
 };
 
 const getFinalizacion = (data) => {
+  if (data.idResolucion === CON_ARREGLO) return '';
   return (
     `Siendo las ${data?.horaFin} horas, se da por finalizado el acto, previa lectura, firmando los comparecientes al pie ` +
     `de la presente, ante mí conciliadora autorizante.`
   );
 };
 
-const getCuerpo = (data) => {
-  let s = `En la ciudad de Santiago del Estero, provincia del mismo nombre, a los ${data?.fechaInicio.dia} días ` +
+const cuerpo = (data) => {
+  let s =
+    `En la ciudad de Santiago del Estero, provincia del mismo nombre, a los ${data?.fechaInicio.dia} días ` +
     `del mes de ${data?.fechaInicio.mes} del año ${data?.fechaInicio.anio}, siendo las ${data?.fechaInicio.hora} ` +
     `horas, ante mí ${data.conciliador}, en mi calidad de Conciliador Laboral, habilitación Nº ${data.nroHabilitacion}, en ` +
     `ejercicio de las funciones conferidas por la ley 7.330 y el decreto reglamentario 2.230/22. En el Marco del ` +
     `trámite de referencia, comparecen ${joinPartes(data, false)}.- Y ABIERTO EL ACTO: ${getDeclaracion(data)}`;
   s += `\n${getFinalizacion(data)}`;
-  return s;
+  return {
+    margin: [0, 0, 0, PARAGRAPH_SPACING_PT],
+    text: s,
+  };
+};
+
+const clausulas = (data) => {
+  const paragraphs = tiptapDocumentToPdfMake(data.clausulas);
+  const result = [];
+  paragraphs.forEach((element) => {
+    result.push({
+      text: element,
+      margin: [0, 0, 0, PARAGRAPH_SPACING_PT],
+    });
+  });
+  return result;
+};
+
+const firmas = () => {
+  return [
+    firma('Firma Reclamante', 'Firma Reclamado'),
+    firma('Aclaración Reclamante', 'Aclaración Reclamado'),
+    firma('Tipo y Nro. Documento Reclamante', 'Tipo y Nro. Documento Reclamado'),
+    firma('Firma Letrado Reclamante', 'Firma Letrado Reclamado'),
+  ];
 };
 
 const cell = (margins, label) => ({
@@ -212,8 +270,19 @@ const firma = (label1, label2) => ({
   ],
 });
 
+function content(data) {
+  const result = [];
+  if (data.idResolucion === CON_ARREGLO) {
+    result.push([preTitulo(data), titulo(data), cuerpo(data), clausulas(data)]);
+  } else {
+    result.push([titulo(data), reclamantes(data), rubros(data), cuerpo(data)]);
+  }
+  result.push(firmas());
+  return result;
+}
+
 const buildActaDoc = (data) => {
-  return {
+  const result = {
     pageSize: {
       width: 609.5,
       height: 935.5,
@@ -225,26 +294,7 @@ const buildActaDoc = (data) => {
       lineHeight: 1.5,
       alignment: 'justify',
     },
-
-    content: [
-      {
-        text: data?.titulo,
-        style: 'header',
-      },
-      subHeader(data),
-      {
-        margin: [0, 0, 0, 10],
-        text: [{ text: 'OBJETO DEL RECLAMO/RUBROS Y PERÍODOS: ' }, { text: data?.rubros }],
-      },
-      {
-        margin: [0, 0, 0, 10],
-        text: getCuerpo(data),
-      },
-      firma('Firma Reclamante', 'Firma Reclamado'),
-      firma('Aclaración Reclamante', 'Aclaración Reclamado'),
-      firma('Tipo y Nro. Documento Reclamante', 'Tipo y Nro. Documento Reclamado'),
-      firma('Firma Letrado Reclamante', 'Firma Letrado Reclamado'),
-    ],
+    content: content(data),
     styles: {
       header: {
         bold: true,
@@ -254,6 +304,7 @@ const buildActaDoc = (data) => {
       },
     },
   };
+  return result;
 };
 
 const buildErrorDoc = (message) => ({
@@ -265,6 +316,7 @@ const buildErrorDoc = (message) => ({
       fontSize: 14,
       alignment: 'center',
       margin: [0, 50, 0, 0],
+      font: 'Times',
     },
   ],
 });
