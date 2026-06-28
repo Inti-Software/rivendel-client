@@ -10,6 +10,7 @@ export function mapApiToForm(data) {
     fechaHoraInicio: apiDateToInput(data.fechaHoraInicio),
     horaFin: apiHourToInput(data.horaFin),
     proxAudiencia: apiDateToInput(data.proximaAudiencia),
+    clausulas: data.clausulas,
     reclamantes: data.reclamantes || [],
     reclamados: data.reclamados || [],
   };
