@@ -56,6 +56,7 @@ export default [
         "varsIgnorePattern": "^_", // Si quieres ignorar variables también, descomenta esta línea
       }],
       "unused-imports/no-unused-imports": "error",
+      "react/jsx-key": "error"
     },
     settings: {
       react: { version: 'detect' }, // Detecta automáticamente tu versión de React

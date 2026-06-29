@@ -1,4 +1,5 @@
 import { apiDateToInput, apiHourToInput, combineDateAndHour } from './dateUtils';
+import { CON_ARREGLO } from './tiposResoluciones';
 
 export function mapApiToForm(data) {
   return {
@@ -9,6 +10,7 @@ export function mapApiToForm(data) {
     fechaHoraInicio: apiDateToInput(data.fechaHoraInicio),
     horaFin: apiHourToInput(data.horaFin),
     proxAudiencia: apiDateToInput(data.proximaAudiencia),
+    clausulas: data.clausulas,
     reclamantes: data.reclamantes || [],
     reclamados: data.reclamados || [],
   };
@@ -30,6 +32,15 @@ function parteToDto(p) {
   };
 }
 
+function getClausulas(clausulas, idResolucion) {
+  if (idResolucion !== CON_ARREGLO) return null;
+  if (!clausulas) return null;
+  if (typeof clausulas === 'object' && Object.entries(clausulas).length === 0) {
+    return null;
+  }
+  return JSON.stringify(clausulas);
+}
+
 export function mapFormToApi(state) {
   return {
     id: state.id,
@@ -41,5 +52,6 @@ export function mapFormToApi(state) {
     proximaAudiencia: state.proxAudiencia || null,
     reclamantes: state.reclamantes.map(parteToDto),
     reclamados: state.reclamados.map(parteToDto),
+    clausulas: getClausulas(state.clausulas, state.idResolucion),
   };
 }
