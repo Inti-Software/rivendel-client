@@ -1,6 +1,5 @@
 {
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" }
-  ],
-  "installCommand": "node --version && npm install -g pnpm@11.9.0 && pnpm install"
+  ]
 }
