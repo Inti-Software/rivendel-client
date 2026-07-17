@@ -1,6 +1,15 @@
 let isAuthenticated = false;
 let listeners = new Set();
 let userName = null;
+let googleCalendarConnected = false;
+
+export function setGoogleCalendarConnected(value) {
+  googleCalendarConnected = value;
+}
+
+export function getGoogleCalendarConnected() {
+  return googleCalendarConnected;
+}
 
 export function setUserName(name) {
   userName = name;

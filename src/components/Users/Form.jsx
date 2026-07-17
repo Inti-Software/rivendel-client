@@ -2,6 +2,7 @@ import { useEffect, useReducer } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import { Users } from "../../api/endpoints/users";
 import ValidationErrors from "../Shared/ValidationErrors";
+import { GoogleCalendarButton } from "../GoogleCalendar/components/GoogleCalendarButton";
 
 const initialState = {
   nombre: "",
@@ -158,6 +159,9 @@ export default function Form() {
 						<div className="mb-3">
 							<label htmlFor="newPasswordRepeated" className="form-label">Repita la nueva contraseña</label>
 							<input id="newPasswordRepeated" className="form-control" type="password" value={state.newPasswordRepeated} onChange={setField} autoComplete="off" />
+						</div>
+						<div className="mb-3">
+							<GoogleCalendarButton />
 						</div>
 					</div>
 				</div>
