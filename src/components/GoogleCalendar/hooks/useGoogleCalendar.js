@@ -8,7 +8,6 @@ export function useGoogleCalendar() {
     setLoading(true);
     try {
       const { data } = await GoogleCalendar.authUrl();
-      // Redirigir al usuario a Google
       window.location.href = data.url;
     } finally {
       setLoading(false);

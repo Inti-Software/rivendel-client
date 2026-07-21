@@ -2,7 +2,7 @@ import { useEffect, useReducer } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import { Users } from "../../api/endpoints/users";
 import ValidationErrors from "../Shared/ValidationErrors";
-import { GoogleCalendarButton } from "../GoogleCalendar/components/GoogleCalendarButton";
+import { GoogleCalendarButton } from "../GoogleCalendar/components/Button";
 
 const initialState = {
   nombre: "",

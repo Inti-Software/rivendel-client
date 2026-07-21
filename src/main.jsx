@@ -20,6 +20,7 @@ import PartesForm from './components/Partes/Form.jsx';
 import ListReclamos from './components/Reclamos/components/List.jsx';
 import ReclamosForm from './components/Reclamos/components/Form.jsx';
 import UserForm from './components/Users/Form.jsx';
+import { GoogleCalendarCallback } from './components/GoogleCalendar/components/Callback.jsx';
 
 await initializeAuth();
 setupInterceptors();
@@ -48,6 +49,8 @@ root.render(
               <Route path="/reclamos" element={<ListReclamos />} />
               <Route path="/reclamos/new" element={<ReclamosForm />} />
               <Route path="/reclamos/edit/:id" element={<ReclamosForm />} />
+
+              <Route path="/google-calendar/callback" element={<GoogleCalendarCallback />} />
             </Route>
           </Route>
         </Routes>
