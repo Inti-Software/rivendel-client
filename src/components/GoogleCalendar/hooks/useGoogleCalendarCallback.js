@@ -1,10 +1,15 @@
 import { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { useRef } from 'react';
 
 export function useGoogleCalendarCallback({ onSuccess, onError } = {}) {
   const [searchParams, setSearchParams] = useSearchParams();
+  const executed = useRef(false);
 
   useEffect(() => {
+    if (executed.current) return;
+    executed.current = true;
+
     const status = searchParams.get('google_calendar');
 
     if (status === 'connected') {

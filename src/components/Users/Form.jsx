@@ -1,8 +1,9 @@
-import { useEffect, useReducer } from "react";
+import { useEffect, useReducer, useState } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import { Users } from "../../api/endpoints/users";
 import ValidationErrors from "../Shared/ValidationErrors";
-import { GoogleCalendarButton } from "../GoogleCalendar/components/Button";
+import { Button } from "../GoogleCalendar/components/Button";
+import { getGoogleCalendarConnected, setGoogleCalendarConnected, subscribeCalendar } from "../../auth/authState";
 
 const initialState = {
   nombre: "",
@@ -10,6 +11,7 @@ const initialState = {
 	password: "",
 	newPassword: "",
 	newPasswordRepeated: "",
+	googleCalendarConnected: false,
   initializing: true,
   loading: false,
   errors: []
@@ -51,35 +53,42 @@ function formReducer(state, action) {
 			};
 		}
 
-		case "INITIAL_LOAD": 
+		case "INITIAL_LOAD": {
+			setGoogleCalendarConnected(action.payload.googleCalendarConnected);
 			return { 
 				...state,
 				...action.payload,
 				initializing: false
 			};
-
+		}
     default:
       return state;
   }
 }
 
 export default function Form() {
-  const [state, dispatch] = useReducer(formReducer, initialState);
+	const [state, dispatch] = useReducer(formReducer, initialState);
 	const navigate = useNavigate();
 	const { id } = useParams();
+	const [connected, setConnected] = useState(getGoogleCalendarConnected());
 
 	useEffect(() => {
 		const fetchData = async () => {
 			const response = await Users.get(id);
 			if (response.ok) {
 				const data = response.data;
-				dispatch({ type: "INITIAL_LOAD", payload: { nombre: data.nombre, nroHabilitacion: data.nroHabilitacion }});
+				dispatch({ type: "INITIAL_LOAD", payload: { nombre: data.nombre, nroHabilitacion: data.nroHabilitacion, googleCalendarConnected: data.googleCalendarConnected } });
 			} else {					
 				dispatch({ type: "INITIAL_LOAD", payload: { errors: [response.error] } });
 			}
 		};
 		fetchData();
 	}, [id]);
+
+	useEffect(() => {
+		const unsub = subscribeCalendar(setConnected);
+		return unsub;
+	}, []);
 
 	const validate = () => {
 		const errors = [];
@@ -160,9 +169,15 @@ export default function Form() {
 							<label htmlFor="newPasswordRepeated" className="form-label">Repita la nueva contraseña</label>
 							<input id="newPasswordRepeated" className="form-control" type="password" value={state.newPasswordRepeated} onChange={setField} autoComplete="off" />
 						</div>
-						<div className="mb-3">
-							<GoogleCalendarButton />
-						</div>
+					</div>
+				</div>
+				<div className="card mb-3 border-primary">
+					<div className="card-header h6 fw-bold text-primary border-primary">Google Calendar</div>
+					<div className="card-body">
+						<p className="text-gray small" style={{ fontSize: "0.75em"}}>
+							{connected ? "Tu calendario está conectado para sincronizar eventos." : "Conecta tu calendario para sincronizar eventos."}
+						</p>
+						<Button />
 					</div>
 				</div>
 				<div className="mb-3 d-flex justify-content-end border-top pt-2 border-primary-subtle">

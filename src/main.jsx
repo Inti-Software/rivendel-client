@@ -20,7 +20,7 @@ import PartesForm from './components/Partes/Form.jsx';
 import ListReclamos from './components/Reclamos/components/List.jsx';
 import ReclamosForm from './components/Reclamos/components/Form.jsx';
 import UserForm from './components/Users/Form.jsx';
-import { GoogleCalendarCallback } from './components/GoogleCalendar/components/Callback.jsx';
+import { Callback as GoogleCalendarCallback } from './components/GoogleCalendar/components/Callback.jsx';
 
 await initializeAuth();
 setupInterceptors();

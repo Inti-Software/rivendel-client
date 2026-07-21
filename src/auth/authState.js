@@ -1,14 +1,21 @@
 let isAuthenticated = false;
-let listeners = new Set();
+let isAuthenticatedListeners = new Set();
 let userName = null;
 let googleCalendarConnected = false;
-
-export function setGoogleCalendarConnected(value) {
-  googleCalendarConnected = value;
-}
+let calendarListeners = new Set();
 
 export function getGoogleCalendarConnected() {
   return googleCalendarConnected;
+}
+
+export function setGoogleCalendarConnected(value) {
+  googleCalendarConnected = value;
+  calendarListeners.forEach((l) => l(googleCalendarConnected));
+}
+
+export function subscribeCalendar(listener) {
+  calendarListeners.add(listener);
+  return () => calendarListeners.delete(listener);
 }
 
 export function setUserName(name) {
@@ -21,7 +28,7 @@ export function getUserName() {
 
 export function setAuthenticated(value) {
   isAuthenticated = value;
-  listeners.forEach((l) => l(isAuthenticated));
+  isAuthenticatedListeners.forEach((l) => l(isAuthenticated));
 }
 
 export function getAuthenticated() {
@@ -29,6 +36,6 @@ export function getAuthenticated() {
 }
 
 export function subscribe(listener) {
-  listeners.add(listener);
-  return () => listeners.delete(listener);
+  isAuthenticatedListeners.add(listener);
+  return () => isAuthenticatedListeners.delete(listener);
 }
