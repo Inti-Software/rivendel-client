@@ -23,9 +23,9 @@ export function Callback() {
   }, []);
 
   return (
-    <p>
+    <div className="text-center mt-5">
       <Spinner text={"Conectando..."} />
-      Conectando Google Calendar...
-    </p>
+      <p>Conectando Google Calendar...</p>
+    </div>
   );
 }
