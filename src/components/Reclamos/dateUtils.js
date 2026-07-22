@@ -36,3 +36,7 @@ export const isChronological = (firstDate, secondDate) => {
   const d2 = dayjs(secondDate);
   return d1.isValid() && d2.isValid() && d2.isAfter(d1, 'days');
 };
+
+export function inputDateToApi(dateTimeStr) {
+  return dayjs(dateTimeStr, 'DD/MM/YYYY HH:mm').format('YYYY-MM-DDTHH:mm:ss') + '-03:00';  
+}

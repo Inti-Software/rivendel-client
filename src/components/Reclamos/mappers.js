@@ -1,4 +1,4 @@
-import { apiDateToInput, apiHourToInput, combineDateAndHour } from './dateUtils';
+import { apiDateToInput, apiHourToInput, combineDateAndHour, inputDateToApi } from './dateUtils';
 import { CON_ARREGLO } from './tiposResoluciones';
 
 export function mapApiToForm(data) {
@@ -47,7 +47,7 @@ export function mapFormToApi(state) {
     numero: state.numero,
     rubros: state.rubros,
     idResolucion: state.idResolucion,
-    fechaHoraInicio: state.fechaHoraInicio,
+    fechaHoraInicio: inputDateToApi(state.fechaHoraInicio),
     horaFin: combineDateAndHour(state.fechaHoraInicio, state.horaFin),
     proximaAudiencia: state.proxAudiencia || null,
     reclamantes: state.reclamantes.map(parteToDto),
