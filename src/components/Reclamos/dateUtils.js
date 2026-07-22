@@ -19,7 +19,7 @@ export function combineDateAndHour(fecha = dayjs(), hora) {
   if (isNaN(h) || isNaN(m)) {
     throw new Error("Formato de hora inválido. Debe ser 'hh:mm'.");
   }
-  return dayjs(fecha).hour(h).minute(m).second(0).millisecond(0).format('YYYY-MM-DDTHH:mm:ss');
+  return dayjs(fecha).hour(h).minute(m).second(0).millisecond(0).format('YYYY-MM-DDTHH:mm:ss') + '-03:00';
 }
 
 export function isValidDateTime(dateTimeStr) {
@@ -38,5 +38,5 @@ export const isChronological = (firstDate, secondDate) => {
 };
 
 export function inputDateToApi(dateTimeStr) {
-  return dayjs(dateTimeStr, 'DD/MM/YYYY HH:mm').format('YYYY-MM-DDTHH:mm:ss') + '-03:00';  
+  return dayjs(dateTimeStr, 'DD/MM/YYYY HH:mm').format('YYYY-MM-DDTHH:mm:ss') + '-03:00';
 }
