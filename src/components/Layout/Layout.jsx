@@ -1,18 +1,19 @@
 import "./Layout.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { logout } from "../../auth/auth.api";
 import { getUserName } from "../../auth/authState";
 import { useNotification } from "../../contexts/Constants";
 import { DEAL, PERSON, BOXARROWLEFT } from "../Shared/Icons";
+import { useTourInicial } from "./hooks/useTourInicial";
 
-const NavLink = ({relativeUrl, text}) => {
+const NavLink = ({relativeUrl, text, id}) => {
   const location = useLocation()
   const pn = location.pathname
   const classes = 'nav-link' + (pn.includes(relativeUrl)? ' active': '');
 
   return (
-    <Link className={classes} to={relativeUrl} aria-current="page">
+    <Link className={classes} to={relativeUrl} aria-current="page" id={id}>
       <span>{text}</span>      
       <span className="active"></span>
     </Link>
@@ -22,6 +23,13 @@ const NavLink = ({relativeUrl, text}) => {
 function Layout({ children }) {
   const { showError } = useNotification();
   const [error, setError] = useState(false);
+  const { iniciarTour, getTourVisto } = useTourInicial();
+
+  useEffect(() => {
+    if (!getTourVisto()) {
+      iniciarTour();
+    }
+  }, []);
 
   useState(() => {
     if (error) {
@@ -31,9 +39,9 @@ function Layout({ children }) {
   }, [error, showError]);
 
   const items = [
-    { relativeUrl: '/patrocinantes', text: 'Patrocinantes' },
-    { relativeUrl: '/partes', text: 'Partes' },
-    { relativeUrl: '/reclamos', text: 'Reclamos' }
+    { relativeUrl: '/patrocinantes', text: 'Patrocinantes', id: 'patrocinantes' },
+    { relativeUrl: '/partes', text: 'Partes', id: 'partes' },
+    { relativeUrl: '/reclamos', text: 'Reclamos', id: 'reclamos' }
   ]
 
   const handleLogout = async (e) => {
@@ -69,7 +77,7 @@ function Layout({ children }) {
             <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
               {items.map((item, k) => (
                 <li className="nav-item" key={k}>
-                  <NavLink relativeUrl={item.relativeUrl} text={item.text} />
+                  <NavLink relativeUrl={item.relativeUrl} text={item.text} id={item.id} />
                 </li>
               )) }
               <li className="nav-item">
@@ -85,10 +93,11 @@ function Layout({ children }) {
       <main className="container py-4">{children}</main>
 
       <footer className="pt-2 mt-auto footer d-flex justify-content-between align-items-center px-3">
+        <div><button className="btn btn-sm btn-secondary" onClick={iniciarTour} title="¿Cómo funciona esto?">💡</button></div>
         <p className="text-body-secondary ps-2 mb-0">© 2025 Inti Software</p>
         <p className="mb-0 text-success fw-bold">
           <span className="pe-1"><PERSON size="20px" /></span>
-          <Link to={"/user/form"} title="Configurar datos" className="text-success text-decoration-none">
+          <Link to={"/user/form"} title="Configurar datos" className="text-success text-decoration-none" id="username">
               {getUserName()} 
           </Link>
         </p>
