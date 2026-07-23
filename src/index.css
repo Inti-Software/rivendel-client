@@ -60,3 +60,11 @@ input[type="text"]#criterio:focus {
 .fs-very-small {
   font-size: 0.33rem;
 }
+
+.driver-popover {
+  border-radius: 8px;
+}
+
+.driver-popover-title {
+  font-weight: 600;
+}
