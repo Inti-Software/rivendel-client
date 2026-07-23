@@ -1,11 +1,11 @@
 import "./Layout.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { logout } from "../../auth/auth.api";
 import { getUserName } from "../../auth/authState";
 import { useNotification } from "../../contexts/Constants";
 import { DEAL, PERSON, BOXARROWLEFT } from "../Shared/Icons";
-import ReclamosPage from "../Reclamos/components/TourInicial";
+import { useTourInicial } from "./hooks/useTourInicial";
 
 const NavLink = ({relativeUrl, text, id}) => {
   const location = useLocation()
@@ -23,6 +23,13 @@ const NavLink = ({relativeUrl, text, id}) => {
 function Layout({ children }) {
   const { showError } = useNotification();
   const [error, setError] = useState(false);
+  const { iniciarTour, getTourVisto } = useTourInicial();
+
+  useEffect(() => {
+    if (!getTourVisto()) {
+      iniciarTour();
+    }
+  }, []);
 
   useState(() => {
     if (error) {
@@ -86,7 +93,7 @@ function Layout({ children }) {
       <main className="container py-4">{children}</main>
 
       <footer className="pt-2 mt-auto footer d-flex justify-content-between align-items-center px-3">
-        <div><ReclamosPage/></div>
+        <div><button className="btn btn-sm btn-secondary" onClick={iniciarTour} title="¿Cómo funciona esto?">💡</button></div>
         <p className="text-body-secondary ps-2 mb-0">© 2025 Inti Software</p>
         <p className="mb-0 text-success fw-bold">
           <span className="pe-1"><PERSON size="20px" /></span>
