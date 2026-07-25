@@ -4,6 +4,11 @@ import { getToken, clearAuthData, setAuthData } from "./tokenStore.js";
 
 let isRefreshing = false;
 let failedQueue = [];
+const MAX_RETRIES = 6;
+const RETRY_DELAY_MS = 5000;
+
+const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
 
 function processQueue(error, token = null) {
   failedQueue.forEach((prom) => {
@@ -34,6 +39,22 @@ async function onResponseUseFullFilled(response) {
 
 async function onResponseUseRejected(error) {
   const originalRequest = error.config;
+
+  const isNetworkOrTimeoutError =
+    !error.response && (error.code === 'ECONNABORTED' || error.message === 'Network Error');
+
+  if (isNetworkOrTimeoutError) {
+    config._retryCount = config._retryCount || 0;
+
+    if (config._retryCount >= MAX_RETRIES) {
+      return Promise.reject(error);
+    }
+
+    config._retryCount += 1;
+    await wait(RETRY_DELAY_MS);
+
+    return axiosInstance(config);
+  }
 
   if (!error.response) {
     return Promise.reject(error);

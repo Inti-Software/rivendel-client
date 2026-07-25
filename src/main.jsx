@@ -21,6 +21,8 @@ import ListReclamos from './components/Reclamos/components/List.jsx';
 import ReclamosForm from './components/Reclamos/components/Form.jsx';
 import UserForm from './components/Users/Form.jsx';
 import { Callback as GoogleCalendarCallback } from './components/GoogleCalendar/components/Callback.jsx';
+import { BackendStatusProvider } from './contexts/BackendStatusContext.jsx';
+import { AppGate } from './components/Utils/AppGate.jsx';
 
 await initializeAuth();
 setupInterceptors();
@@ -28,33 +30,37 @@ dayjs.locale('es');
 const root = createRoot(document.getElementById('root'));
 root.render(
   <StrictMode>
-    <NotificationProvider>
-      <BrowserRouter>
-        <PageTitle />
-        <NotificationDisplay />
-        <Routes>
-          <Route path="/" element={<App />} />
-          <Route element={<ProtectedRoute />}>
-            <Route element={<LayoutRoutes />}>
-              <Route path="/user/form" element={<UserForm />} />
+    <BackendStatusProvider>
+      <NotificationProvider>
+        <BrowserRouter>
+          <PageTitle />
+          <NotificationDisplay />
+          <AppGate>
+            <Routes>
+              <Route path="/" element={<App />} />
+              <Route element={<ProtectedRoute />}>
+                <Route element={<LayoutRoutes />}>
+                  <Route path="/user/form" element={<UserForm />} />
 
-              <Route path="/patrocinantes" element={<ListPatrocinantes />} />
-              <Route path="/patrocinantes/new" element={<PatrocinantesForm />} />
-              <Route path="/patrocinantes/edit/:id" element={<PatrocinantesForm />} />
+                  <Route path="/patrocinantes" element={<ListPatrocinantes />} />
+                  <Route path="/patrocinantes/new" element={<PatrocinantesForm />} />
+                  <Route path="/patrocinantes/edit/:id" element={<PatrocinantesForm />} />
 
-              <Route path="/partes" element={<ListPartes />} />
-              <Route path="/partes/new" element={<PartesForm />} />
-              <Route path="/partes/edit/:id" element={<PartesForm />} />
+                  <Route path="/partes" element={<ListPartes />} />
+                  <Route path="/partes/new" element={<PartesForm />} />
+                  <Route path="/partes/edit/:id" element={<PartesForm />} />
 
-              <Route path="/reclamos" element={<ListReclamos />} />
-              <Route path="/reclamos/new" element={<ReclamosForm />} />
-              <Route path="/reclamos/edit/:id" element={<ReclamosForm />} />
+                  <Route path="/reclamos" element={<ListReclamos />} />
+                  <Route path="/reclamos/new" element={<ReclamosForm />} />
+                  <Route path="/reclamos/edit/:id" element={<ReclamosForm />} />
 
-              <Route path="/google-calendar/callback" element={<GoogleCalendarCallback />} />
-            </Route>
-          </Route>
-        </Routes>
-      </BrowserRouter>
-    </NotificationProvider>
+                  <Route path="/google-calendar/callback" element={<GoogleCalendarCallback />} />
+                </Route>
+              </Route>
+            </Routes>
+          </AppGate>
+        </BrowserRouter>
+      </NotificationProvider>
+    </BackendStatusProvider>
   </StrictMode>,
 );
