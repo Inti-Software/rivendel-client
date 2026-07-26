@@ -1,14 +1,14 @@
 import { authHttp } from "./http.js";
 import { refresh } from "../auth/auth.api.js";
 import { getToken, clearAuthData, setAuthData } from "./tokenStore.js";
+import { setBackendDown } from './backendStatusStore.js';
 
 let isRefreshing = false;
 let failedQueue = [];
-const MAX_RETRIES = 6;
+const MAX_RETRIES = 3;
 const RETRY_DELAY_MS = 5000;
 
 const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
 
 function processQueue(error, token = null) {
   failedQueue.forEach((prom) => {
@@ -34,27 +34,45 @@ async function onRequestUseRejected(error) {
 }
 
 async function onResponseUseFullFilled(response) {
+  setBackendDown(false);
   return response;
 }
 
 async function onResponseUseRejected(error) {
+  console.log('INTERCEPTOR ERROR:', {
+    code: error.code,
+    message: error.message,
+    hasResponse: !!error.response,
+    status: error.response?.status,
+  });  
+  
   const originalRequest = error.config;
 
   const isNetworkOrTimeoutError =
     !error.response && (error.code === 'ECONNABORTED' || error.message === 'Network Error');
 
   if (isNetworkOrTimeoutError) {
-    config._retryCount = config._retryCount || 0;
+    console.log('is network error');
+    originalRequest._retryCount = originalRequest._retryCount || 0;
 
-    if (config._retryCount >= MAX_RETRIES) {
+    console.log('originalRequest._retryCount >= MAX_RETRIES', originalRequest._retryCount >= MAX_RETRIES, 'originalRequest._retryCount, MAX_RETRIES', originalRequest._retryCount, MAX_RETRIES);
+    if (originalRequest._retryCount >= MAX_RETRIES) {
+      console.log('originalRequest._retryCount >= MAX_RETRIES');
+      setBackendDown(true);
       return Promise.reject(error);
     }
 
-    config._retryCount += 1;
+    originalRequest._retryCount += 1;
+    console.log('originalRequest._retryCount += 1');
+    setBackendDown(true);
     await wait(RETRY_DELAY_MS);
 
-    return axiosInstance(config);
+    return authHttp(originalRequest);
   }
+
+  console.log('!isNetworkOrTimeoutError');
+
+  setBackendDown(false);
 
   if (!error.response) {
     return Promise.reject(error);

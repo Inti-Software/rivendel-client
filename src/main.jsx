@@ -21,7 +21,7 @@ import ListReclamos from './components/Reclamos/components/List.jsx';
 import ReclamosForm from './components/Reclamos/components/Form.jsx';
 import UserForm from './components/Users/Form.jsx';
 import { Callback as GoogleCalendarCallback } from './components/GoogleCalendar/components/Callback.jsx';
-import { BackendStatusProvider } from './contexts/BackendStatusContext.jsx';
+import { BackendStatusProvider } from './contexts/BackendStatusProvider.jsx';
 import { AppGate } from './components/Utils/AppGate.jsx';
 
 await initializeAuth();

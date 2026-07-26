@@ -1,22 +1,13 @@
-// AppGate.jsx
-import { useBackendStatus } from './context/BackendStatusContext';
-import WakeUpSpinner from './components/WakeUpSpinner';
-import ErrorScreen from './components/ErrorScreen';
+import { useBackendStatus } from '../../contexts/Constants';
+import WakeUpSpinner from './WakeUpSpinner';
 
 export function AppGate({ children }) {
-  const { isBackendReady, isChecking } = useBackendStatus();
+  const { isBackendDown } = useBackendStatus();
 
-  if (isChecking) {
+  console.log('isBackendDown', isBackendDown);
+
+  if (isBackendDown) {
     return <WakeUpSpinner message="Iniciando el servidor, puede tardar unos segundos..." />;
-  }
-
-  if (!isBackendReady) {
-    return (
-      <ErrorScreen
-        message="No se pudo conectar al servidor."
-        onRetry={() => window.location.reload()}
-      />
-    );
   }
 
   return children;
