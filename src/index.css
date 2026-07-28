@@ -68,3 +68,7 @@ input[type="text"]#criterio:focus {
 .driver-popover-title {
   font-weight: 600;
 }
+
+.react-datepicker__input-container {
+  display: inline !important;
+}

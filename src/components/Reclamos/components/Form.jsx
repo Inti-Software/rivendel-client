@@ -8,6 +8,8 @@ import PartesList from "./PartesList";
 import { handleOnChange, handleSubmit, onAcceptSearchParte } from '../eventHandlers.utils';
 import { ProximaAudienciaInput } from "./ProximaAudienciaInput";
 import { RichTextEditor } from '../../CustomTipTap/RichTextEditor';
+import DatePicker from "./DatePicker";
+import HourPicker from "./HourPicker";
 
 export default function Form() {
 	const navigate = useNavigate();
@@ -35,11 +37,9 @@ export default function Form() {
 				</div>
 				<div className="col-4">
 					<label htmlFor="fechaHoraInicio" className="form-label d-block">Fecha y Hora</label>
-					<input id="fechaHoraInicio" placeholder="AAAA-MM-DD HH:MM" className="form-control text-center d-inline-block w-auto" 
-						type="datetime-local" value={state.fechaHoraInicio} onChange={(e) => handleOnChange(e, setField)} />
+					<DatePicker id={"fechaHoraInicio"} name={"fechaHoraInicio"} value={state.fechaHoraInicio} setField={setField} />
 					<span className="mx-3">hasta</span>
-					<input id="horaFin" placeholder="HH:MM" className="form-control d-inline text-center w-25" type="time" value={state.horaFin} 
-						onChange={(e) => handleOnChange(e, setField)} />
+					<HourPicker id={"horaFin"} name={"horaFin"} value={state.horaFin} setField={setField} />
 				</div>
 				<div className="col-2">
 					<label htmlFor="idResolucion" className="form-label">Resolución</label>
