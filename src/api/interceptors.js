@@ -1,9 +1,14 @@
 import { authHttp } from "./http.js";
 import { refresh } from "../auth/auth.api.js";
 import { getToken, clearAuthData, setAuthData } from "./tokenStore.js";
+import { BACKEND_STATUS_DOWN, BACKEND_STATUS_UP, BACKEND_STATUS_ERROR, setBackendDown } from './backendStatusStore.js';
 
 let isRefreshing = false;
 let failedQueue = [];
+const MAX_RETRIES = 3;
+const RETRY_DELAY_MS = 5000;
+
+const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 function processQueue(error, token = null) {
   failedQueue.forEach((prom) => {
@@ -29,11 +34,33 @@ async function onRequestUseRejected(error) {
 }
 
 async function onResponseUseFullFilled(response) {
+  setBackendDown(BACKEND_STATUS_UP);
   return response;
 }
 
 async function onResponseUseRejected(error) {
   const originalRequest = error.config;
+
+  const isNetworkOrTimeoutError =
+    !error.response && (error.code === 'ECONNABORTED' || error.message === 'Network Error');
+
+  if (isNetworkOrTimeoutError) {
+    originalRequest._retryCount = originalRequest._retryCount || 0;
+    
+    if (originalRequest._retryCount >= MAX_RETRIES) {
+      setBackendDown(BACKEND_STATUS_DOWN);
+      return Promise.reject(error);
+    }
+    
+    
+    originalRequest._retryCount += 1;
+    await wait(RETRY_DELAY_MS);
+    setBackendDown(BACKEND_STATUS_ERROR);
+
+    return authHttp(originalRequest);
+  }
+
+  setBackendDown(BACKEND_STATUS_UP);
 
   if (!error.response) {
     return Promise.reject(error);

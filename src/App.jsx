@@ -8,6 +8,7 @@ function App() {
   const [error, setError] = useState("");
   const [redirect, setRedirect] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);  
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -56,8 +57,15 @@ function App() {
           </div>
           <div className="mb-3">
             <label htmlFor="password" className="form-label">Contraseña</label>
-            <input type="password" className="form-control" id="password" placeholder="123456" required 
-              onInvalid={(e) => e.target.setCustomValidity("Ingrese una contraseña")} onInput={(e) => e.target.setCustomValidity("")} />
+            <div className="position-relative d-block">
+              <input type={showPassword ? "text" : "password"} className="form-control" id="password" placeholder="123456" required 
+                onInvalid={(e) => e.target.setCustomValidity("Ingrese una contraseña")} onInput={(e) => e.target.setCustomValidity("")} />
+              <button type="button" onClick={() => setShowPassword((prev) => !prev)}
+                className="btn position-absolute top-50 end-0 translate-middle-y" tabIndex={-1}
+                aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}>
+                  {showPassword ? "🙈" : "👁️"}
+              </button>
+            </div>
           </div>
           <button disabled={loading} type="submit" className="btn btn-primary w-100">{loading? "Iniciando sesión...":"Iniciar sesión"}</button>
         </form>
