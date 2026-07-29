@@ -1,7 +1,7 @@
 import { authHttp } from "./http.js";
 import { refresh } from "../auth/auth.api.js";
 import { getToken, clearAuthData, setAuthData } from "./tokenStore.js";
-import { setBackendDown } from './backendStatusStore.js';
+import { BACKEND_STATUS_DOWN, BACKEND_STATUS_UP, BACKEND_STATUS_ERROR, setBackendDown } from './backendStatusStore.js';
 
 let isRefreshing = false;
 let failedQueue = [];
@@ -34,45 +34,33 @@ async function onRequestUseRejected(error) {
 }
 
 async function onResponseUseFullFilled(response) {
-  setBackendDown(false);
+  setBackendDown(BACKEND_STATUS_UP);
   return response;
 }
 
 async function onResponseUseRejected(error) {
-  console.log('INTERCEPTOR ERROR:', {
-    code: error.code,
-    message: error.message,
-    hasResponse: !!error.response,
-    status: error.response?.status,
-  });  
-  
   const originalRequest = error.config;
 
   const isNetworkOrTimeoutError =
     !error.response && (error.code === 'ECONNABORTED' || error.message === 'Network Error');
 
   if (isNetworkOrTimeoutError) {
-    console.log('is network error');
     originalRequest._retryCount = originalRequest._retryCount || 0;
-
-    console.log('originalRequest._retryCount >= MAX_RETRIES', originalRequest._retryCount >= MAX_RETRIES, 'originalRequest._retryCount, MAX_RETRIES', originalRequest._retryCount, MAX_RETRIES);
+    
     if (originalRequest._retryCount >= MAX_RETRIES) {
-      console.log('originalRequest._retryCount >= MAX_RETRIES');
-      setBackendDown(true);
+      setBackendDown(BACKEND_STATUS_DOWN);
       return Promise.reject(error);
     }
-
+    
+    
     originalRequest._retryCount += 1;
-    console.log('originalRequest._retryCount += 1');
-    setBackendDown(true);
     await wait(RETRY_DELAY_MS);
+    setBackendDown(BACKEND_STATUS_ERROR);
 
     return authHttp(originalRequest);
   }
 
-  console.log('!isNetworkOrTimeoutError');
-
-  setBackendDown(false);
+  setBackendDown(BACKEND_STATUS_UP);
 
   if (!error.response) {
     return Promise.reject(error);

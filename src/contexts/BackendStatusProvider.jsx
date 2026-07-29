@@ -5,6 +5,7 @@ import { getBackendDown, subscribeBackendStatus } from '../api/backendStatusStor
 
 export function BackendStatusProvider({ children }) {
   const [isBackendDown, setIsBackendDown] = useState(getBackendDown());
+  //const isBackendDown = getBackendDown();
 
   useEffect(() => {
     setIsBackendDown(getBackendDown());

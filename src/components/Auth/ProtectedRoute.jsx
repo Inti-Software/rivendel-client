@@ -3,7 +3,7 @@ import { Navigate, Outlet } from "react-router-dom";
 import { getAuthenticated, subscribe } from "../../auth/authState"
 import WakeUpSpinner from '../Utils/WakeUpSpinner.jsx';
 import { getBackendDown, subscribeBackendStatus } from "../../api/backendStatusStore";
-
+import { BACKEND_STATUS_ERROR } from '../../api/backendStatusStore';
 
 export default function ProtectedRoute() {
   const [isAuth, setIsAuth] = useState(getAuthenticated());
@@ -18,9 +18,7 @@ export default function ProtectedRoute() {
       setResolved(true);
     });
     
-    console.log('Suscribiéndome a backend status');    
     const unsubscribeBackend = subscribeBackendStatus((value) => {
-      console.log('Backend status cambió a:', value);
       setIsBackendDown(value);
     });    
 
@@ -32,7 +30,7 @@ export default function ProtectedRoute() {
     };
   }, []);
 
-  if (isBackendDown) {
+  if (isBackendDown === BACKEND_STATUS_ERROR) {
     return <WakeUpSpinner message="Iniciando el servidor, puede tardar unos segundos..." />;
   }
 
