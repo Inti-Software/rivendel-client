@@ -106,7 +106,6 @@ const SearchPatrocinanteDialog = ({ handleAccept, handleCancel }) => {
 				dispatch({ type: "SEARCH_SUCCESS", data: response.data.data });
 			})
 			.catch(error => {
-				console.error("Error al buscar patrocinantes:", error);
 				dispatch({ type: "SEARCH_FAIL", error: "Ocurrió un error al realizar la búsqueda. " + 
 					"Por favor, inténtelo de nuevo." })
 			});

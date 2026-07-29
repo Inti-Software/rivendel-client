@@ -86,7 +86,6 @@ const SearchParteDialog = ({ title, visible, handleAccept, handleCancel }) => {
 
 	useEffect(() => {
 		if (error) {
-			console.error("Error al buscar partes:", error);
 			dispatch({ type: "SEARCH_FAIL", error: "Ocurrió un error al realizar la búsqueda. Por favor, inténtelo de nuevo." });
 		}
 	}, [error])

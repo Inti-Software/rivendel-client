@@ -86,13 +86,11 @@ export default function Form() {
 						nroCasillero: data.nroCasillero
 					}});
 				} else {					
-					console.error(response.error);
 					dispatch({ type: "INITIAL_LOAD", payload: {} });
 				}
 			};
 			fetchData();
 		} catch (err) {
-			console.error(err);
 			dispatch({ type: "INITIAL_LOAD", payload: {} });
 		}
 	}, [id]);
