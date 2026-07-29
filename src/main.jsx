@@ -1,4 +1,5 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
+import "react-datepicker/dist/react-datepicker.css";
 import 'bootstrap/dist/js/bootstrap.bundle.min.js'; // Contiene la lógica JS del modal
 import dayjs from 'dayjs';
 import 'dayjs/locale/es';
