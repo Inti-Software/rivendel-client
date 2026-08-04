@@ -18,6 +18,7 @@ pdfMake.fonts = {
 
 const PARAGRAPH_SPACING_PT = 10;
 const EMPTY_PARAGRAPH_HEIGHT_PT = 12;
+const EMPTY_SIGN = '1';
 
 const preTitulo = (data) => {
   return {
@@ -228,36 +229,55 @@ const clausulas = (data) => {
   return result;
 };
 
-const firmas = () => {
+const firmas = (data) => {
+  const existenReclamantes = data?.reclamantes?.some((r) => (r.nroWhatsappParte ?? '') === '');
+  const existenReclamados = data?.reclamados?.some((r) => (r.nroWhatsappParte ?? '') === '');
+  const existenLetradosReclamantes = data?.reclamantes?.some((r) => (r.nroWhatsappPatrocinante ?? '') === '');
+  const existenLetradosReclamados = data?.reclamados?.some((r) => (r.nroWhatsappPatrocinante ?? '') === '');
+  const textosFirmas = {
+    firmaReclamante: existenReclamantes ? 'Firma Reclamante' : EMPTY_SIGN,
+    firmaReclamado: existenReclamados ? 'Firma Reclamado' : EMPTY_SIGN,
+    aclaracionReclamante: existenReclamantes ? 'Aclaración Reclamante' : EMPTY_SIGN,
+    aclaracionReclamado: existenReclamados ? 'Aclaración Reclamado' : EMPTY_SIGN,
+    tipoDocumentoReclamante: existenReclamantes ? 'Tipo y Nro. Documento Reclamante' : EMPTY_SIGN,
+    tipoDocumentoReclamado: existenReclamados ? 'Tipo y Nro. Documento Reclamado' : EMPTY_SIGN,
+    firmaLetradoReclamante: existenLetradosReclamantes ? 'Firma Letrado Reclamante' : EMPTY_SIGN,
+    firmaLetradoReclamado: existenLetradosReclamados ? 'Firma Letrado Reclamado' : EMPTY_SIGN,
+  };
+
   return [
-    firma('Firma Reclamante', 'Firma Reclamado'),
-    firma('Aclaración Reclamante', 'Aclaración Reclamado'),
-    firma('Tipo y Nro. Documento Reclamante', 'Tipo y Nro. Documento Reclamado'),
-    firma('Firma Letrado Reclamante', 'Firma Letrado Reclamado'),
+    firma(textosFirmas.firmaReclamante, textosFirmas.firmaReclamado),
+    firma(textosFirmas.aclaracionReclamante, textosFirmas.aclaracionReclamado),
+    firma(textosFirmas.tipoDocumentoReclamante, textosFirmas.tipoDocumentoReclamado),
+    firma(textosFirmas.firmaLetradoReclamante, textosFirmas.firmaLetradoReclamado),
   ];
 };
 
-const cell = (margins, label) => ({
-  table: {
-    widths: ['*'],
-    body: [
-      [
-        {
-          text: label,
-          border: [false, true, false, false],
-          fontSize: 8,
-          verticalAlignment: 'bottom',
-          alignment: 'center',
-        },
+const cell = (margins, label) => {
+  if (label === EMPTY_SIGN) return {};
+
+  return {
+    table: {
+      widths: ['*'],
+      body: [
+        [
+          {
+            text: label,
+            border: [false, true, false, false],
+            fontSize: 8,
+            verticalAlignment: 'bottom',
+            alignment: 'center',
+          },
+        ],
       ],
-    ],
-  },
-  layout: {
-    hLineWidth: () => 0.2,
-    hLineColor: () => '#000',
-  },
-  margin: margins,
-});
+    },
+    layout: {
+      hLineWidth: () => 0.2,
+      hLineColor: () => '#000',
+    },
+    margin: margins,
+  };
+};
 
 const firma = (label1, label2) => ({
   columns: [
@@ -277,7 +297,7 @@ function content(data) {
   } else {
     result.push([titulo(data), reclamantes(data), rubros(data), cuerpo(data)]);
   }
-  result.push(firmas());
+  result.push(firmas(data));
   return result;
 }
 
