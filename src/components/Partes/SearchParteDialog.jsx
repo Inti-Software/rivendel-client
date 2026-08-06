@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useReducer } from 'react';
 import { Partes } from '../../api/endpoints/partes';
 import { SEARCH } from '../Shared/Icons';
-import { NO_ESPECIFICADO } from '../Shared/constants';
 import useDebounce from '../../hooks/useDebounce';
 import { useApi } from '../../hooks/useApi';
 import Spinner from '../Shared/Spinner';
+import { getDomicilio } from "../Patrocinantes/utils";
 
 const initialState = {
 	term: "",
@@ -118,16 +118,6 @@ const SearchParteDialog = ({ title, visible, handleAccept, handleCancel }) => {
 		}
 	}, [visible]);
 		
-  const getDomicilio = (p) => {
-    let s = NO_ESPECIFICADO
-    if (p?.domicilio !== "")
-      s = p?.domicilio;
-    if (p?.localidad !== "")
-      s += ", " + p?.localidad
-
-    return s;
-  }
-
 	const getClassName = () => {
 		const warning = "bg-warning-subtle border-warning";
 		const error = "bg-danger-subtle border-danger";
@@ -186,7 +176,7 @@ const SearchParteDialog = ({ title, visible, handleAccept, handleCancel }) => {
 														</div>
 													</div>
 													<div>
-														<span className="text-secondary d-flex border-bottom border-secondary-subtle">Patrocinante</span>
+														<span className="text-secondary d-flex border-bottom border-secondary-subtle small fw-medium">Patrocinante</span>
 														<div className="row">
 															{(p.patrocinante == null) ? (
 															<div className="col-12 d-flex p-2">

@@ -83,7 +83,8 @@ function getPartes(partes) {
 		const nroWhatsappParte = partes[i].nroWhatsappParte || null
 		const nroWhatsappPatrocinante = partes[i].nroWhatsappPatrocinante || null
 		const postergo = partes[i].postergo || false
-		const incomparendo = partes[i].incomparendo || false
+		const incomparendoParte = partes[i].incomparendoParte || false
+		const incomparendoPatrocinante = partes[i].incomparendoPatrocinante || false
 		const multado = partes[i].multado || false
 
 		if (patrocinante) {
@@ -104,7 +105,8 @@ function getPartes(partes) {
 			patrocinante: patrocinante,
 			esApoderado: partes[i].esApoderado,
 			postergo: postergo,
-			incomparendo: incomparendo,
+			incomparendoParte: incomparendoParte,
+			incomparendoPatrocinante: incomparendoPatrocinante,
 			multado: multado
 		}
 		result.push(parte)

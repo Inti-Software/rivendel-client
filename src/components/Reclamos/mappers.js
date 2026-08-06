@@ -27,7 +27,8 @@ function parteToDto(p) {
     nroWhatsappParte: p.nroWhatsappParte || null,
     nroWhatsappPatrocinante: p.nroWhatsappPatrocinante || null,
     postergo: p.postergo || false,
-    incomparendo: p.incomparendo || false,
+    incomparendoParte: p.incomparendoParte || false,
+    incomparendoPatrocinante: p.incomparendoPatrocinante || false,
     multado: p.multado || false,
   };
 }
