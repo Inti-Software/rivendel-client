@@ -1,18 +1,8 @@
-import { NO_ESPECIFICADO } from "../Shared/constants";
-
 export const removeParte = (id, isReclamante, state, setField) => {
   const partes = isReclamante ? state.reclamantes : state.reclamados;
   const f = isReclamante ? 'reclamantes' : 'reclamados';
   const v = partes.filter((p) => p.id !== id);
   setField(f, v);
-};
-
-export const getDomicilio = (patrocinante) => {
-  let s = NO_ESPECIFICADO;
-  if (patrocinante?.domicilio !== '') s = patrocinante?.domicilio;
-  if (patrocinante?.localidad !== '') s += ', ' + patrocinante?.localidad;
-
-  return s;
 };
 
 export const setFieldParte = (field, value, parteId, esPatrocinante, esReclamante, state, setField) => {
@@ -30,8 +20,10 @@ export const setFieldParte = (field, value, parteId, esPatrocinante, esReclamant
           }
         case 'postergo':
           return { ...p, postergo: !p.postergo };
-        case 'incomparendo':
-          return { ...p, incomparendo: !p.incomparendo };
+        case 'incomparendoParte':
+          return { ...p, incomparendoParte: !p.incomparendoParte };
+        case 'incomparendoPatrocinante':
+          return { ...p, incomparendoPatrocinante: !p.incomparendoPatrocinante };
         case 'multado':
           return { ...p, multado: !p.multado };
         default:
