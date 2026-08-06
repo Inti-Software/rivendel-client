@@ -239,22 +239,57 @@ const firmas = (data) => {
   const existenLetradosReclamantes = data?.reclamantes?.some(existePatrocinante);
   const existenLetradosReclamados = data?.reclamados?.some(existePatrocinante);
 
-  const textosFirmas = {
-    firmaReclamante: existenReclamantes ? 'Firma Reclamante' : EMPTY_SIGN,
-    firmaReclamado: existenReclamados ? 'Firma Reclamado' : EMPTY_SIGN,
-    aclaracionReclamante: existenReclamantes ? 'Aclaración Reclamante' : EMPTY_SIGN,
-    aclaracionReclamado: existenReclamados ? 'Aclaración Reclamado' : EMPTY_SIGN,
-    tipoDocumentoReclamante: existenReclamantes ? 'Tipo y Nro. Documento Reclamante' : EMPTY_SIGN,
-    tipoDocumentoReclamado: existenReclamados ? 'Tipo y Nro. Documento Reclamado' : EMPTY_SIGN,
-    firmaLetradoReclamante: existenLetradosReclamantes ? 'Firma Letrado Reclamante' : EMPTY_SIGN,
-    firmaLetradoReclamado: existenLetradosReclamados ? 'Firma Letrado Reclamado' : EMPTY_SIGN,
-  };
+  const firmasIzquierda = [];
+  const firmasDerecha = [];
+  if (existenReclamantes && existenLetradosReclamantes) {
+    firmasIzquierda.push('Firma Reclamante');
+    firmasIzquierda.push('Aclaración Reclamante');
+    firmasIzquierda.push('Tipo y Nro. Documento Reclamante');
+    firmasIzquierda.push('Firma Letrado Reclamante');
+  } else if (existenReclamantes) {
+    firmasIzquierda.push('Firma Reclamante');
+    firmasIzquierda.push('Aclaración Reclamante');
+    firmasIzquierda.push('Tipo y Nro. Documento Reclamante');
+    firmasIzquierda.push(EMPTY_SIGN);
+  } else if (existenLetradosReclamantes) {
+    firmasIzquierda.push('Firma Letrado Reclamante');
+    firmasIzquierda.push(EMPTY_SIGN);
+    firmasIzquierda.push(EMPTY_SIGN);
+    firmasIzquierda.push(EMPTY_SIGN);
+  } else {
+    firmasIzquierda.push(EMPTY_SIGN);
+    firmasIzquierda.push(EMPTY_SIGN);
+    firmasIzquierda.push(EMPTY_SIGN);
+    firmasIzquierda.push(EMPTY_SIGN);
+  }
+
+  if (existenReclamados && existenLetradosReclamados) {
+    firmasDerecha.push('Firma Reclamado');
+    firmasDerecha.push('Aclaración Reclamado');
+    firmasDerecha.push('Tipo y Nro. Documento Reclamado');
+    firmasDerecha.push('Firma Letrado Reclamado');
+  } else if (existenReclamados) {
+    firmasDerecha.push('Firma Reclamado');
+    firmasDerecha.push('Aclaración Reclamado');
+    firmasDerecha.push('Tipo y Nro. Documento Reclamado');
+    firmasDerecha.push(EMPTY_SIGN);
+  } else if (existenLetradosReclamados) {
+    firmasDerecha.push('Firma Letrado Reclamado');
+    firmasDerecha.push(EMPTY_SIGN);
+    firmasDerecha.push(EMPTY_SIGN);
+    firmasDerecha.push(EMPTY_SIGN);
+  } else {
+    firmasDerecha.push(EMPTY_SIGN);
+    firmasDerecha.push(EMPTY_SIGN);
+    firmasDerecha.push(EMPTY_SIGN);
+    firmasDerecha.push(EMPTY_SIGN);
+  }
 
   return [
-    firma(textosFirmas.firmaReclamante, textosFirmas.firmaReclamado),
-    firma(textosFirmas.aclaracionReclamante, textosFirmas.aclaracionReclamado),
-    firma(textosFirmas.tipoDocumentoReclamante, textosFirmas.tipoDocumentoReclamado),
-    firma(textosFirmas.firmaLetradoReclamante, textosFirmas.firmaLetradoReclamado),
+    firma(firmasIzquierda[0], firmasDerecha[0]),
+    firma(firmasIzquierda[1], firmasDerecha[1]),
+    firma(firmasIzquierda[2], firmasDerecha[2]),
+    firma(firmasIzquierda[3], firmasDerecha[3]),
   ];
 };
 
