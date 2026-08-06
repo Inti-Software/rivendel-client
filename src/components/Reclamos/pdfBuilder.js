@@ -230,10 +230,15 @@ const clausulas = (data) => {
 };
 
 const firmas = (data) => {
-  const existenReclamantes = data?.reclamantes?.some((r) => (r.nroWhatsappParte ?? '') === '');
-  const existenReclamados = data?.reclamados?.some((r) => (r.nroWhatsappParte ?? '') === '');
-  const existenLetradosReclamantes = data?.reclamantes?.some((r) => (r.nroWhatsappPatrocinante ?? '') === '');
-  const existenLetradosReclamados = data?.reclamados?.some((r) => (r.nroWhatsappPatrocinante ?? '') === '');
+  const existeParte = (p) =>
+    (p.nroWhatsappParte ?? '') === '' && (p?.incomparendoParte ?? false) === false;
+  const existePatrocinante = (p) =>
+    (p.nroWhatsappPatrocinante ?? '') === '' && (p?.incomparendoPatrocinante ?? false) === false;
+  const existenReclamantes = data?.reclamantes?.some(existeParte);
+  const existenReclamados = data?.reclamados?.some(existeParte);
+  const existenLetradosReclamantes = data?.reclamantes?.some(existePatrocinante);
+  const existenLetradosReclamados = data?.reclamados?.some(existePatrocinante);
+
   const textosFirmas = {
     firmaReclamante: existenReclamantes ? 'Firma Reclamante' : EMPTY_SIGN,
     firmaReclamado: existenReclamados ? 'Firma Reclamado' : EMPTY_SIGN,
