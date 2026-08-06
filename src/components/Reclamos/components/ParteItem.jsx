@@ -20,7 +20,7 @@ const ParteItem = ({p, esReclamante, state, setField}) => (
 									onChange={e => setFieldParte("postergo", e.target.value, p.id, null, esReclamante, state, setField) } /> Pidió postergación
 						</label>
 						<label className="me-2">
-								<input type="checkbox" defaultChecked={p.incomparendo} 
+								<input type="checkbox" defaultChecked={p.incomparendoParte} 
 									onChange={e => setFieldParte("incomparendoParte", e.target.value, p.id, null, esReclamante, state, setField) } /> Incomparendo
 						</label>
 						<label className="me-2">
@@ -59,7 +59,7 @@ const ParteItem = ({p, esReclamante, state, setField}) => (
 								</div>
 								<div className="col d-flex align-items-start mt-1 justify-content-end" style={{ fontSize: "0.75em" }}>
 									<label className="me-2">
-										<input type="checkbox" defaultChecked={p.postergo} 
+										<input type="checkbox" defaultChecked={p.incomparendoPatrocinante} 
 											onChange={e => setFieldParte("incomparendoPatrocinante", e.target.value, p.id, null, esReclamante, state, setField) } /> Incomparendo
 									</label>
 								</div>
