@@ -122,7 +122,7 @@ const getParte = (partes, esReclamado, cantidadReclamos) => {
       }
     }
 
-    if (parte.incomparendo && cantidadReclamos) {
+    if (parte.incomparendoParte && cantidadReclamos) {
       s += ` quien fue notificada de las ${cantidadReclamos} fechas de audiencia de conciliación, según informe suministrado por la DICLO.`;
     }
 
@@ -138,8 +138,8 @@ const getParte = (partes, esReclamado, cantidadReclamos) => {
 };
 
 const joinPartes = (data, incomparendo) => {
-  const reclamantes = data?.reclamantes?.filter((r) => r.incomparendo === incomparendo);
-  const reclamados = data?.reclamados?.filter((r) => r.incomparendo === incomparendo);
+  const reclamantes = data?.reclamantes?.filter((r) => r.incomparendoParte === incomparendo);
+  const reclamados = data?.reclamados?.filter((r) => r.incomparendoParte === incomparendo);
 
   const partesReclamantes = getParte(reclamantes, false, data?.cantidad);
   const partesReclamados = getParte(reclamados, true, data?.cantidad);
@@ -233,7 +233,9 @@ const firmas = (data) => {
   const existeParte = (p) =>
     (p.nroWhatsappParte ?? '') === '' && (p?.incomparendoParte ?? false) === false;
   const existePatrocinante = (p) =>
-    (p.nroWhatsappPatrocinante ?? '') === '' && (p?.incomparendoPatrocinante ?? false) === false;
+    p.patrocinante &&
+    (p.nroWhatsappPatrocinante ?? '') === '' &&
+    (p?.incomparendoPatrocinante ?? false) === false;
   const existenReclamantes = data?.reclamantes?.some(existeParte);
   const existenReclamados = data?.reclamados?.some(existeParte);
   const existenLetradosReclamantes = data?.reclamantes?.some(existePatrocinante);
