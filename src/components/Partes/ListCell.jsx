@@ -12,9 +12,17 @@ const getDomicilio = (p) => {
 	return s;
 }
 
+const getIdentificacion = (p) => {
+	const nroDocumento = (Number(p.cuil) === 0)? p.nroDocumento : p.cuil; 
+	if (nroDocumento === "0") {
+		return p.nombre
+	}
+	return nroDocumento + " - " + p.nombre
+}
+
 const getDeleteMessage = (p) => 
 	(<DeleteMessage message={"¿Está seguro que desea eliminar esta parte?"}
-			fields={((Number(p.cuil) === 0)? p.nroDocumento : p.cuil) + " - " + p.nombre} />)
+			fields={getIdentificacion(p)} />)
 
 export default function ListCell(p, onDeleteRecord) {
 	return (

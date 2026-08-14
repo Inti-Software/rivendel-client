@@ -77,7 +77,11 @@ const getParte = (partes, esReclamado, cantidadReclamos) => {
     const localidad = parte.localidad || '';
     const patrocinante = parte.patrocinante || {};
 
-    s += `${nombre} ${sintetico} ${nroDocumento}`;
+    s += nombre;
+    
+    if (nroDocumento !== NO_ESPECIFICADO) {
+      s += ` ${sintetico} ${nroDocumento}`;
+    }
 
     if (cuil !== NO_ESPECIFICADO) {
       s += `, CUIL ${cuil}`;

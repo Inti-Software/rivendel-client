@@ -11,7 +11,8 @@ const initialState = {
   id: 0,
   nombre: "",
   idTipoDocumento: 0,
-  nroDocumento: "",
+  nroDocumento: "0",
+	enableNroDocumento: true,
   cuil: "",
 	enableCuil: true,
 	patrocinante: {
@@ -132,6 +133,7 @@ export default function Form() {
 					nombre: data.nombre,
 					idTipoDocumento: data.idTipoDocumento,
 					nroDocumento: data.nroDocumento,
+					enableNroDocumento: data.nroDocumento.trim() !== "" && data.nroDocumento != "0",
 					enableCuil: data.cuil.trim() !== "" && data.cuil != "0",
 					cuil: data.cuil,
 					patrocinante: {
@@ -245,6 +247,13 @@ export default function Form() {
 		dispatch({ type: "SET_FIELD", field: "enableCuil", value: !state.enableCuil })
 	}
 
+	function handleChangeLabelNroDocumento() {
+		dispatch({ type: "SET_FIELD", field: "enableNroDocumento", value: !state.enableNroDocumento });
+		if (!state.enableNroDocumento) {
+			dispatch({ type: "SET_FIELD", field: "nroDocumento", value: '0' });
+		}
+	}
+
 	return (
 		<div className="w-50 m-auto">
 			<form onSubmit={handleSubmit} style={{ padding: 20 }}>
@@ -261,15 +270,20 @@ export default function Form() {
 						required autoComplete="off" />
 				</div>
 				<div className="mb-3">
-					<label htmlFor="nroDocumento" className="form-label">Documento</label>
+					<label htmlFor="nroDocumento" className="form-label" onClick={handleChangeLabelNroDocumento}>						
+						<input id="enableNroDocumento" type="checkbox" checked={state.enableNroDocumento} onChange={() => {}} /> Documento
+					</label>
 					<div className="row g-3">
 						<div className="col">
 							<DataBindedSelect id={"idTipoDocumento"} data={tiposDocumento} selectedValue={state.idTipoDocumento} 
-								setSelectedValue={(v) => dispatch({ type: "SET_FIELD", field: "idTipoDocumento", value: parseInt(v) }) } />
+								setSelectedValue={(v) => dispatch({ type: "SET_FIELD", field: "idTipoDocumento", value: parseInt(v) }) } 
+								props={{ autoComplete: "off", visible: !state.enableNroDocumento, style: { backgroundColor: state.enableNroDocumento? "#fff" : "#aaa" } }}
+								/>
 						</div>
 						<div className="col">
 							<input id="nroDocumento" type="number" className="form-control" value={state.nroDocumento} 
-								onChange={setField} autoComplete="off" />
+								onChange={setField} autoComplete="off" disabled={!state.enableNroDocumento} 
+								style={{ backgroundColor: state.enableNroDocumento? "#fff" : "#aaa" }}/>
 						</div>
 					</div>
 				</div>

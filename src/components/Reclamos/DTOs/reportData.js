@@ -76,7 +76,10 @@ function getPartes(partes) {
 		}
 
 		const sintetico = partes[i].tipoDocumento.sintetico;
-		const nroDocumento = partes[i].nroDocumento || NO_ESPECIFICADO
+		let nroDocumento = partes[i].nroDocumento || NO_ESPECIFICADO
+		if (nroDocumento === "0") {
+			nroDocumento = NO_ESPECIFICADO
+		}
 		const cuil = partes[i].cuil || NO_ESPECIFICADO
 		const domicilio = partes[i].domicilio;
 		const localidad = partes[i].localidad;
