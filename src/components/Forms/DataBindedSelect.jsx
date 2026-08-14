@@ -1,6 +1,6 @@
 import { useEffect, useId } from "react";
 
-export default function DataBindedSelect({ id, data = [], selectedValue, setSelectedValue }) {
+export default function DataBindedSelect({ id, data = [], selectedValue, setSelectedValue, props = {} }) {
   const internalId = useId();
   const selectId = id ?? internalId;
 
@@ -20,6 +20,7 @@ export default function DataBindedSelect({ id, data = [], selectedValue, setSele
       className="form-select"
       value={selectedValue ?? ""}
       onChange={(e) => setSelectedValue(e.target.value)}
+      {...props}
     >
       {data.map((item) => (
         <option key={item.value} value={item.value}>
