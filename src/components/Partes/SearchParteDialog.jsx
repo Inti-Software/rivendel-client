@@ -168,7 +168,7 @@ const SearchParteDialog = ({ title, visible, handleAccept, handleCancel }) => {
 													<div className='row'>
 														<div className='col-3'>
 															<span className="fw-bold">{p.tipoDocumento}: </span>
-															<span aria-label='cuil'>{p.nroDocumento}</span>
+															<span aria-label='cuil'>{p.nroDocumento !== '0'? p.nroDocumento : '-'}</span>
 														</div>
 														<div className='col-9'>
 															<span className="fw-bold">Nombre: </span>
