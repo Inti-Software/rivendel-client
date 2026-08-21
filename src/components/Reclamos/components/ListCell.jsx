@@ -2,7 +2,6 @@ import dayjs from "dayjs";
 import { RECLAMANTE, RECLAMADO } from "../../Shared/constants.js";
 import DeleteMessage from "../../Shared/DeleteMessage.jsx"
 import { GridEditButton, GridDeleteButton, GridPrintButton } from "../../Grid/GridButtons.jsx";
-import createPDF from "../pdfBuilder.js";
 import { ANULADO, CON_ARREGLO, FRACASO, getResolucionText, PENDIENTE, POSTERGADO, SIN_ARREGLO } from "../tiposResoluciones.js";
 
 const getDeleteMessage = (rec) => {
@@ -10,9 +9,11 @@ const getDeleteMessage = (rec) => {
 	return (<DeleteMessage message={s} />)
 }
 
-const handlePrint = (e, id) => {
+const handlePrint = async (e, id) => {
 	e.preventDefault();
-	createPDF(id);
+
+  const { default: createPDF } = await import('../pdfBuilder');
+	await createPDF(id);
 };
 
 const getBadgeColor = (resolucionId) => {
