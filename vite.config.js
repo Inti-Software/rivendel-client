@@ -9,6 +9,8 @@ export default defineConfig({
     visualizer({
       filename: 'bundle-analysis.html',
       open: true,
+      gzipSize: true,
+      brotliSize: true,
     }),
   ],
 })

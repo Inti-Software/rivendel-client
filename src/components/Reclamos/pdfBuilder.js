@@ -1,20 +1,8 @@
-import pdfMake from 'pdfmake/build/pdfmake';
-import vfs from '../../assets/vfs_fonts.js';
 import { Reclamos } from '../../api/endpoints/reclamos.js';
 import ReportData from './DTOs/reportData.js';
 import { NO_ESPECIFICADO } from '../Shared/constants.js';
 import { CON_ARREGLO } from './tiposResoluciones.js';
 import { tiptapDocumentToPdfMake } from './tiptap-to-pdfmake.js';
-
-pdfMake.vfs = vfs;
-pdfMake.fonts = {
-  Times: {
-    normal: 'LiberationSerif-Regular.ttf',
-    bold: 'LiberationSerif-Bold.ttf',
-    italics: 'LiberationSerif-Italic.ttf',
-    bolditalics: 'LiberationSerif-BoldItalic.ttf',
-  },
-};
 
 const PARAGRAPH_SPACING_PT = 10;
 const EMPTY_PARAGRAPH_HEIGHT_PT = 12;
@@ -222,6 +210,12 @@ const cuerpo = (data) => {
 };
 
 const clausulas = (data) => {
+  if (!data.clausulas || data.clausulas.length === 0) {
+    return {
+      text: '',
+      margin: [0, 0, 0, PARAGRAPH_SPACING_PT],
+    };
+  }
   const paragraphs = tiptapDocumentToPdfMake(data.clausulas);
   const result = [];
   paragraphs.forEach((element) => {
@@ -405,6 +399,17 @@ const buildDocument = async (id) => {
 
 const createPDF = async (id) => {
   const doc = await buildDocument(id);
+  const { default: pdfMake } = await import('pdfmake/build/pdfmake');
+  const { default: vfs } = await import('../../assets/vfs_fonts');
+  pdfMake.vfs = vfs;
+  pdfMake.fonts = {
+    Times: {
+      normal: 'LiberationSerif-Regular.ttf',
+      bold: 'LiberationSerif-Bold.ttf',
+      italics: 'LiberationSerif-Italic.ttf',
+      bolditalics: 'LiberationSerif-BoldItalic.ttf',
+    },
+  };
   return pdfMake.createPdf(doc).open();
 };
 

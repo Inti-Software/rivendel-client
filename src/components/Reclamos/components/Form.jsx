@@ -7,9 +7,12 @@ import useReclamoForm from "../hooks/useReclamoForm";
 import PartesList from "./PartesList";
 import { handleOnChange, handleSubmit, onAcceptSearchParte } from '../eventHandlers.utils';
 import { ProximaAudienciaInput } from "./ProximaAudienciaInput";
-import { RichTextEditor } from '../../CustomTipTap/RichTextEditor';
-import DatePicker from "./DatePicker";
-import HourPicker from "./HourPicker";
+import { lazy, Suspense } from 'react';
+import Spinner from "../../Shared/Spinner";
+
+const RichTextEditor = lazy(() => import('../../CustomTipTap/RichTextEditor'));
+const DatePicker = lazy(() => import('./DatePicker'));
+const HourPicker = lazy(() => import('./HourPicker'));
 
 export default function Form() {
 	const navigate = useNavigate();
@@ -42,9 +45,11 @@ export default function Form() {
 				</div>
 				<div className="col-4">
 					<label htmlFor="fechaHoraInicio" className="form-label d-block">Fecha y Hora</label>
-					<DatePicker id={"fechaHoraInicio"} name={"fechaHoraInicio"} value={state.fechaHoraInicio} setField={setField} />
-					<span className="mx-3">hasta</span>
-					<HourPicker id={"horaFin"} name={"horaFin"} value={state.horaFin} setField={setField} />
+				  <Suspense fallback={<Spinner />}>
+						<DatePicker id={"fechaHoraInicio"} name={"fechaHoraInicio"} value={state.fechaHoraInicio} setField={setField} />
+						<span className="mx-3">hasta</span>
+						<HourPicker id={"horaFin"} name={"horaFin"} value={state.horaFin} setField={setField} />
+					</Suspense>
 				</div>
 				<div className="col-2">
 					<label htmlFor="idResolucion" className="form-label">Resolución</label>
@@ -76,7 +81,9 @@ export default function Form() {
 					<div className="mb-3">
 						<span className="h5 text-primary">Cláusulas</span>
 					</div>
-					<RichTextEditor initialContent={state.clausulas} onChange={(doc) => setField('clausulas', doc)} visible={state.idResolucion === CON_ARREGLO} />
+					<Suspense fallback={<Spinner />}>
+						<RichTextEditor initialContent={state.clausulas} onChange={(doc) => setField('clausulas', doc)} visible={state.idResolucion === CON_ARREGLO} />
+					</Suspense>
 				</div>
 				:
 				<></>
