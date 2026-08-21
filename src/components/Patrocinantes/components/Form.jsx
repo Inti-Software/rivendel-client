@@ -1,7 +1,7 @@
 import { useEffect, useReducer } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
-import { Patrocinantes } from "../../api/endpoints/patrocinantes";
-import ValidationErrors from "../Shared/ValidationErrors";
+import { Patrocinantes } from "../../../api/endpoints/patrocinantes";
+import ValidationErrors from "../../Shared/ValidationErrors";
 
 const initialState = {
   id: 0,

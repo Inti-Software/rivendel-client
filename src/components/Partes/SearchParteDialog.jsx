@@ -1,234 +1,59 @@
-import { useCallback, useEffect, useReducer } from 'react';
 import { Partes } from '../../api/endpoints/partes';
-import { SEARCH } from '../Shared/Icons';
-import useDebounce from '../../hooks/useDebounce';
-import { useApi } from '../../hooks/useApi';
-import Spinner from '../Shared/Spinner';
 import { getDomicilio } from "../Patrocinantes/utils";
+import SearchDialogContainer from '../Shared/SearchDialogContainer';
 
-const initialState = {
-	term: "",
-	data: [],
-	selected: {
-		id: 0,
-		cuil: "",
-		nombre: ""
-	},
-	done: false,
-	error: ""
-}
-
-function formReducer(state, action) {
-  switch (action.type) {
-    case "SET_FIELD":
-      return {
-        ...state,
-        [action.field]: action.value,
-				error: ""
-      };
-
-    case "SEARCH_START":
-      return { 
-				...state, 
-				error: ""
-			};
-
-    case "SEARCH_SUCCESS": 
-      return {
-				...initialState, 
-				term: state.term,
-				data: action.data,
-				done: true
-			};
-
-    case "SEARCH_FAIL": {
-      return { 
-				...state,
-				error: action.error,
-				loading: false,
-				done: true
-			};
-		}
-
-		case "RESET_SEARCH": {
-			return {
-				...state,
-				term: action.value,
-				done: false,
-				data: []
-			}
-		}
-
-    default:
-      return state;
-  }
-}
-
-const SearchParteDialog = ({ title, visible, handleAccept, handleCancel }) => {
-	const [state, dispatch] = useReducer(formReducer, initialState);
-	const debouncedValue = useDebounce(state.term, 300)
-	const { data, error, execute: findAll } = useApi(Partes.findAll);
-
-	const buscar = useCallback(() => {
-		if (debouncedValue.trim().length < 3) {			
-			return;
-		}
-
-		dispatch({ type: "SEARCH_START" });
-		findAll({ query: debouncedValue.trim(), currentPage: 1, recordsPerPage: 100 });
-	}, [debouncedValue, findAll]);
-
-	useEffect(() => {
-		if (data) {
-			dispatch({ type: "SEARCH_SUCCESS", data: data.data });
-		}
-	}, [data])
-
-	useEffect(() => {
-		if (error) {
-			dispatch({ type: "SEARCH_FAIL", error: "Ocurrió un error al realizar la búsqueda. Por favor, inténtelo de nuevo." });
-		}
-	}, [error])
-
-	useEffect(() => {
-		debouncedValue.trim() ? buscar() : dispatch({ type: "SET_FIELD", field: "term", value: "" })
-	}, [debouncedValue, buscar])
-
-	const onSelectRow = (event) => {
-		const row = event.target.closest("tr");
-		const td = row.querySelector("td");
-		dispatch({ type: "SET_FIELD", field: "selected", value: { id: parseInt(td.id) } });
-	}
-
-	const handleKeyDown = (event) => {
-		if (event.keyCode === 13) {
-			event.preventDefault();
-			buscar();
-		}
-		if (event.keyCode === 27) {
-			event.preventDefault();
-			handleCancel(event)
-		}
-	}
-
-	useEffect(() => {
-		if (visible) {
-			dispatch({ type: 'RESET_SEARCH', value: '' });
-			document.getElementById("criterio").focus();			
-		}
-	}, [visible]);
-		
-	const getClassName = () => {
-		const warning = "bg-warning-subtle border-warning";
-		const error = "bg-danger-subtle border-danger";
-		return (state.error.trim() !== "")? error : warning;
-	}
-
-	const getMessage = () => {
-		const msg = "No hay datos para mostrar."
-		return (state.error.trim() !== "")? state.error : msg;
-	}
-
-	const handleChange = (e) => {
-		dispatch({ type: "RESET_SEARCH", value: e.target.value })
-	}
-
-	if (!visible) return null;
-
-	return (
-		<div className={`modal show modal-backdrop-50 dialog-centered`} 
-				style={{display: 'flex'}}
-				tabIndex="-1"
-				>
-			<div className="modal-dialog center-vertical min-vw-100">
-				<div className="modal-content w-50">
-					<div className="modal-header bg-success text-white">
-						<h5 className="modal-title">{title}</h5>
+const template = (p, isSelected, selectRow) => (
+	<tr key={p.id} onClick={() => selectRow(p.id)} style={{ cursor: "pointer" }}>
+		<td id={p.id}>
+			<div className={'border border-secondary mx-0 rounded-1 p-2 mb-1 ' + (isSelected? 'bg-warning-subtle' : 'bg-secondary-subtle') }
+				style={{ fontSize: "0.9em" }}>
+				<div className='row'>
+					<div className='col-3'>
+						<span className="fw-bold">{p.tipoDocumento}: </span>
+						<span aria-label='cuil'>{p.nroDocumento}</span>
 					</div>
-					<div className="modal-body">
-						<div className="row mb-3">
-							<div className="col-11">
-								<input id='criterio' type="text" className="form-control" placeholder="Nombre o CUIL" autoComplete='off'
-									value={state.term} onChange={ handleChange } onKeyDown={handleKeyDown} />
-							</div>
-							<div className="col-1">
-								<button type="button" className="btn btn-outline-primary form-control" onClick={buscar}>
-									{SEARCH}
-								</button>
-							</div>
+					<div className='col'>
+						<span className="fw-bold">Nombre: </span>
+						<span aria-label='nombre'>{p.nombre}</span>
+					</div>
+				</div>
+				<div>
+					<span className="text-secondary d-flex border-bottom border-secondary-subtle small fw-medium">Patrocinante</span>
+					<div className="row">
+						{(p.patrocinante == null) ? (
+						<div className="col-12 d-flex p-2">
+							<span className="border rounded border-warning bg-warning-subtle m-auto p-1" 
+								style={{"fontSize": "0.75em"}}>No hay datos para mostrar.</span>
 						</div>
-						<div style={{ maxHeight: "400px", overflowY: "scroll" }} onClick={onSelectRow} className='d-flex'>
-							{state.data?.length > 0 ? (
-								<table className="w-100">
-									<tbody>
-									{ state.data?.map((p) => (
-										<tr key={p.id}>
-											<td id={p.id}>
-												<div className={'border border-secondary mx-0 rounded-1 p-2 mb-1 ' + ((p.id === state.selected.id)? 'bg-warning-subtle' : 'bg-secondary-subtle') }>
-													<div className='row'>
-														<div className='col-3'>
-															<span className="fw-bold">{p.tipoDocumento}: </span>
-															<span aria-label='cuil'>{p.nroDocumento !== '0'? p.nroDocumento : '-'}</span>
-														</div>
-														<div className='col-9'>
-															<span className="fw-bold">Nombre: </span>
-															<span aria-label='nombre'>{p.nombre}</span>
-														</div>
-													</div>
-													<div>
-														<span className="text-secondary d-flex border-bottom border-secondary-subtle small fw-medium">Patrocinante</span>
-														<div className="row">
-															{(p.patrocinante == null) ? (
-															<div className="col-12 d-flex p-2">
-																<span className="border rounded border-warning bg-warning-subtle m-auto p-1" 
-																	style={{"fontSize": "0.75em"}}>No hay datos para mostrar.</span>
-															</div>
-															):(
-															<>
-																<div className="col-2">
-																	<span className="fw-bold">Nº Matr.: </span> {p.patrocinante?.nroMatricula}
-																</div>
-																<div className="col-4">
-																	<span className="fw-bold">Nombre: </span>{p.patrocinante?.nombre}
-																</div>
-																<div className="col-6">
-																	<span className="fw-bold">Domicilio: </span>{getDomicilio(p.patrocinante)}
-																</div>
-															</>
-															)}
-														</div>
-													</div>
-												</div>
-											</td>
-										</tr> 
-									))}
-									</tbody>
-								</table>
-							) : (
-								state.done &&
-								(<span className={"rounded-2 border text-center text-black mx-auto border-2 p-1 " + getClassName() }
-										style={{ fontSize: '12px' }}>
-									{ getMessage() }
-								</span>)
-							)}
-						</div>
-					</div>
-					<div>
-						{state.loading && <Spinner />}
-					</div>
-					<div className="modal-footer">
-						<button type="button" className="btn btn-success" onClick={(e) => handleAccept(e, state.selected.id)}
-							disabled={(state.data.length > 0 && !state.loading)? "" : "disabled"}>
-							Aceptar
-						</button>
-						<button type="button" className="btn btn-outline-secondary" onClick={handleCancel}>
-							Cancelar
-						</button>
+						):(
+						<>
+							<div className="col-2">
+								<span className="fw-bold">Nº Matr.: </span> {p.patrocinante?.nroMatricula}
+							</div>
+							<div className="col-4">
+								<span className="fw-bold">Nombre: </span>{p.patrocinante?.nombre}
+							</div>
+							<div className="col-6">
+								<span className="fw-bold">Domicilio: </span>{getDomicilio(p.patrocinante)}
+							</div>
+						</>
+						)}
 					</div>
 				</div>
 			</div>
-		</div>
-	)
-};
+		</td>
+	</tr> 
+);	
+
+const SearchParteDialog = ({ title, handleAccept, handleCancel }) => (
+	<SearchDialogContainer
+		title={title}
+		placeholder="Nombre o CUIL"
+		template={template}
+		searchFn={(term) => Partes.findAll({ query: term })}
+		onAccept={handleAccept}
+		onCancel={handleCancel}
+	/>
+);
 
 export default SearchParteDialog;
