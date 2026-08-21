@@ -23,8 +23,13 @@ export default function Form() {
   return (
     <form onSubmit={(e) => handleSubmit(e, isCreateOperation, state, setErrors, submitStart, 
 			submitSuccess, submitFail, navigate)} style={{ padding: 20 }}>
-			<SearchParteDialog title={searchDialogTitle} visible={state.searchPartes.show}
-				handleAccept={(e, id) => onAcceptSearchParte(e, id, state, hidePartesDialog, setField, setErrors)} handleCancel={hidePartesDialog} />
+				{state.searchPartes.show &&(
+					<SearchParteDialog 
+						title={searchDialogTitle} 
+						handleAccept={(e, id) => onAcceptSearchParte(e, id, state, hidePartesDialog, setField, setErrors)} 
+						handleCancel={hidePartesDialog} />
+				)}
+
 		  <h3 className="mb-3">{formTitle}</h3>
 			
 			<ValidationErrors errors={state.errors} />

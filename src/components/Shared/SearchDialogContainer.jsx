@@ -5,7 +5,8 @@ import useSearchDialog from '../../hooks/useSearchDialog';
 const SearchDialogContainer = ({
 	title,
 	placeholder,
-	columns,          // [{ key: 'nombre', label: 'Nombre' }, ...]
+	columns = undefined,          // [{ key: 'nombre', label: 'Nombre' }, ...]
+	template = undefined,         // JSX.Element
 	searchFn,         // (term: string) => Promise<Response>
 	onAccept,
 	onCancel,
@@ -31,6 +32,38 @@ const SearchDialogContainer = ({
 	const feedbackClassName = error
 		? "bg-danger-subtle border-danger"
 		: "bg-warning-subtle border-warning";
+
+	const tabularResults = () => (
+		<table className="table table-striped table-sm mx-1 table-hover" style={{ fontSize: "0.9em" }}>
+			<thead>
+				<tr>
+					{columns.map(col => <th key={col.key} scope="col">{col.label}</th>)}
+				</tr>
+			</thead>
+			<tbody>
+				{data.map((row) => {
+					const isSelected = row.id === selectedId;
+					return (
+						<tr key={row.id} onClick={() => selectRow(row.id)} style={{ cursor: "pointer" }}>
+							{columns.map(col => (
+								<td key={col.key} className={isSelected ? "bg-warning-subtle" : ""}>
+									{row[col.key]}
+								</td>
+							))}
+						</tr>
+					);
+				})}
+			</tbody>
+		</table>
+	);
+
+	const templateResults = () => (
+		<table className="w-100 mx-1">
+			<tbody>
+				{data.map((row) => template(row, row.id === selectedId, selectRow))}
+			</tbody>
+		</table>
+	);
 
 	return (
 		<div className="modal show modal-backdrop-50 dialog-centered d-flex" tabIndex="-1"
@@ -62,27 +95,7 @@ const SearchDialogContainer = ({
 
 						<div style={{ maxHeight: "200px", overflowY: "scroll" }} className="d-flex">
 							{data.length > 0 ? (
-								<table className="table table-striped table-sm mx-1 table-hover">
-									<thead>
-										<tr>
-											{columns.map(col => <th key={col.key} scope="col">{col.label}</th>)}
-										</tr>
-									</thead>
-									<tbody>
-										{data.map((row) => {
-											const isSelected = row.id === selectedId;
-											return (
-												<tr key={row.id} onClick={() => selectRow(row.id)} style={{ cursor: "pointer" }}>
-													{columns.map(col => (
-														<td key={col.key} className={isSelected ? "bg-warning-subtle" : ""}>
-															{row[col.key]}
-														</td>
-													))}
-												</tr>
-											);
-										})}
-									</tbody>
-								</table>
+								(columns)? tabularResults() : templateResults()
 							) : (
 								done && (
 									<span

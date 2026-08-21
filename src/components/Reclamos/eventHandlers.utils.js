@@ -59,12 +59,12 @@ const getParte = async (id, field, partes, setField, setErrors) => {
   fetch();
 };
 
-export const onAcceptSearchParte = (e, parteId, state, hidePartesDialog, setField, setErrors) => {
+export const onAcceptSearchParte = (e, parte, state, hidePartesDialog, setField, setErrors) => {
   e.preventDefault();
   const partes = state.searchPartes.esReclamante ? state.reclamantes : state.reclamados;
-  if (!partes.find((r) => r.id === parteId)) {
+  if (!partes.find((r) => r.id === parte.id)) {
     const f = state.searchPartes.esReclamante ? 'reclamantes' : 'reclamados';
-    getParte(parteId, f, partes, setField, setErrors);
+    getParte(parte.id, f, partes, setField, setErrors);
   }
   hidePartesDialog();
 };
