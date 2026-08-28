@@ -1,6 +1,6 @@
 import { useEffect, useReducer } from "react";
 import { useParams } from "react-router-dom";
-import { Patrocinantes } from "../../api/endpoints/patrocinantes";
+import { Patrocinantes } from "../../../api/endpoints/patrocinantes";
 
 const initialState = {
   id: 0,
