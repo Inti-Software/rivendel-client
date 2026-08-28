@@ -1,5 +1,5 @@
 import { useNavigate, Link, useParams } from "react-router-dom";
-import SearchParteDialog from "../../Partes/SearchParteDialog";
+import SearchParteDialog from "../../Partes/components/SearchParteDialog";
 import DataBindedSelect from "../../Forms/DataBindedSelect";
 import ValidationErrors from "../../Shared/ValidationErrors";
 import { CON_ARREGLO, POSTERGADO, RESOLUCIONES } from "../tiposResoluciones";
