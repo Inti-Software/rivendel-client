@@ -17,7 +17,7 @@ const validate = (state) => {
 export const handleSubmit = async (e, state, dispatch, navigate) => {
   e.preventDefault();
 
-  const errors = validate();
+  const errors = validate(state);
   if (errors.length > 0) {
     dispatch({ type: 'SET_ERRORS', errors });
     return;
