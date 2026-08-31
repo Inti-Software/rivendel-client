@@ -38,7 +38,7 @@ export default function Form() {
 						<div className="col">
 							<DataBindedSelect id={"idTipoDocumento"} data={tiposDocumento} selectedValue={state.idTipoDocumento} 
 								setSelectedValue={(v) => dispatch({ type: "SET_FIELD", field: "idTipoDocumento", value: parseInt(v) }) } 
-								props={{ autoComplete: "off", visible: !state.enableNroDocumento, 
+								props={{ autoComplete: "off", visible: state.enableNroDocumento?'visible':'', 
 									style: { backgroundColor: backgroundNroDocumento } }}
 								/>
 						</div>
