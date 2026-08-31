@@ -1,6 +1,6 @@
-import { Partes } from '../../api/endpoints/partes';
-import { getDomicilio } from "../Patrocinantes/utils";
-import SearchDialogContainer from '../Shared/SearchDialogContainer';
+import { Partes } from '../../../api/endpoints/partes';
+import { getDomicilio } from "../../Patrocinantes/utils";
+import SearchDialogContainer from '../../Shared/SearchDialogContainer';
 
 const template = (p, isSelected, selectRow) => (
 	<tr key={p.id} onClick={() => selectRow(p.id)} style={{ cursor: "pointer" }}>

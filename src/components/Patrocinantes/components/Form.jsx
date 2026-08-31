@@ -1,144 +1,11 @@
-import { useEffect, useReducer } from "react";
-import { useNavigate, useParams, Link } from "react-router-dom";
-import { Patrocinantes } from "../../../api/endpoints/patrocinantes";
 import ValidationErrors from "../../Shared/ValidationErrors";
-
-const initialState = {
-  id: 0,
-  nombre: "",
-	nroMatricula: 0,
-  domicilio: "",
-  localidad: "",
-  nroCasillero: 0,
-  initializing: true,
-  loading: false,
-  errors: []
-};
-
-function formReducer(state, action) {
-  switch (action.type) {
-    case "SET_FIELD":
-      return {
-        ...state,
-        [action.field]: action.value,
-				errors: []
-      };
-
-    case "SET_ERRORS":
-      return {
-        ...state,
-        errors: action.errors
-      };
-
-    case "SUBMIT_START":
-      return { 
-				...state, 
-				errors: [],
-				loading: true 
-			};
-
-    case "SUBMIT_SUCCESS": 
-      return initialState;
-
-    case "SUBMIT_FAIL": {
-			const errors = (typeof action.errors === "string") ?
-							[action.errors || "Error en la solicitud"] :
-							action.errors || ["Error en la solicitud"];
-      return { 
-				...state,
-				errors: errors,
-				loading: false 
-			};
-		}
-
-		case "INITIAL_LOAD": 
-			return { 
-				...state,
-				...action.payload,
-				initializing: false
-			};
-
-    default:
-      return state;
-  }
-}
-
+import { handleSubmit } from '../eventHandlers.js';
+import useForm from '../hooks/useForm.js';
+import { Link, useNavigate } from 'react-router-dom';
 
 export default function Form() {
-  const [state, dispatch] = useReducer(formReducer, initialState);
 	const navigate = useNavigate();
-	const { id } = useParams();
-
-	useEffect(() => {
-		if (isNaN(id)) return;
-
-		try {
-			const fetchData = async () => {
-				const response = await Patrocinantes.get(id);
-				if (response.ok) {
-					const data = response.data;
-					dispatch({ type: "INITIAL_LOAD", payload: {
-						id: data.id,
-						nombre: data.nombre,
-						nroMatricula: data.nroMatricula,
-						domicilio: data.domicilio,
-						localidad: data.localidad,
-						nroCasillero: data.nroCasillero
-					}});
-				} else {					
-					dispatch({ type: "INITIAL_LOAD", payload: {} });
-				}
-			};
-			fetchData();
-		} catch (err) {
-			dispatch({ type: "INITIAL_LOAD", payload: {} });
-		}
-	}, [id]);
-
-	const validate = () => {
-		const errors = [];
-		if (state.nombre.trim() === "") errors.push("Ingrese el nombre del patrocinante");
-		return errors;
-	};
-
-	const handleSubmit = async (e) => {
-		e.preventDefault();
-
-		const errors = validate();
-		if (errors.length > 0) {
-			dispatch({ type: "SET_ERRORS", errors });
-			return;
-		}
-
-		dispatch({ type: "SUBMIT_START" });
-
-		try {
-			const patrocinante = {
-				id: state.id, 
-				nombre: state.nombre,
-				nroMatricula: state.nroMatricula,
-				domicilio: state.domicilio,
-				localidad: state.localidad,
-				nroCasillero: state.nroCasillero,
-			};
-
-			let result;
-			if (isNaN(id))
-				result = await Patrocinantes.create(patrocinante);
-			else
-				result = await	Patrocinantes.update(patrocinante);
-
-			if (result.ok) {
-				const mensaje = `El patrocinante ${state.nombre} se ${isNaN(id) ? "actualizó" : "creó"} correctamente.`;
-				dispatch({ type: "SUBMIT_SUCCESS" });
-				navigate("/patrocinantes", { state: { successMsg: mensaje }});
-			} else {				
-				dispatch({ type: "SUBMIT_FAIL", errors: result.error });
-			}
-		} catch (err) {
-			dispatch({ type: "SUBMIT_FAIL", errors: [err.message] });
-		}
-	};
+	const {state, dispatch} = useForm();
 
 	const setField = (e) => {
 		dispatch({ type: "SET_FIELD", field: e.target.id, value: e.target.value})
@@ -146,8 +13,8 @@ export default function Form() {
 
 	return (
 		<div className="w-50 m-auto">
-			<form onSubmit={handleSubmit}>
-				<h3 className="mb-3">{isNaN(id)? "Nuevo " : "Edición de "} Patrocinante</h3>
+			<form onSubmit={(e) => handleSubmit(e, state, dispatch, navigate)}>
+				<h3 className="mb-3">{isNaN(state.id)? "Nuevo " : "Edición de "} Patrocinante</h3>
 				{state.errors.length > 0 && <ValidationErrors errors={state.errors} />}
 
 				<div className="mb-3">

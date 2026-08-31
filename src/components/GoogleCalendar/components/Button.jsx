@@ -7,7 +7,9 @@ export function Button() {
   const { connect, disconnect, loading } = useGoogleCalendar();
 
   useEffect(() => {
-    const unsub = subscribeCalendar(setConnected);
+    const unsub = subscribeCalendar((newState) => {
+      queueMicrotask(() => setConnected(newState));
+    });
     return unsub; // cleanup al desmontar
   }, []);
 

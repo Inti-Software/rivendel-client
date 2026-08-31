@@ -1,8 +1,8 @@
-import { Partes } from "../../api/endpoints/partes";
-import { CUSTOM_COLUMN } from "../Shared/constants";
-import Grid from "../Grid/Grid";
+import { Partes } from "../../../api/endpoints/partes";
+import { CUSTOM_COLUMN } from "../../Shared/constants";
+import Grid from "../../Grid/Grid";
 import ListCell from "./ListCell.jsx";
-import Container from "../Shared/Container.jsx";
+import Container from "../../Shared/Container.jsx";
 
 const ListPartes = () => {
 	const rowGenerator = ({ data, onDelete }) => {
