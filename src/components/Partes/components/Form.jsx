@@ -6,6 +6,7 @@ import SearchPatrocinanteDialog from "../../Patrocinantes/components/SearchPatro
 import useForm from "../hooks/useForm";
 import { handleSubmit, onAcceptSearchPatrocinante } from '../eventHandlers.js';
 import { getPatrocinante, formatCuil } from '../utils.js';
+import { isNew } from '../../Shared/utis.js';
 
 export default function Form() {
 	const { state, tiposDocumento, dispatch, setField, toogleEnableCuil, toogleEnableNroDocumento,
@@ -18,7 +19,7 @@ export default function Form() {
 	return (
 		<div className="w-50 m-auto">
 			<form onSubmit={(e) => handleSubmit(e, state, dispatch, navigate)} style={{ padding: 20 }}>
-				<h3 className="mb-3">{isNaN(state.id)? "Nueva " : "Edición de "} Parte</h3>
+				<h3 className="mb-3">{isNew(state.id)? "Nueva " : "Edición de "} Parte</h3>
 				{state.errors.length > 0 && <ValidationErrors errors={state.errors} />}
 				
 				{state.searchPatrocinante && (

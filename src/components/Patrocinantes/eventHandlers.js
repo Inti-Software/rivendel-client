@@ -1,4 +1,5 @@
 import { Patrocinantes } from '../../api/endpoints/patrocinantes';
+import { isNew } from '../Shared/utis.js';
 
 const validate = (state) => {
   const errors = [];
@@ -27,14 +28,14 @@ export const handleSubmit = async (e, state, dispatch, navigate) => {
       nroCasillero: state.nroCasillero,
     };
 
-    const isNew = isNaN(state.id);
+    const isNewPatrocinatne = isNew(state.id);
  
-    const result = isNew
+    const result = isNewPatrocinatne
       ? await Patrocinantes.create(patrocinante)
       : await Patrocinantes.update(patrocinante);
 
     if (result.ok) {
-      const mensaje = `El patrocinante ${state.nombre} se ${isNew ? 'actualizó' : 'creó'} correctamente.`;
+      const mensaje = `El patrocinante ${state.nombre} se ${isNewPatrocinatne ? 'actualizó' : 'creó'} correctamente.`;
       dispatch({ type: 'SUBMIT_SUCCESS' });
       navigate('/patrocinantes', { state: { successMsg: mensaje } });
     } else {

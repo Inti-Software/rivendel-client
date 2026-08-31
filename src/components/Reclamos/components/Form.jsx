@@ -9,6 +9,7 @@ import { handleOnChange, handleSubmit, onAcceptSearchParte } from '../eventHandl
 import { ProximaAudienciaInput } from "./ProximaAudienciaInput";
 import { lazy, Suspense } from 'react';
 import Spinner from "../../Shared/Spinner";
+import { isNew } from '../../Shared/utis.js';
 
 const RichTextEditor = lazy(() => import('../../CustomTipTap/RichTextEditor'));
 const DatePicker = lazy(() => import('./DatePicker'));
@@ -19,7 +20,7 @@ export default function Form() {
 	const { id } = useParams();
 	const { state, setField, setErrors, submitStart, submitSuccess, 
 		submitFail, searchPartes, hidePartesDialog } = useReclamoForm(id);
-	const isCreateOperation = Number.isNaN(state.id) || !(state.id > 0);
+	const isCreateOperation = isNew(state.id);
 	const searchDialogTitle = state.searchPartes.esReclamante? "Agregar reclamante" : "Agregar reclamado"
 	const formTitle = `${isCreateOperation? "Nuevo " : "Edición de "} Reclamo`
 
