@@ -2,6 +2,7 @@ import ValidationErrors from "../../Shared/ValidationErrors";
 import { handleSubmit } from '../eventHandlers.js';
 import useForm from '../hooks/useForm.js';
 import { Link, useNavigate } from 'react-router-dom';
+import { isNew } from '../../Shared/utis.js';
 
 export default function Form() {
 	const navigate = useNavigate();
@@ -14,7 +15,7 @@ export default function Form() {
 	return (
 		<div className="w-50 m-auto">
 			<form onSubmit={(e) => handleSubmit(e, state, dispatch, navigate)}>
-				<h3 className="mb-3">{isNaN(state.id)? "Nuevo " : "Edición de "} Patrocinante</h3>
+				<h3 className="mb-3">{isNew(state.id)? "Nuevo " : "Edición de "} Patrocinante</h3>
 				{state.errors.length > 0 && <ValidationErrors errors={state.errors} />}
 
 				<div className="mb-3">

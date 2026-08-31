@@ -1,4 +1,5 @@
 import { Partes } from "../../api/endpoints/partes";
+import { isNew } from '../Shared/utis.js';
 
 const esEnteroValido = (s) => {
   const nro = Number(s);
@@ -17,7 +18,7 @@ const validate = (state) => {
 export const handleSubmit = async (e, state, dispatch, navigate) => {
   e.preventDefault();
 
-  const errors = validate();
+  const errors = validate(state);
   if (errors.length > 0) {
     dispatch({ type: 'SET_ERRORS', errors });
     return;
@@ -36,11 +37,9 @@ export const handleSubmit = async (e, state, dispatch, navigate) => {
       localidad: state.localidad,
       idPatrocinante: state.patrocinante.id,
       esApoderado: state.esApoderado,
-    };
+    };    
 
-    const isNew = isNaN(state.id);
-
-    const result = isNew
+    const result = isNew(state.id)
 			? await Partes.create(parte)
 			: await Partes.update(parte);
 
