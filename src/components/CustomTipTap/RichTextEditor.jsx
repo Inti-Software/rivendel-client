@@ -6,10 +6,19 @@ import Bold from "@tiptap/extension-bold";
 import HardBreak from "@tiptap/extension-hard-break";
 import History from "@tiptap/extension-history";
 import { useCallback } from "react";
+import DOMPurify from "dompurify"; // Importamos DOMPurify
 import './rich-text-editor.css';
 
 const EXTENSIONS = [Document, Paragraph, Text, Bold, HardBreak, History];
 const EMPTY_DOC = { type: "doc", content: [{ type: "paragraph" }] };
+
+// Función de sanitización con DOMPurify
+function cleanPastedHTML(html) {
+  return DOMPurify.sanitize(html, {
+    ALLOWED_TAGS: ['p', 'strong', 'b', 'br'],
+    ALLOWED_ATTR: [], 
+  });
+}
 
 export default function RichTextEditor({ initialContent, onChange, visible = true }) {
   const editor = useEditor({
@@ -20,7 +29,8 @@ export default function RichTextEditor({ initialContent, onChange, visible = tru
     },
     editorProps: {
       attributes: { class: "rte-content", spellcheck: "true" },
-      transformPastedHTML: (html) => stripUnsupportedMarkup(html),
+      // Usamos la función sanitizadora aquí
+      transformPastedHTML: (html) => cleanPastedHTML(html),
     },
   });
 
@@ -35,27 +45,23 @@ export default function RichTextEditor({ initialContent, onChange, visible = tru
     editor?.chain().focus().toggleBold().run();
   }, [editor]);
 
-  if (!editor) return null;
-
-  if (!visible) return null;
+  if (!editor || !visible) return null;
 
   return (
     <div className="rte-wrapper border border-1 bg-secondary-subtle rounded-2 border-dark p-1">
-      <div className="rounded-2 d-flex ps-2 py-1" style={{backgroundColor: '#dadada'}} role="toolbar" aria-label="Formato de texto">
-        <button type="button" onClick={toggleBold} aria-pressed={isBold} data-bs-toggle="button" 
-          className={"btn btn-outline-dark rte-btn" + (isBold ? "" : "")} title="Negrita (Ctrl+B)" >
+      <div className="rounded-2 d-flex ps-2 py-1" style={{ backgroundColor: '#dadada' }} role="toolbar" aria-label="Formato de texto">
+        <button 
+          type="button" 
+          onClick={toggleBold} 
+          aria-pressed={isBold} 
+          data-bs-toggle="button" 
+          className="btn btn-outline-dark rte-btn" 
+          title="Negrita (Ctrl+B)" 
+        >
           <strong>Negrita</strong>
         </button>
       </div>
       <EditorContent editor={editor} className="bg-white mt-1 border border-dark-subtle" />
     </div>
   );
-}
-
-function stripUnsupportedMarkup(html) {
-  const allowed = /<(\/?)(p|strong|b|br)(\s[^>]*)?>/gi;
-  return html.replace(/<[^>]+>/g, (tag) => {
-    allowed.lastIndex = 0;
-    return allowed.test(tag) ? tag : "";
-  });
 }
