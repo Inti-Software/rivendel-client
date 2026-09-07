@@ -1,22 +1,23 @@
-import { useEditor, EditorContent, useEditorState } from "@tiptap/react";
-import Document from "@tiptap/extension-document";
-import Paragraph from "@tiptap/extension-paragraph";
-import Text from "@tiptap/extension-text";
-import Bold from "@tiptap/extension-bold";
-import HardBreak from "@tiptap/extension-hard-break";
-import History from "@tiptap/extension-history";
-import { useCallback } from "react";
-import DOMPurify from "dompurify"; // Importamos DOMPurify
+import { useEditor, EditorContent, useEditorState } from '@tiptap/react';
+import Document from '@tiptap/extension-document';
+import Paragraph from '@tiptap/extension-paragraph';
+import Text from '@tiptap/extension-text';
+import Bold from '@tiptap/extension-bold';
+import HardBreak from '@tiptap/extension-hard-break';
+import History from '@tiptap/extension-history';
+import { useCallback } from 'react';
+import DOMPurify from 'dompurify'; // Importamos DOMPurify
 import './rich-text-editor.css';
+import plantillaHtmlInicial from '../../assets/clausulas-template.html?raw';
 
 const EXTENSIONS = [Document, Paragraph, Text, Bold, HardBreak, History];
-const EMPTY_DOC = { type: "doc", content: [{ type: "paragraph" }] };
+const EMPTY_DOC = { type: 'doc', content: [{ type: 'paragraph' }] };
 
 // Función de sanitización con DOMPurify
 function cleanPastedHTML(html) {
   return DOMPurify.sanitize(html, {
     ALLOWED_TAGS: ['p', 'strong', 'b', 'br'],
-    ALLOWED_ATTR: [], 
+    ALLOWED_ATTR: [],
   });
 }
 
@@ -28,8 +29,7 @@ export default function RichTextEditor({ initialContent, onChange, visible = tru
       if (onChange) onChange(editor.getJSON());
     },
     editorProps: {
-      attributes: { class: "rte-content", spellcheck: "true" },
-      // Usamos la función sanitizadora aquí
+      attributes: { class: 'rte-content', spellcheck: 'true' },
       transformPastedHTML: (html) => cleanPastedHTML(html),
     },
   });
@@ -37,7 +37,7 @@ export default function RichTextEditor({ initialContent, onChange, visible = tru
   const { isBold } = useEditorState({
     editor,
     selector: ({ editor }) => ({
-      isBold: editor.isActive("bold"),
+      isBold: editor.isActive('bold'),
     }),
   });
 
@@ -45,20 +45,51 @@ export default function RichTextEditor({ initialContent, onChange, visible = tru
     editor?.chain().focus().toggleBold().run();
   }, [editor]);
 
+  const pasteTemplate = useCallback(() => {
+    const sanitizedTemplate = cleanPastedHTML(plantillaHtmlInicial)
+      //eliminar saltos de línea y reemplazarlos por un solo espacio
+      .replace(/\n/g, ' ')
+      //eliminar dos espacios seguidos y reemplazarlos por un solo espacio
+      .replace(/ {2,}/g, ' ')
+      //eliminar todos los espacios al inicio de cada línea y reemplazarlos por un solo espacio
+      .replace(/^\s+/gm, ' ')
+      //eliminar tabulaciones y reemplazarlas por un solo espacio
+      .replace(/\t/g, ' ')
+      //eliminar todos los espacios antes y después de <br/> y reemplazarlos por vacío
+      .replace(/ *<br\/?> */g, '<br/>')
+      //eliminar espacios al inicio y al final
+      .trim();
+    editor?.chain().focus().clearContent().run();
+    editor?.chain().focus().insertContent(sanitizedTemplate).run();
+  }, [editor]);
+
   if (!editor || !visible) return null;
 
   return (
     <div className="rte-wrapper border border-1 bg-secondary-subtle rounded-2 border-dark p-1">
-      <div className="rounded-2 d-flex ps-2 py-1" style={{ backgroundColor: '#dadada' }} role="toolbar" aria-label="Formato de texto">
-        <button 
-          type="button" 
-          onClick={toggleBold} 
-          aria-pressed={isBold} 
-          data-bs-toggle="button" 
-          className="btn btn-outline-dark rte-btn" 
-          title="Negrita (Ctrl+B)" 
+      <div
+        className="rounded-2 d-flex ps-2 py-1"
+        style={{ backgroundColor: '#dadada' }}
+        role="toolbar"
+        aria-label="Formato de texto"
+      >
+        <button
+          type="button"
+          onClick={toggleBold}
+          aria-pressed={isBold}
+          data-bs-toggle="button"
+          className="btn btn-outline-dark rte-btn"
+          title="Negrita (Ctrl+B)"
         >
           <strong>Negrita</strong>
+        </button>
+        <button
+          type="button"
+          onClick={pasteTemplate}
+          className="btn btn-outline-dark rte-btn ms-1"
+          title="Insertar plantilla"
+        >
+          <span>Insertar plantilla</span>
         </button>
       </div>
       <EditorContent editor={editor} className="bg-white mt-1 border border-dark-subtle" />
