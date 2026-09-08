@@ -12,8 +12,8 @@ const getDeleteMessage = (rec) => {
 const handlePrint = async (e, id) => {
 	e.preventDefault();
 
-  const { default: createPDF } = await import('../pdfBuilder');
-	await createPDF(id);
+  const { default: createActa } = await import('../acta-builder.js');
+	await createActa(id);
 };
 
 const getBadgeColor = (resolucionId) => {
