@@ -1,6 +1,6 @@
 import { Reclamos } from '../../api/endpoints/reclamos.js';
 import ReportData from './DTOs/reportData.js';
-import { CON_ARREGLO } from './tiposResoluciones.js';
+import { ACUERDO } from './tiposResoluciones.js';
 import { tiptapDocumentToPdfMake } from './tiptap-to-pdfmake.js';
 import { PRESENCIALES, INCOMPARENDOS, getComparecientes, joinPartes } from './acta.utils.js';
 
@@ -49,7 +49,7 @@ const getPostergacion = (proximaAudiencia) =>
   : ''
 
 function getDeclaracion(data) {
-  if (data.idResolucion === CON_ARREGLO) {
+  if (data.idResolucion === ACUERDO) {
     return 'las partes expresan lo siguiente:';
   }
 
@@ -74,7 +74,7 @@ function getDeclaracion(data) {
 };
 
 function getFinalizacion(data) {
-  if (data.idResolucion === CON_ARREGLO) return '';
+  if (data.idResolucion === ACUERDO) return '';
 
   const { existenReclamantes, existenReclamados, existenLetradosReclamantes, 
     existenLetradosReclamados } = getComparecientes(data);
@@ -216,7 +216,7 @@ const firmaRow = (label1, label2) => ({
 
 function content(data) {
   const result = [];
-  if (data.idResolucion === CON_ARREGLO) {
+  if (data.idResolucion === ACUERDO) {
     result.push([preTitulo(data), titulo(data), cuerpo(data), clausulas(data)]);
   } else {
     result.push([titulo(data), reclamantes(data), rubros(data), cuerpo(data)]);

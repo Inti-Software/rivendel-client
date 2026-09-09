@@ -2,7 +2,7 @@ import { useNavigate, Link, useParams } from "react-router-dom";
 import SearchParteDialog from "../../Partes/components/SearchParteDialog";
 import DataBindedSelect from "../../Forms/DataBindedSelect";
 import ValidationErrors from "../../Shared/ValidationErrors";
-import { CON_ARREGLO, POSTERGADO, RESOLUCIONES } from "../tiposResoluciones";
+import { ACUERDO, POSTERGADO, RESOLUCIONES } from "../tiposResoluciones";
 import useReclamoForm from "../hooks/useReclamoForm";
 import PartesList from "./PartesList";
 import { handleOnChange, handleSubmit, onAcceptSearchParte } from '../eventHandlers.utils';
@@ -77,13 +77,13 @@ export default function Form() {
 				<PartesList state={state} esReclamante={false} setField={setField} onAddParte={searchPartes} />
 			</div>
 
-			{(state.idResolucion === CON_ARREGLO)?
+			{(state.idResolucion === ACUERDO)?
 				<div className="mb-3">
 					<div className="mb-3">
 						<span className="h5 text-primary">Cláusulas</span>
 					</div>
 					<Suspense fallback={<Spinner />}>
-						<RichTextEditor initialContent={state.clausulas} onChange={(doc) => setField('clausulas', doc)} visible={state.idResolucion === CON_ARREGLO} />
+						<RichTextEditor initialContent={state.clausulas} onChange={(doc) => setField('clausulas', doc)} visible={state.idResolucion === ACUERDO} />
 					</Suspense>
 				</div>
 				:

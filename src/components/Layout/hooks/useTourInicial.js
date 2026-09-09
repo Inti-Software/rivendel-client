@@ -45,7 +45,7 @@ export function useTourInicial() {
             title: 'Reclamos',
             description:
               'Cargá tus reclamos. Los estados de resolución pueden ser, entre otros:' +
-              ' con acuerdo, sin acuerdo, fracasado o pendiente (si te faltan datos para finalizar la carga).',
+              ' acuerdo, fracaso o pendiente (si te faltan datos para finalizar la carga).',
           },
         },
         {
