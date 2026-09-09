@@ -1,5 +1,5 @@
 import { apiDateToInput, apiHourToInput, combineDateAndHour, inputDateToApi } from './dateUtils';
-import { CON_ARREGLO } from './tiposResoluciones';
+import { ACUERDO } from './tiposResoluciones';
 
 export function mapApiToForm(data) {
   return {
@@ -34,7 +34,7 @@ function parteToDto(p) {
 }
 
 function getClausulas(clausulas, idResolucion) {
-  if (idResolucion !== CON_ARREGLO) return null;
+  if (idResolucion !== ACUERDO) return null;
   if (!clausulas) return null;
   if (typeof clausulas === 'object' && Object.entries(clausulas).length === 0) {
     return null;

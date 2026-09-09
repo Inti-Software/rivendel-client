@@ -1,8 +1,8 @@
 import { NO_ESPECIFICADO } from "../../Shared/constants";
-import { CON_ARREGLO } from "../tiposResoluciones";
+import { ACUERDO } from "../tiposResoluciones";
 
 function getTitulo(data) {
-	if (data.idResolucion === CON_ARREGLO) {
+	if (data.idResolucion === ACUERDO) {
 		return { titulo : 'ACUERDO CONCILIATORIO' };
 	} else {
 		return { titulo: `CERTIFICACIÓN DE FRACASO RECLAMO ${data.numero}` };

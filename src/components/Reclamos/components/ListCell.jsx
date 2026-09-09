@@ -2,7 +2,7 @@ import dayjs from "dayjs";
 import { RECLAMANTE, RECLAMADO } from "../../Shared/constants.js";
 import DeleteMessage from "../../Shared/DeleteMessage.jsx"
 import { GridEditButton, GridDeleteButton, GridPrintButton } from "../../Grid/GridButtons.jsx";
-import { ANULADO, CON_ARREGLO, FRACASO, getResolucionText, PENDIENTE, POSTERGADO, SIN_ARREGLO } from "../tiposResoluciones.js";
+import { ANULADO, ACUERDO, FRACASO, getResolucionText, PENDIENTE, POSTERGADO } from "../tiposResoluciones.js";
 
 const getDeleteMessage = (rec) => {
 	const s = `¿Está seguro que desea eliminar el reclamo Nº ${rec.numero}?`;
@@ -12,22 +12,21 @@ const getDeleteMessage = (rec) => {
 const handlePrint = async (e, id) => {
 	e.preventDefault();
 
-  const { default: createPDF } = await import('../pdfBuilder');
-	await createPDF(id);
+  const { default: createActa } = await import('../acta-builder.js');
+	await createActa(id);
 };
 
 const getBadgeColor = (resolucionId) => {
 	switch (resolucionId) {
 		case PENDIENTE:
 			return "badge bg-warning-subtle text-warning-emphasis fs-very-small rounded-pill";
-		case SIN_ARREGLO:
-			return "badge bg-dark-subtle text-secondary fs-very-small rounded-pill";
-		case CON_ARREGLO:
+		case FRACASO:
+			return "badge bg-danger-subtle text-danger fs-very-small rounded-pill";
+			//return "badge bg-dark-subtle text-secondary fs-very-small rounded-pill";
+		case ACUERDO:
 			return "badge bg-success fs-very-small rounded-pill";
 		case POSTERGADO:
 			return "badge bg-primary-subtle text-primary fs-very-small rounded-pill";
-		case FRACASO:
-			return "badge bg-danger-subtle text-danger fs-very-small rounded-pill";
 		case ANULADO:
 			return "badge bg-danger-subtle text-dark fs-very-small rounded-pill";
 		default:
