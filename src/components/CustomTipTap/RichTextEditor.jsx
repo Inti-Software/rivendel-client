@@ -5,15 +5,15 @@ import Text from '@tiptap/extension-text';
 import Bold from '@tiptap/extension-bold';
 import HardBreak from '@tiptap/extension-hard-break';
 import History from '@tiptap/extension-history';
-import { useCallback } from 'react';
-import DOMPurify from 'dompurify'; // Importamos DOMPurify
+import { useCallback, useState } from 'react';
+import DOMPurify from 'dompurify';
 import './rich-text-editor.css';
 import plantillaHtmlInicial from '../../assets/clausulas-template.html?raw';
+import ClausulasTemplateFormDialog from '../Reclamos/components/ClausulasTemplateFormDialog';
 
 const EXTENSIONS = [Document, Paragraph, Text, Bold, HardBreak, History];
 const EMPTY_DOC = { type: 'doc', content: [{ type: 'paragraph' }] };
 
-// Función de sanitización con DOMPurify
 function cleanPastedHTML(html) {
   return DOMPurify.sanitize(html, {
     ALLOWED_TAGS: ['p', 'strong', 'b', 'br'],
@@ -22,6 +22,8 @@ function cleanPastedHTML(html) {
 }
 
 export default function RichTextEditor({ initialContent, onChange, visible = true }) {
+  const [showClausulasDialog, setShowClausulasDialog] = useState(false);
+
   const editor = useEditor({
     extensions: EXTENSIONS,
     content: initialContent ?? EMPTY_DOC,
@@ -63,10 +65,20 @@ export default function RichTextEditor({ initialContent, onChange, visible = tru
     editor?.chain().focus().insertContent(sanitizedTemplate).run();
   }, [editor]);
 
+  function onAcceptClausulasFormDialog(e, fields) {
+    setShowClausulasDialog(false);
+    console.log('onAcceptClausulasFormDialog', fields);
+  }
+
+  function onCancelClausulasFormDialog() {
+    setShowClausulasDialog(false);
+  }
+
   if (!editor || !visible) return null;
 
   return (
     <div className="rte-wrapper border border-1 bg-secondary-subtle rounded-2 border-dark p-1">
+      <ClausulasTemplateFormDialog onAccept={onAcceptClausulasFormDialog} onCancel={onCancelClausulasFormDialog} visible={showClausulasDialog} />
       <div
         className="rounded-2 d-flex ps-2 py-1"
         style={{ backgroundColor: '#dadada' }}
@@ -90,6 +102,22 @@ export default function RichTextEditor({ initialContent, onChange, visible = tru
           title="Insertar plantilla"
         >
           <span>Insertar plantilla</span>
+        </button>
+        <button
+          type="button"
+          onClick={() => editor.chain().focus().clearContent().run()}
+          className="btn btn-outline-dark rte-btn ms-1"
+          title="Limpiar contenido"
+        >
+          <span>Limpiar contenido</span>
+        </button>
+        <button
+          type="button"
+          onClick={() => setShowClausulasDialog(true)}
+          className="btn btn-outline-dark rte-btn ms-1"
+          title="Insertar plantilla desde formulario"
+        >
+          <span>Insertar plantilla desde formulario</span>
         </button>
       </div>
       <EditorContent editor={editor} className="bg-white mt-1 border border-dark-subtle" />
