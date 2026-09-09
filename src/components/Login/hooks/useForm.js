@@ -17,7 +17,7 @@ function formReducer(state, action) {
       return {
         ...state,
         [action.field]: action.value,
-        errors: [],
+        errors: '',
       };
 
     case 'SUBMIT_START':
