@@ -2,7 +2,7 @@ import { useNavigate, Link, useParams } from "react-router-dom";
 import SearchParteDialog from "../../Partes/components/SearchParteDialog";
 import DataBindedSelect from "../../Forms/DataBindedSelect";
 import ValidationErrors from "../../Shared/ValidationErrors";
-import { ACUERDO, POSTERGADO, RESOLUCIONES } from "../tiposResoluciones";
+import { POSTERGADO, RESOLUCIONES } from "../tiposResoluciones";
 import useReclamoForm from "../hooks/useReclamoForm";
 import PartesList from "./PartesList";
 import { handleOnChange, handleSubmit, onAcceptSearchParte } from '../eventHandlers.utils';
@@ -10,8 +10,8 @@ import { ProximaAudienciaInput } from "./ProximaAudienciaInput";
 import { lazy, Suspense } from 'react';
 import Spinner from "../../Shared/Spinner";
 import { isNew } from '../../Shared/utis.js';
+import ClausulasEditor from "./ClausulasEditor";
 
-const RichTextEditor = lazy(() => import('../../CustomTipTap/RichTextEditor'));
 const DatePicker = lazy(() => import('./DatePicker'));
 const HourPicker = lazy(() => import('./HourPicker'));
 
@@ -19,20 +19,17 @@ export default function Form() {
 	const navigate = useNavigate();
 	const { id } = useParams();
 	const { state, setField, setErrors, submitStart, submitSuccess, 
-		submitFail, searchPartes, hidePartesDialog } = useReclamoForm(id);
+		submitFail, showSearchParteDialog, hideSearchParteDialog } = useReclamoForm(id);
 	const isCreateOperation = isNew(state.id);
-	const searchDialogTitle = state.searchPartes.esReclamante? "Agregar reclamante" : "Agregar reclamado"
+	const searchParteDialogTitle = state.searchPartes.esReclamante? "Agregar reclamante" : "Agregar reclamado"
 	const formTitle = `${isCreateOperation? "Nuevo " : "Edición de "} Reclamo`
+	const handleAcceptSearchParteDialog = (e, id) => onAcceptSearchParte(e, id, state, hideSearchParteDialog, setField, setErrors);
 
   return (
     <form onSubmit={(e) => handleSubmit(e, isCreateOperation, state, setErrors, submitStart, 
 			submitSuccess, submitFail, navigate)} style={{ padding: 20 }}>
-				{state.searchPartes.show &&(
-					<SearchParteDialog 
-						title={searchDialogTitle} 
-						handleAccept={(e, id) => onAcceptSearchParte(e, id, state, hidePartesDialog, setField, setErrors)} 
-						handleCancel={hidePartesDialog} />
-				)}
+			<SearchParteDialog title={searchParteDialogTitle} visible={state.searchPartes.show}
+				handleAccept={handleAcceptSearchParteDialog} handleCancel={hideSearchParteDialog} />
 
 		  <h3 className="mb-3">{formTitle}</h3>
 			
@@ -73,22 +70,11 @@ export default function Form() {
 				<div className="mb-3">
 					<span className="h5 text-primary">Partes Involucradas</span>
 				</div>
-				<PartesList state={state} esReclamante={true} setField={setField} onAddParte={searchPartes} />
-				<PartesList state={state} esReclamante={false} setField={setField} onAddParte={searchPartes} />
+				<PartesList state={state} esReclamante={true} setField={setField} onAddParte={showSearchParteDialog} />
+				<PartesList state={state} esReclamante={false} setField={setField} onAddParte={showSearchParteDialog} />
 			</div>
 
-			{(state.idResolucion === ACUERDO)?
-				<div className="mb-3">
-					<div className="mb-3">
-						<span className="h5 text-primary">Cláusulas</span>
-					</div>
-					<Suspense fallback={<Spinner />}>
-						<RichTextEditor initialContent={state.clausulas} onChange={(doc) => setField('clausulas', doc)} visible={state.idResolucion === ACUERDO} />
-					</Suspense>
-				</div>
-				:
-				<></>
-			}
+			<ClausulasEditor state={state} setField={setField} />
 
 			<div className="mb-3 d-flex justify-content-end border-top pt-2 border-primary-subtle">
 					<button disabled={state.loading || state.searchPartes.show } type="submit" className="btn btn-primary me-2">
