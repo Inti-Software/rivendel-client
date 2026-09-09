@@ -1,24 +1,6 @@
-//crear un componente react con estilos bootstrap para ingresar los siguientes campos en un 
-// formulario de reclamos, utilizando el componente DatePicker para los campos de fecha y fecha-telegrama. Los campos a incluir son:
-//puesto
-//fecha
-//fecha-telegrama
-//reclamado
-//importe
-//importe-nros
-//rubros
-//nro-cuotas
-//importe-cuotas
-//fecha-primera-cuota
-//titular-cuenta
-//dni-reclamante
-//cuil-titular-cuenta
-//entidad-cuenta
-//alias-cuenta
-//reclamante
-
 import useClausulasDialog from '../hooks/useClausulasForm.js';
 import { lazy, useEffect } from 'react';
+import { formatCuil } from '../../Shared/utis.js';
 
 const DatePicker = lazy(() => import('./DatePicker.jsx'));
 
@@ -37,11 +19,11 @@ export default function ClausulasTemplateFormDialog({ onAccept, onCancel, visibl
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [visible, onCancel]);  
 
-  // const setField = (e) => {
-  //   dispatch({ type: 'SET_FIELD', field: e.target.id, value: e.target.value });
-  // };
+  const setField = (e) => {
+    dispatch({ type: 'SET_FIELD', field: e.target.id, value: e.target.value });
+  };
 
-  const setField = (field, value) => { dispatch({ type: "SET_FIELD", field, value }) };
+  const setDateField = (field, value) => { dispatch({ type: "SET_FIELD", field, value }) };
 
   function handleKeyDown(event) {
     if (event.key === "Enter") handleSubmit(event);
@@ -89,12 +71,12 @@ export default function ClausulasTemplateFormDialog({ onAccept, onCancel, visibl
                 </div>
                 <div className="col-sm-3">
                   <label htmlFor="fecha" className="form-label">Despido</label>
-                  <DatePicker id="fecha" name="fecha" value={state.fecha} setField={setField} showTime={false} 
+                  <DatePicker id="fecha" name="fecha" value={state.fecha} setField={setDateField} showTime={false} 
                     className="form-control text-center d-inline w-75" />
                 </div>
                 <div className="col-sm-3">
                   <label htmlFor="fechaTelegrama" className="form-label">Telegrama</label>
-                  <DatePicker id="fechaTelegrama" name="fechaTelegrama" value={state.fechaTelegrama} setField={setField} 
+                  <DatePicker id="fechaTelegrama" name="fechaTelegrama" value={state.fechaTelegrama} setField={setDateField} 
                     showTime={false} className="form-control text-center d-inline w-75" />
                 </div>
               </div>
@@ -130,8 +112,6 @@ export default function ClausulasTemplateFormDialog({ onAccept, onCancel, visibl
                   </div>
                   <div className="col-sm-4">
                     <label htmlFor="cuotas.importeCuotas" className="form-label">Importe</label>
-                    {/* <input type="number" className="form-control text-end" id="cuotas.importeCuotas" name="cuotas.importeCuotas" value={state.cuotas.importeCuotas} 
-                      onChange={setField} autoComplete="off" /> */}
                     <div className="input-group">
                       <span class="input-group-text">$</span>
                       <input type="number" className="form-control text-end" id="importe" name="cuotas.importeCuotas" value={state.cuotas.importeCuotas} onChange={setField} autoComplete="off" />
@@ -140,11 +120,56 @@ export default function ClausulasTemplateFormDialog({ onAccept, onCancel, visibl
                   </div>
                   <div className="col-sm-4">
                     <label htmlFor="cuotas.fechaPrimeraCuota" className="form-label">1ª cuota</label>
-                    <DatePicker id="cuotas.fechaPrimeraCuota" name="cuotas.fechaPrimeraCuota" value={state.cuotas.fechaPrimeraCuota} setField={setField} 
+                    <DatePicker id="cuotas.fechaPrimeraCuota" name="cuotas.fechaPrimeraCuota" value={state.cuotas.fechaPrimeraCuota} setField={setDateField} 
                       showTime={false} />
                   </div>
                 </div>
               </div>
+
+              <div className="mb-3 border border-1 border-secondary-subtle rounded-2 p-2 bg-secondary-subtle">
+                <h5>Reclamante</h5>
+                <div className="row">
+                  <div className="col-sm-6">
+                    <label htmlFor="reclamante.dni" className="form-label">DNI</label>
+                    <input type="number" className="form-control text-end" id="reclamante.dni" name="reclamante.dni" value={state.reclamante.dni} 
+                      onChange={setField} autoComplete="off" />
+                  </div>
+                  <div className="col-sm-6">
+                    <label htmlFor="reclamante.nombre" className="form-label">Nombre</label>
+                    <input type="text" className="form-control" id="reclamante.nombre" name="reclamante.nombre" value={state.reclamante.nombre} 
+                      onChange={setField} autoComplete="off" />
+                  </div>
+                </div>
+              </div>
+
+              <div className="mb-3 border border-1 border-secondary-subtle rounded-2 p-2 bg-secondary-subtle">
+                <h5>Cuenta</h5>
+                <div className="row">
+                  <div className="col-sm-6">
+                    <label htmlFor="cuenta.titular" className="form-label">Titular</label>
+                    <input type="text" className="form-control" id="cuenta.titular" name="cuenta.titular" value={state.cuenta.titular} 
+                      onChange={setField} autoComplete="off" />
+                  </div>
+                  <div className="col-sm-6">
+                    <label htmlFor="cuenta.cuilTitular" className="form-label">CUIL Titular</label>
+                    <input type="text" className="form-control text-start" id="cuenta.cuilTitular" name="cuenta.cuilTitular" value={formatCuil(state.cuil)}
+                      onChange={setField} autoComplete="off" placeholder="  -        - " />
+                  </div>
+                </div>
+                <div className="row mt-2">
+                  <div className="col-sm-6">
+                    <label htmlFor="cuenta.entidad" className="form-label">Entidad</label>
+                    <input type="text" className="form-control" id="cuenta.entidad" name="cuenta.entidad" value={state.cuenta.entidad} 
+                      onChange={setField} autoComplete="off" />
+                  </div>
+                  <div className="col-sm-6">
+                    <label htmlFor="cuenta.alias" className="form-label">Alias</label>
+                    <input type="text" className="form-control" id="cuenta.alias" name="cuenta.alias" value={state.cuenta.alias} 
+                      onChange={setField} autoComplete="off" />
+                  </div>
+                </div>
+              </div>
+              <pre>{JSON.stringify(state, null, ' ')}</pre>
             </div>
           </div>
           <div className="modal-footer">
@@ -166,6 +191,7 @@ export default function ClausulasTemplateFormDialog({ onAccept, onCancel, visibl
           </div>
         </div>
       </div>
+
     </div>
   );
 }
