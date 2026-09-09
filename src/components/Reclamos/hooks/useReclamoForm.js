@@ -13,8 +13,8 @@ export default function useReclamoForm (id) {
 	const submitStart = () => dispatch({ type: "SUBMIT_START" });
 	const submitSuccess = () => dispatch({ type: "SUBMIT_SUCCESS" });
 	const submitFail = (errors) => dispatch({ type: "SUBMIT_FAIL", errors });
-	const searchPartes = (isReclamante) => dispatch({ type: "SEARCH_PARTES", show: true, esReclamante: isReclamante });
-	const hidePartesDialog = () => dispatch({ type: "SEARCH_PARTES", show: false});
+	const showSearchParteDialog = (isReclamante) => dispatch({ type: "SEARCH_PARTES", show: true, esReclamante: isReclamante });
+	const hideSearchParteDialog = () => dispatch({ type: "SEARCH_PARTES", show: false});
 
 	useEffect(() => {
 		if (isNaN(id)) {
@@ -41,6 +41,6 @@ export default function useReclamoForm (id) {
 		}
 	}, [state.idResolucion]);
 
-	return { state, setField, setErrors, submitStart, submitSuccess, submitFail, searchPartes, hidePartesDialog };
+	return { state, setField, setErrors, submitStart, submitSuccess, submitFail, showSearchParteDialog, hideSearchParteDialog };
 }
 
