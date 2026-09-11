@@ -4,7 +4,7 @@ import { removeParte, setFieldParte } from "../partes.utils";
 import { getDomicilio } from "../../Patrocinantes/utils";
 
 const getIdentificacionParte = (p) => {
-	const doc = p.cuil? p.cuil : p.nroDocumento !== '0'? p.nroDocumento : '';
+	const doc = (p.cuil && p.cuil !== '0')? p.cuil : p.nroDocumento !== '0'? p.nroDocumento : '';
 	if (doc !== '') {
 		return `${doc} - ${p.nombre}`;
 	} else {
