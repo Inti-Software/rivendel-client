@@ -70,17 +70,17 @@ export default function ClausulasTemplateFormDialog({ onAccept, onCancel, visibl
 
   return (
     <div
-      className="modal show modal-backdrop-50 dialog-centered d-flex"
+      className="modal show modal-backdrop-50 d-flex align-items-center justify-content-center"
       tabIndex="-1"
       onKeyDown={handleKeyDown}
     >
-      <div className="modal-dialog center-vertical min-vw-100">
-        <div className="modal-content w-50">
+      <div className="modal-dialog w-50" style={{ height: '70vh', minHeight: '50vh', maxWidth: '50vw' }}>
+        <div className="modal-content h-100 w-100 d-flex flex-column">
           <div className="modal-header bg-success text-white">
             <h5 className="modal-title">Cláusulas</h5>
           </div>
-          <div className="modal-body">
-            <div style={{ maxHeight: "200px", overflowY: "scroll" }} className="ps-1 pe-3">
+          <div className="modal-body overflow-y-auto flex-grow-1">
+            <div className="ps-1 pe-3">
               <div className="mb-3 row">
                 <div className="col-sm-6">
                   <label htmlFor="puesto" className="form-label">Puesto</label>
@@ -119,70 +119,82 @@ export default function ClausulasTemplateFormDialog({ onAccept, onCancel, visibl
                 <textarea className="form-control" rows="3" id="rubros" name="rubros" value={state.rubros} onChange={setField}></textarea>
               </div>
               
-              <div className="mb-3 border border-1 border-secondary-subtle rounded-2 p-2 bg-secondary-subtle">
-                <h5>Cuotas</h5>
-                <div className="row">
-                  <div className="col-sm-4">
-                    <label htmlFor="cuotas.cantidad" className="form-label">Cantidad</label>
-                    <input type="number" className="form-control text-end" id="cuotas.cantidad" name="cuotas.cantidad" value={state.cuotas.cantidad} 
-                      onChange={setField} autoComplete="off" />
-                  </div>
-                  <div className="col-sm-4">
-                    <label htmlFor="cuotas.importe" className="form-label">Importe</label>
-                    <div className="input-group">
-                      <span className="input-group-text">$</span>
-                      <input type="number" className="form-control text-end" id="cuotas.importe" name="cuotas.importe" value={state.cuotas.importe} onChange={setField} autoComplete="off" />
-                      <span className="input-group-text">.00</span>
+              <div className="card mb-3">
+                <div class="card-header bg-secondary-subtle h5 text-center">
+                  <span class="card-title">Cuotas</span>
+                </div>
+                <div className="card-body">
+                  <div className="row">
+                    <div className="col-sm-4">
+                      <label htmlFor="cuotas.cantidad" className="form-label">Cantidad</label>
+                      <input type="number" className="form-control text-end" id="cuotas.cantidad" name="cuotas.cantidad" value={state.cuotas.cantidad} 
+                        onChange={setField} autoComplete="off" />
+                    </div>
+                    <div className="col-sm-4">
+                      <label htmlFor="cuotas.importe" className="form-label">Importe</label>
+                      <div className="input-group">
+                        <span className="input-group-text">$</span>
+                        <input type="number" className="form-control text-end" id="cuotas.importe" name="cuotas.importe" value={state.cuotas.importe} onChange={setField} autoComplete="off" />
+                        <span className="input-group-text">.00</span>
+                      </div>
+                    </div>
+                    <div className="col-sm-4">
+                      <label htmlFor="cuotas.fechaPrimera" className="form-label">1ª cuota</label>
+                      <DatePicker id="cuotas.fechaPrimera" name="cuotas.fechaPrimera" value={state.cuotas.fechaPrimera} setField={setDateField} 
+                        showTime={false} />
                     </div>
                   </div>
-                  <div className="col-sm-4">
-                    <label htmlFor="cuotas.fechaPrimera" className="form-label">1ª cuota</label>
-                    <DatePicker id="cuotas.fechaPrimera" name="cuotas.fechaPrimera" value={state.cuotas.fechaPrimera} setField={setDateField} 
-                      showTime={false} />
+                </div>
+              </div>
+
+              <div className="card mb-3">
+                <div class="card-header bg-secondary-subtle h5 text-center">
+                  <span class="card-title">Reclamante</span>
+                </div>
+                <div className="card-body">
+                  <div className="row">
+                    <div className="col-sm-6">
+                      <label htmlFor="reclamante.dni" className="form-label">DNI</label>
+                      <input type="number" className="form-control text-end" id="reclamante.dni" name="reclamante.dni" value={state.reclamante.dni} 
+                        onChange={setField} autoComplete="off" />
+                    </div>
+                    <div className="col-sm-6">
+                      <label htmlFor="reclamante.nombre" className="form-label">Nombre</label>
+                      <input type="text" className="form-control" id="reclamante.nombre" name="reclamante.nombre" value={state.reclamante.nombre} 
+                        onChange={setField} autoComplete="off" />
+                    </div>
                   </div>
                 </div>
               </div>
 
-              <div className="mb-3 border border-1 border-secondary-subtle rounded-2 p-2 bg-secondary-subtle">
-                <h5>Reclamante</h5>
-                <div className="row">
-                  <div className="col-sm-6">
-                    <label htmlFor="reclamante.dni" className="form-label">DNI</label>
-                    <input type="number" className="form-control text-end" id="reclamante.dni" name="reclamante.dni" value={state.reclamante.dni} 
-                      onChange={setField} autoComplete="off" />
-                  </div>
-                  <div className="col-sm-6">
-                    <label htmlFor="reclamante.nombre" className="form-label">Nombre</label>
-                    <input type="text" className="form-control" id="reclamante.nombre" name="reclamante.nombre" value={state.reclamante.nombre} 
-                      onChange={setField} autoComplete="off" />
-                  </div>
+              <div className="card">
+                <div class="card-header bg-secondary-subtle h5 text-center">
+                  <span class="card-title">Cuenta</span>
                 </div>
-              </div>
-
-              <div className="mb-3 border border-1 border-secondary-subtle rounded-2 p-2 bg-secondary-subtle">
-                <h5>Cuenta</h5>
-                <div className="row">
-                  <div className="col-sm-6">
-                    <label htmlFor="cuenta.alias" className="form-label">Alias</label>
-                    <input type="text" className="form-control" id="cuenta.alias" name="cuenta.alias" value={state.cuenta.alias} 
-                      onChange={setField} autoComplete="off" onBlur={requestCBU} />
+                <div className="card-body">
+                  <div className="row">
+                    <div className="col-sm-6">
+                      <label htmlFor="cuenta.alias" className="form-label">Alias</label>
+                      <input type="text" className="form-control" id="cuenta.alias" name="cuenta.alias" value={state.cuenta.alias} 
+                        onChange={setField} autoComplete="off" onBlur={requestCBU} />
+                    </div>
+                    <div className="col-sm-6">
+                      <label htmlFor="cuenta.titular" className="form-label">Titular</label>
+                      <input type="text" className="form-control" id="cuenta.titular" name="cuenta.titular" value={state.cuenta.titular} 
+                        onChange={setField} autoComplete="off" />
+                    </div>
                   </div>
-                  <div className="col-sm-6">
-                    <label htmlFor="cuenta.titular" className="form-label">Titular</label>
-                    <input type="text" className="form-control" id="cuenta.titular" name="cuenta.titular" value={state.cuenta.titular} 
-                      onChange={setField} autoComplete="off" />
-                  </div>
-                </div>
-                <div className="row mt-2">
-                  <div className="col-sm-6">
-                    <label htmlFor="cuenta.cuilTitular" className="form-label">CUIL Titular</label>
-                    <input type="text" className="form-control text-start" id="cuenta.cuilTitular" name="cuenta.cuilTitular" value={formatCuil(state.cuenta.cuilTitular)}
-                      onChange={setField} autoComplete="off" placeholder="  -        - " />
-                  </div>
-                  <div className="col-sm-6">
-                    <label htmlFor="cuenta.entidad" className="form-label">Entidad</label>
-                    <input type="text" className="form-control" id="cuenta.entidad" name="cuenta.entidad" value={state.cuenta.entidad} 
-                      onChange={setField} autoComplete="off" />
+                  <div className="row mt-2">
+                    <div className="col-sm-6">
+                      <label htmlFor="cuenta.cuilTitular" className="form-label">CUIL Titular</label>
+                      <input type="text" className="form-control text-start" id="cuenta.cuilTitular" name="cuenta.cuilTitular" value={formatCuil(state.cuenta.cuilTitular)}
+                        onChange={setField} autoComplete="off" placeholder="  -        - " />
+                    </div>
+                    <div className="col-sm-6">
+                      <label htmlFor="cuenta.entidad" className="form-label">Entidad</label>
+                      <input type="text" className="form-control" id="cuenta.entidad" name="cuenta.entidad" value={state.cuenta.entidad} 
+                        onChange={setField} autoComplete="off" />
+                    </div>
                   </div>
                 </div>
               </div>
