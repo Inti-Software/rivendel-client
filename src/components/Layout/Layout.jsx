@@ -1,4 +1,4 @@
-import "./Layout.css";
+import "./layout.css";
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { logout } from "../../auth/auth.api";
