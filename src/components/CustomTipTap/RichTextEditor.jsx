@@ -8,8 +8,9 @@ import History from '@tiptap/extension-history';
 import { useCallback, useEffect, useState } from 'react';
 import DOMPurify from 'dompurify';
 import './rich-text-editor.css';
-import plantillaHtmlInicial from '../../assets/clausulas-template.html?raw';
+import defaultTemplate from '../../assets/clausulas-template.html?raw';
 import ClausulasTemplateFormDialog from '../Reclamos/components/ClausulasTemplateFormDialog';
+import { numeroALetras } from '../Reclamos/numeros-a-letras';
 
 const EXTENSIONS = [Document, Paragraph, Text, Bold, HardBreak, History];
 const EMPTY_DOC = { type: 'doc', content: [{ type: 'paragraph' }] };
@@ -60,8 +61,7 @@ export default function RichTextEditor({ initialContent, documentFields, onChang
     editor?.chain().focus().toggleBold().run();
   }, [editor]);
 
-  const pasteTemplate = useCallback(() => {
-    const sanitizedTemplate = cleanPastedHTML(plantillaHtmlInicial)
+  const sanitizedTemplate = cleanPastedHTML(defaultTemplate)
       //eliminar saltos de línea y reemplazarlos por un solo espacio
       .replace(/\n/g, ' ')
       //eliminar dos espacios seguidos y reemplazarlos por un solo espacio
@@ -74,13 +74,83 @@ export default function RichTextEditor({ initialContent, documentFields, onChang
       .replace(/ *<br\/?> */g, '<br/>')
       //eliminar espacios al inicio y al final
       .trim();
+
+
+  const pasteTemplate = useCallback(() => {
     editor?.chain().focus().clearContent().run();
     editor?.chain().focus().insertContent(sanitizedTemplate).run();
   }, [editor]);
 
   function onAcceptClausulasFormDialog(e, fields) {
     setShowClausulasDialog(false);
-    console.log('onAcceptClausulasFormDialog', fields);
+    if (!fields) {
+      editor?.chain().focus().clearContent().run();
+      editor?.chain().focus().insertContent(sanitizedTemplate).run();
+    }
+
+    //campos en template
+    //puesto
+    //fecha
+    //fecha-telegrama
+    //reclamado
+    //importe
+    //importe-nros
+    //rubros
+    //nro-cuotas
+    //importe-cuotas
+    //fecha-primera-cuota
+    //titular-cuenta
+    //dni-reclamante
+    //cuil-titular-cuenta
+    //entidad-cuenta
+    //alias-cuenta
+    //reclamante
+    // const initialState = {
+    //   puesto: '',
+    //   fecha: '',
+    //   fechaTelegrama: '',
+    //   reclamado: '',
+    //   importe: 0.0,
+    //   importeNros: '',
+    //   rubros: '',
+    //   cuotas: {
+    //     cantidad: 0,
+    //     importe: 0.0,
+    //     fechaPrimera: '',
+    //   },
+    //   reclamante: {
+    //     dni: 0,
+    //     nombre: '',
+    //   },
+    //   cuenta: {
+    //     titular: '',
+    //     cuilTitular: '',
+    //     entidad: '',
+    //     alias: '',
+    //   },    
+
+    let template = sanitizedTemplate
+      .replaceAll("[PUESTO]", fields.puesto)
+      .replaceAll("[FECHA]", fields.fecha)
+      .replaceAll("[FECHA-TELEGRAMA]", fields.fechaTelegrama)
+      .replaceAll("[RECLAMADO]", fields.reclamado)
+      .replaceAll("[IMPORTE]", fields.importe)
+      .replaceAll("[IMPORTE-NROS]", numeroALetras(fields.importe))
+      .replaceAll("[RUBROS]", fields.rubros)
+      .replaceAll("[NRO-CUOTAS]", fields.cuotas.cantidad)
+      .replaceAll("[IMPORTE-CUOTAS]", fields.cuotas.importe)
+      .replaceAll("[FECHA-PRIMERA-CUOTA]", fields.cuotas.fechaPrimera)
+      .replaceAll("[TITULAR-CUENTA]", fields.cuenta.titular)
+      .replaceAll("[DNI-RECLAMANTE]", fields.reclamante.dni)
+      .replaceAll("[CUIL-TITULAR-CUENTA]", fields.cuenta.cuilTitular)
+      .replaceAll("[ENTIDAD-CUENTA]", fields.cuenta.entidad)
+      .replaceAll("[ALIAS-CUENTA]", fields.cuenta.alias)
+      .replaceAll("[RECLAMANTE]", fields.reclamante.nombre)
+
+    console.log(template)
+
+    editor?.chain().focus().clearContent().run();
+    editor?.chain().focus().insertContent(template).run();
   }
 
   function onCancelClausulasFormDialog() {
