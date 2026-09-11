@@ -5,7 +5,7 @@ import { Banking } from '../../../api/endpoints/banking.js'
 
 const DatePicker = lazy(() => import('./DatePicker.jsx'));
 
-export default function ClausulasTemplateFormDialog({ onAccept, onCancel, visible = true }) {
+export default function ClausulasTemplateFormDialog({ onAccept, onCancel, defaultValues, visible = true }) {
   if (!visible) return null;
 
   const { state, dispatch } = useClausulasDialog();
@@ -18,7 +18,11 @@ export default function ClausulasTemplateFormDialog({ onAccept, onCancel, visibl
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [visible, onCancel]);  
+  }, [visible, onCancel]);
+
+  useEffect(() => {
+    dispatch({ type: 'SET_DEFAULT_VALUES', values: defaultValues  });
+  }, [defaultValues]);
 
   const setField = (e) => {
     dispatch({ type: 'SET_FIELD', field: e.target.id, value: e.target.value });
@@ -77,7 +81,7 @@ export default function ClausulasTemplateFormDialog({ onAccept, onCancel, visibl
       <div className="modal-dialog w-50" style={{ height: '70vh', minHeight: '50vh', maxWidth: '50vw' }}>
         <div className="modal-content h-100 w-100 d-flex flex-column">
           <div className="modal-header bg-success text-white">
-            <h5 className="modal-title">Cláusulas</h5>
+            <h5 className="modal-title">Datos para rellenar la plantilla</h5>
           </div>
           <div className="modal-body overflow-y-auto flex-grow-1">
             <div className="ps-1 pe-3">

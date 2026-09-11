@@ -2,7 +2,7 @@ import { useNavigate, Link, useParams } from "react-router-dom";
 import SearchParteDialog from "../../Partes/components/SearchParteDialog";
 import DataBindedSelect from "../../Forms/DataBindedSelect";
 import ValidationErrors from "../../Shared/ValidationErrors";
-import { POSTERGADO, RESOLUCIONES } from "../tiposResoluciones";
+import { ACUERDO, POSTERGADO, RESOLUCIONES } from "../tiposResoluciones";
 import useReclamoForm from "../hooks/useReclamoForm";
 import PartesList from "./PartesList";
 import { handleOnChange, handleSubmit, onAcceptSearchParte } from '../eventHandlers.utils';
@@ -74,13 +74,14 @@ export default function Form() {
 				<PartesList state={state} esReclamante={false} setField={setField} onAddParte={showSearchParteDialog} />
 			</div>
 
-			<ClausulasEditor state={state} setField={setField} />
+			<ClausulasEditor content={state.clausulas} visible={state.idResolucion === ACUERDO} reclamo={state.reclamo}
+				onContentChange={(content) => setField('clausulas', content)} />
 
 			<div className="mb-3 d-flex justify-content-end border-top pt-2 border-primary-subtle">
-					<button disabled={state.loading || state.searchPartes.show } type="submit" className="btn btn-primary me-2">
-						{state.loading? "Grabando...":"Grabar"}
-					</button>
-					<Link to="/reclamos" className="btn btn-outline-primary">Cancelar</Link>
+				<button disabled={state.loading || state.searchPartes.show } type="submit" className="btn btn-primary me-2">
+					{state.loading? "Grabando...":"Grabar"}
+				</button>
+				<Link to="/reclamos" className="btn btn-outline-primary">Cancelar</Link>
 			</div>    
 
     </form>

@@ -41,6 +41,22 @@ export default function useReclamoForm (id) {
 		}
 	}, [state.idResolucion]);
 
+	useEffect(() => {
+		const getParte = (p, concatenado) => {
+			const doc = (p.cuil && p.cuil !== '0')? p.cuil : p.nroDocumento !== '0'? p.nroDocumento : '';
+			if (doc !== '') {
+				return concatenado? `${doc} - ${p.nombre}` : { dni: doc, nombre: p.nombre };
+			} else {
+				return concatenado? p.nombre : { dni: 0, nombre: p.nombre };
+			}
+		}
+
+		let reclamante = state.reclamantes.map((r) => getParte(r, false))?.[0];
+		let reclamado = state.reclamados.map((r) => getParte(r, true))?.[0];
+		const rubros = state.rubros;
+		setField('reclamo', { reclamado, rubros, reclamante });
+	}, [state.reclamantes, state.reclamados, state.rubros]);
+
 	return { state, setField, setErrors, submitStart, submitSuccess, submitFail, showSearchParteDialog, hideSearchParteDialog };
 }
 

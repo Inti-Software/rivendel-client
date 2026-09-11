@@ -1,11 +1,10 @@
 import { lazy, Suspense } from 'react';
 import Spinner from "../../Shared/Spinner";
-import { ACUERDO } from "../tiposResoluciones";
 
 const RichTextEditor = lazy(() => import('../../CustomTipTap/RichTextEditor'));
 
-export default function ClausulasEditor({ state, setField }) {
-  if (state.idResolucion !== ACUERDO) return null;
+export default function ClausulasEditor({ content, visible, reclamo, onContentChange }) {
+  if (!visible) return null;
 
   return (
     <div className="mb-3">
@@ -13,10 +12,8 @@ export default function ClausulasEditor({ state, setField }) {
         <span className="h5 text-primary">Cláusulas</span>
       </div>
       <Suspense fallback={<Spinner />}>
-        <RichTextEditor
-          initialContent={state.clausulas}
-          onChange={(doc) => setField('clausulas', doc)}
-          visible={state.idResolucion === ACUERDO}
+        <RichTextEditor initialContent={content} onChange={onContentChange} 
+          documentFields={reclamo}
         />
       </Suspense>
     </div>

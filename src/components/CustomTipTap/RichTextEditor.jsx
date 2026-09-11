@@ -5,7 +5,7 @@ import Text from '@tiptap/extension-text';
 import Bold from '@tiptap/extension-bold';
 import HardBreak from '@tiptap/extension-hard-break';
 import History from '@tiptap/extension-history';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import DOMPurify from 'dompurify';
 import './rich-text-editor.css';
 import plantillaHtmlInicial from '../../assets/clausulas-template.html?raw';
@@ -21,8 +21,21 @@ function cleanPastedHTML(html) {
   });
 }
 
-export default function RichTextEditor({ initialContent, onChange, visible = true }) {
+export default function RichTextEditor({ initialContent, documentFields, onChange }) {
   const [showClausulasDialog, setShowClausulasDialog] = useState(false);
+  const [clausulasFields, setClausulasFields] = useState({ 
+    reclamado: '', 
+    rubros: '', 
+    reclamante: { 
+      dni: 0, 
+      nombre: '' 
+    }
+  })
+
+  useEffect(() => {
+    setClausulasFields(documentFields);
+  }, [documentFields])
+  
 
   const editor = useEditor({
     extensions: EXTENSIONS,
@@ -74,11 +87,10 @@ export default function RichTextEditor({ initialContent, onChange, visible = tru
     setShowClausulasDialog(false);
   }
 
-  if (!editor || !visible) return null;
-
   return (
     <div className="rte-wrapper border border-1 bg-secondary-subtle rounded-2 border-dark p-1">
-      <ClausulasTemplateFormDialog onAccept={onAcceptClausulasFormDialog} onCancel={onCancelClausulasFormDialog} visible={showClausulasDialog} />
+      <ClausulasTemplateFormDialog onAccept={onAcceptClausulasFormDialog} onCancel={onCancelClausulasFormDialog} 
+        defaultValues={clausulasFields} visible={showClausulasDialog} />
       <div
         className="rounded-2 d-flex ps-2 py-1"
         style={{ backgroundColor: '#dadada' }}

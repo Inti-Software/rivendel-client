@@ -117,6 +117,14 @@ function formReducer(state, action) {
         cuenta: action.payload,
       };
 
+    case 'SET_DEFAULT_VALUES':
+      return {
+        ...state,
+        reclamante: action.values.reclamante ?? { dni: 0, nombre: '' },
+        reclamado: action.values.reclamado ?? '',
+        rubros: action.values.rubros ?? ''
+      };
+
     default:
       return state;
   }
