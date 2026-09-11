@@ -31,7 +31,7 @@ export default function ClausulasTemplateFormDialog({ onAccept, onCancel, defaul
   }, [defaultValues]);
 
   useEffect(() => {
-    dispatch({ type: 'SET_FIELD', field: 'importeLetras', value: numeroALetras(state.importe) });
+    dispatch({ type: 'SET_FIELD', field: 'importeLetras', value: "PESOS " + numeroALetras(state.importe) });
   }, [state.importe]);
 
   const setField = (e) => {

@@ -11,6 +11,7 @@ import './rich-text-editor.css';
 import defaultTemplate from '../../assets/clausulas-template.html?raw';
 import ClausulasTemplateFormDialog from '../Reclamos/components/ClausulasTemplateFormDialog';
 import { numeroALetras } from '../Reclamos/numeros-a-letras';
+import dayjs from 'dayjs';
 
 const EXTENSIONS = [Document, Paragraph, Text, Bold, HardBreak, History];
 const EMPTY_DOC = { type: 'doc', content: [{ type: 'paragraph' }] };
@@ -88,66 +89,36 @@ export default function RichTextEditor({ initialContent, documentFields, onChang
       editor?.chain().focus().insertContent(sanitizedTemplate).run();
     }
 
-    //campos en template
-    //puesto
-    //fecha
-    //fecha-telegrama
-    //reclamado
-    //importe
-    //importe-nros
-    //rubros
-    //nro-cuotas
-    //importe-cuotas
-    //fecha-primera-cuota
-    //titular-cuenta
-    //dni-reclamante
-    //cuil-titular-cuenta
-    //entidad-cuenta
-    //alias-cuenta
-    //reclamante
-    // const initialState = {
-    //   puesto: '',
-    //   fecha: '',
-    //   fechaTelegrama: '',
-    //   reclamado: '',
-    //   importe: 0.0,
-    //   importeNros: '',
-    //   rubros: '',
-    //   cuotas: {
-    //     cantidad: 0,
-    //     importe: 0.0,
-    //     fechaPrimera: '',
-    //   },
-    //   reclamante: {
-    //     dni: 0,
-    //     nombre: '',
-    //   },
-    //   cuenta: {
-    //     titular: '',
-    //     cuilTitular: '',
-    //     entidad: '',
-    //     alias: '',
-    //   },    
+    const strToDate = (dateStr, defaultValue) => dayjs(dateStr).isValid()
+      ? dayjs(dateStr).format('DD [de] MMMM [de] YYYY')
+      : defaultValue;
 
+    const strToLocaleDate = (dateStr, defaultValue) => dayjs(dateStr).isValid()
+      ? dayjs(dateStr).format('DD/MM/YYYY')
+      : defaultValue;
+
+    const formatNumber = (numero) => numero.toLocaleString('es-AR', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+      });
+    
     let template = sanitizedTemplate
-      .replaceAll("[PUESTO]", fields.puesto)
-      .replaceAll("[FECHA]", fields.fecha)
-      .replaceAll("[FECHA-TELEGRAMA]", fields.fechaTelegrama)
-      .replaceAll("[RECLAMADO]", fields.reclamado)
-      .replaceAll("[IMPORTE]", fields.importe)
+      .replaceAll("[PUESTO]", fields.puesto.trim() === ""? "[PUESTO]" : fields.puesto.trim())
+      .replaceAll("[FECHA]", strToDate(fields.fecha, "[FECHA]"))
+      .replaceAll("[FECHA-TELEGRAMA]", strToLocaleDate(fields.fechaTelegrama, "[FECHA-TELEGRAMA]"))
+      .replaceAll("[RECLAMADO]", fields.reclamado.trim() === ""? "[RECLAMADO]" : fields.reclamado)
+      .replaceAll("[IMPORTE]", formatNumber(fields.importe))
       .replaceAll("[IMPORTE-NROS]", numeroALetras(fields.importe))
-      .replaceAll("[RUBROS]", fields.rubros)
-      .replaceAll("[NRO-CUOTAS]", fields.cuotas.cantidad)
-      .replaceAll("[IMPORTE-CUOTAS]", fields.cuotas.importe)
-      .replaceAll("[FECHA-PRIMERA-CUOTA]", fields.cuotas.fechaPrimera)
-      .replaceAll("[TITULAR-CUENTA]", fields.cuenta.titular)
-      .replaceAll("[DNI-RECLAMANTE]", fields.reclamante.dni)
-      .replaceAll("[CUIL-TITULAR-CUENTA]", fields.cuenta.cuilTitular)
-      .replaceAll("[ENTIDAD-CUENTA]", fields.cuenta.entidad)
-      .replaceAll("[ALIAS-CUENTA]", fields.cuenta.alias)
-      .replaceAll("[RECLAMANTE]", fields.reclamante.nombre)
-
-    console.log(template)
+      .replaceAll("[RUBROS]", fields.rubros === ""? "[RUBROS]" : fields.rubros)
+      .replaceAll("[CANTIDAD-CUOTAS]", numeroALetras(fields.cuotas.cantidad))
+      .replaceAll("[IMPORTE-CUOTA]", numeroALetras(fields.cuotas.importe))
+      .replaceAll("[FECHA-PRIMERA-CUOTA]", strToDate(fields.cuotas.fechaPrimera, "[FECHA-PRIMERA-CUOTA]"))
+      .replaceAll("[TITULAR-CUENTA]", fields.cuenta.titular.trim() === ""? "[TITULAR-CUENTA]" : fields.cuenta.titular)
+      .replaceAll("[DNI-RECLAMANTE]", formatNumber(fields.reclamante.dni))
+      .replaceAll("[CUIL-TITULAR-CUENTA]", fields.cuenta.cuilTitular.trim() === ""? "[CUIL-TITULAR-CUENTA]" : fields.cuenta.cuilTitular)
+      .replaceAll("[ENTIDAD-CUENTA]", fields.cuenta.entidad.trim() === ""? "[ENTIDAD-CUENTA]" : fields.cuenta.entidad)
+      .replaceAll("[ALIAS-CUENTA]", fields.cuenta.alias.trim() === ""? "[ALIAS-CUENTA]" : fields.cuenta.alias)
+      .replaceAll("[RECLAMANTE]", fields.reclamante.nombre.trim() === ""? "[RECLAMANTE]" : fields.reclamante.nombre)
 
     editor?.chain().focus().clearContent().run();
     editor?.chain().focus().insertContent(template).run();

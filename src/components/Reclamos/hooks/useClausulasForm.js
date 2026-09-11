@@ -5,12 +5,12 @@ const initialState = {
   fecha: '',
   fechaTelegrama: '',
   reclamado: '',
-  importe: 0.0,
+  importe: 0,
   importeLetras: '',
   rubros: '',
   cuotas: {
     cantidad: 0,
-    importe: 0.0,
+    importe: 0,
     fechaPrimera: '',
   },
   reclamante: {
