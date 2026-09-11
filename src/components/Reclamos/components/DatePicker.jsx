@@ -2,6 +2,25 @@ import ReactDatePicker from 'react-datepicker';
 import { registerLocale } from 'react-datepicker';
 import { es } from 'date-fns/locale';
 
+// Parsea "yyyy-MM-dd", "yyyy-MM-dd HH:mm" o "yyyy-MM-ddTHH:mm[:ss][.sss][Z]"
+// como fecha/hora LOCAL, para evitar el corrimiento de día que produce
+// `new Date(str)` cuando el string no tiene información de zona horaria.
+function parseLocalDate(value) {
+  if (!value) return null;
+
+  const normalized = String(value).trim().replace('T', ' ').replace('Z', '');
+  const [datePart, timePart] = normalized.split(' ');
+  if (!datePart) return null;
+
+  const [year, month, day] = datePart.split('-').map(Number);
+  const [hours = 0, minutes = 0] = (timePart ? timePart.split(':') : []).map(Number);
+
+  if ([year, month, day].some((n) => Number.isNaN(n))) return null;
+
+  const parsed = new Date(year, month - 1, day, hours || 0, minutes || 0);
+  return Number.isNaN(parsed.getTime()) ? null : parsed;
+}
+
 export default function DatePicker({
   id,
   name,
@@ -15,7 +34,7 @@ export default function DatePicker({
   return (
     <ReactDatePicker
       id={id}
-      selected={value ? new Date(value.replace(' ', 'T')) : null}
+      selected={parseLocalDate(value)}
       onChange={(date) => {
         if (!date) {
           setField(name, '');
@@ -34,9 +53,9 @@ export default function DatePicker({
       showTimeSelect={showTime}
       timeFormat="HH:mm"
       timeIntervals={5}
-      dateFormat={showTime ? 'yyyy-MM-dd HH:mm' : 'yyyy-MM-dd'}
+      dateFormat={showTime ? 'dd-MM-yyyy HH:mm' : 'dd-MM-yyyy'}
       locale="es"
-      placeholderText={showTime ? 'aaaa-mm-dd hh:mm' : 'aaaa-mm-dd'}
+      placeholderText={showTime ? 'dd-mm-aaaa hh:mm' : 'dd-mm-aaaa'}
       className={className}
       wrapperClassName="d-inline"
     />
