@@ -1,4 +1,4 @@
-//crear un componente react con estilos bootstrap para ingresar los siguientes campos en un 
+//crear un componente react con estilos bootstrap para ingresar los siguientes campos en un
 // formulario de reclamos, utilizando el componente DatePicker para los campos de fecha y fecha-telegrama. Los campos a incluir son:
 //puesto
 //fecha
@@ -48,14 +48,31 @@ const initialState = {
   loading: false,
 };
 
+function getNewValue(currentValue, newValue) {
+  return typeof currentValue === 'number' && !isNaN(Number(newValue)) ? Number(newValue) : newValue;
+}
+
 function formReducer(state, action) {
   switch (action.type) {
-    case 'SET_FIELD':
+    case 'SET_FIELD': {
+      if (action.field.includes('.')) {
+        const [parent, child] = action.field.split('.');
+
+        return {
+          ...state,
+          [parent]: {
+            ...state[parent],
+            [child]: getNewValue(state[parent]?.[child], action.value),
+          },
+          errors: [],
+        };
+      }
       return {
         ...state,
-        [action.field]: action.value,
+        [action.field]: getNewValue(state[action.field], action.value),
         errors: [],
       };
+    }
 
     case 'SET_ERRORS':
       return {
@@ -93,6 +110,12 @@ function formReducer(state, action) {
         initializing: false,
       };
     }
+
+    case 'UPDATE_CUENTA':
+      return {
+        ...state,
+        cuenta: action.payload,
+      };
 
     default:
       return state;

@@ -1,6 +1,7 @@
 import useClausulasDialog from '../hooks/useClausulasForm.js';
 import { lazy, useEffect } from 'react';
 import { formatCuil } from '../../Shared/utis.js';
+import { Banking } from '../../../api/endpoints/banking.js'
 
 const DatePicker = lazy(() => import('./DatePicker.jsx'));
 
@@ -28,6 +29,22 @@ export default function ClausulasTemplateFormDialog({ onAccept, onCancel, visibl
   function handleKeyDown(event) {
     if (event.key === "Enter") handleSubmit(event);
     if (event.key === "Escape") onCancel(event);
+  }
+
+  async function requestCBU(e) {
+    const alias = e.target.value;
+    if (alias.trim() === '') return;
+    dispatch({ type: 'SUBMIT_START' });
+    const { ok, data } = await Banking.getData(alias);
+    if (ok) {
+      const cuenta = {
+        titular: data.titular,
+        cuilTitular: data.cuilTitular,
+        entidad: data.bancoDestino,
+        alias: alias
+      }
+      dispatch({ type: 'UPDATE_CUENTA', payload: cuenta });
+    }
   }
 
   const validate = (state) => {
@@ -63,7 +80,7 @@ export default function ClausulasTemplateFormDialog({ onAccept, onCancel, visibl
             <h5 className="modal-title">Cláusulas</h5>
           </div>
           <div className="modal-body">
-            <div style={{ maxHeight: "200px", overflowY: "scroll" }} className="pe-3">
+            <div style={{ maxHeight: "200px", overflowY: "scroll" }} className="ps-1 pe-3">
               <div className="mb-3 row">
                 <div className="col-sm-6">
                   <label htmlFor="puesto" className="form-label">Puesto</label>
@@ -88,9 +105,9 @@ export default function ClausulasTemplateFormDialog({ onAccept, onCancel, visibl
                 <label htmlFor="importe" className="col-sm-1 col-form-label">Importe</label>
                 <div className="col-sm-6">
                   <div className="input-group">
-                    <span class="input-group-text">$</span>
+                    <span className="input-group-text">$</span>
                     <input type="number" className="form-control text-end" id="importe" name="importe" value={state.importe} onChange={setField} autoComplete="off" />
-                    <span class="input-group-text">.00</span>
+                    <span className="input-group-text">.00</span>
                   </div>
                 </div>
                 <div className="col-sm-5 col-form-label bg-secondary-subtle text-start rounded badge text-primary">
@@ -99,28 +116,28 @@ export default function ClausulasTemplateFormDialog({ onAccept, onCancel, visibl
               </div>
               <div className="mb-3">
                 <label htmlFor="rubros" className="form-label">Rubros</label>
-                <textarea class="form-control" rows="3" id="rubros" name="rubros" value={state.rubros} onChange={setField}></textarea>
+                <textarea className="form-control" rows="3" id="rubros" name="rubros" value={state.rubros} onChange={setField}></textarea>
               </div>
               
               <div className="mb-3 border border-1 border-secondary-subtle rounded-2 p-2 bg-secondary-subtle">
                 <h5>Cuotas</h5>
                 <div className="row">
                   <div className="col-sm-4">
-                    <label htmlFor="cuotas.cantidadCuotas" className="form-label">Cantidad</label>
-                    <input type="number" className="form-control text-end" id="cuotas.cantidadCuotas" name="cuotas.cantidadCuotas" value={state.cuotas.cantidadCuotas} 
+                    <label htmlFor="cuotas.cantidad" className="form-label">Cantidad</label>
+                    <input type="number" className="form-control text-end" id="cuotas.cantidad" name="cuotas.cantidad" value={state.cuotas.cantidad} 
                       onChange={setField} autoComplete="off" />
                   </div>
                   <div className="col-sm-4">
-                    <label htmlFor="cuotas.importeCuotas" className="form-label">Importe</label>
+                    <label htmlFor="cuotas.importe" className="form-label">Importe</label>
                     <div className="input-group">
-                      <span class="input-group-text">$</span>
-                      <input type="number" className="form-control text-end" id="importe" name="cuotas.importeCuotas" value={state.cuotas.importeCuotas} onChange={setField} autoComplete="off" />
-                      <span class="input-group-text">.00</span>
+                      <span className="input-group-text">$</span>
+                      <input type="number" className="form-control text-end" id="cuotas.importe" name="cuotas.importe" value={state.cuotas.importe} onChange={setField} autoComplete="off" />
+                      <span className="input-group-text">.00</span>
                     </div>
                   </div>
                   <div className="col-sm-4">
-                    <label htmlFor="cuotas.fechaPrimeraCuota" className="form-label">1ª cuota</label>
-                    <DatePicker id="cuotas.fechaPrimeraCuota" name="cuotas.fechaPrimeraCuota" value={state.cuotas.fechaPrimeraCuota} setField={setDateField} 
+                    <label htmlFor="cuotas.fechaPrimera" className="form-label">1ª cuota</label>
+                    <DatePicker id="cuotas.fechaPrimera" name="cuotas.fechaPrimera" value={state.cuotas.fechaPrimera} setField={setDateField} 
                       showTime={false} />
                   </div>
                 </div>
@@ -146,25 +163,25 @@ export default function ClausulasTemplateFormDialog({ onAccept, onCancel, visibl
                 <h5>Cuenta</h5>
                 <div className="row">
                   <div className="col-sm-6">
+                    <label htmlFor="cuenta.alias" className="form-label">Alias</label>
+                    <input type="text" className="form-control" id="cuenta.alias" name="cuenta.alias" value={state.cuenta.alias} 
+                      onChange={setField} autoComplete="off" onBlur={requestCBU} />
+                  </div>
+                  <div className="col-sm-6">
                     <label htmlFor="cuenta.titular" className="form-label">Titular</label>
                     <input type="text" className="form-control" id="cuenta.titular" name="cuenta.titular" value={state.cuenta.titular} 
                       onChange={setField} autoComplete="off" />
                   </div>
-                  <div className="col-sm-6">
-                    <label htmlFor="cuenta.cuilTitular" className="form-label">CUIL Titular</label>
-                    <input type="text" className="form-control text-start" id="cuenta.cuilTitular" name="cuenta.cuilTitular" value={formatCuil(state.cuil)}
-                      onChange={setField} autoComplete="off" placeholder="  -        - " />
-                  </div>
                 </div>
                 <div className="row mt-2">
                   <div className="col-sm-6">
-                    <label htmlFor="cuenta.entidad" className="form-label">Entidad</label>
-                    <input type="text" className="form-control" id="cuenta.entidad" name="cuenta.entidad" value={state.cuenta.entidad} 
-                      onChange={setField} autoComplete="off" />
+                    <label htmlFor="cuenta.cuilTitular" className="form-label">CUIL Titular</label>
+                    <input type="text" className="form-control text-start" id="cuenta.cuilTitular" name="cuenta.cuilTitular" value={formatCuil(state.cuenta.cuilTitular)}
+                      onChange={setField} autoComplete="off" placeholder="  -        - " />
                   </div>
                   <div className="col-sm-6">
-                    <label htmlFor="cuenta.alias" className="form-label">Alias</label>
-                    <input type="text" className="form-control" id="cuenta.alias" name="cuenta.alias" value={state.cuenta.alias} 
+                    <label htmlFor="cuenta.entidad" className="form-label">Entidad</label>
+                    <input type="text" className="form-control" id="cuenta.entidad" name="cuenta.entidad" value={state.cuenta.entidad} 
                       onChange={setField} autoComplete="off" />
                   </div>
                 </div>
