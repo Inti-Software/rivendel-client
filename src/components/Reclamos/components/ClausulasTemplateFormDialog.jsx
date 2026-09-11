@@ -2,6 +2,7 @@ import useClausulasDialog from '../hooks/useClausulasForm.js';
 import { lazy, useEffect } from 'react';
 import { formatCuil } from '../../Shared/utis.js';
 import { Banking } from '../../../api/endpoints/banking.js'
+import { numeroALetras } from '../numeros-a-letras.js';
 
 const DatePicker = lazy(() => import('./DatePicker.jsx'));
 
@@ -28,6 +29,10 @@ export default function ClausulasTemplateFormDialog({ onAccept, onCancel, defaul
       rubros: defaultValues.rubros ?? ''
     }});
   }, [defaultValues]);
+
+  useEffect(() => {
+    dispatch({ type: 'SET_FIELD', field: 'importeLetras', value: numeroALetras(state.importe) });
+  }, [state.importe]);
 
   const setField = (e) => {
     dispatch({ type: 'SET_FIELD', field: e.target.id, value: e.target.value });
@@ -120,8 +125,8 @@ export default function ClausulasTemplateFormDialog({ onAccept, onCancel, defaul
                     <span className="input-group-text">.00</span>
                   </div>
                 </div>
-                <div className="col-sm-5 col-form-label bg-secondary-subtle text-start rounded badge text-primary">
-                  <label>{state.importeNros} xxx</label>
+                <div className="col-sm-5 col-form-label bg-secondary-subtle text-start rounded text-primary fw-bold align-midle" style={{ fontSize: "0.7em" }}>
+                  <label>{state.importeLetras}</label>
                 </div>
               </div>
               <div className="mb-3">

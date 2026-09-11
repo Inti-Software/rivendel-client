@@ -6,7 +6,7 @@ const initialState = {
   fechaTelegrama: '',
   reclamado: '',
   importe: 0.0,
-  importeNros: '',
+  importeLetras: '',
   rubros: '',
   cuotas: {
     cantidad: 0,
