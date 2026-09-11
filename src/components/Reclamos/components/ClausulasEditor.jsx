@@ -5,9 +5,6 @@ import { ACUERDO } from "../tiposResoluciones";
 const RichTextEditor = lazy(() => import('../../CustomTipTap/RichTextEditor'));
 
 export default function ClausulasEditor({ state, setField }) {
-	console.log("ClausulasEditor state:", state);
-	console.log("ClausulasEditor setField:", setField);
-
   if (state.idResolucion !== ACUERDO) return null;
 
   return (
