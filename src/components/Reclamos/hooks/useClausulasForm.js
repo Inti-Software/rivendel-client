@@ -1,22 +1,3 @@
-//crear un componente react con estilos bootstrap para ingresar los siguientes campos en un
-// formulario de reclamos, utilizando el componente DatePicker para los campos de fecha y fecha-telegrama. Los campos a incluir son:
-//puesto
-//fecha
-//fecha-telegrama
-//reclamado
-//importe
-//importe-nros
-//rubros
-//nro-cuotas
-//importe-cuotas
-//fecha-primera-cuota
-//titular-cuenta
-//dni-reclamante
-//cuil-titular-cuenta
-//entidad-cuenta
-//alias-cuenta
-//reclamante
-
 import { useReducer, useEffect } from 'react';
 
 const initialState = {
@@ -37,6 +18,7 @@ const initialState = {
     nombre: '',
   },
   cuenta: {
+    loading: false,
     titular: '',
     cuilTitular: '',
     entidad: '',
@@ -117,12 +99,22 @@ function formReducer(state, action) {
         cuenta: action.payload,
       };
 
-    case 'SET_DEFAULT_VALUES':
+    case 'LOAD_CUENTA_START':
       return {
         ...state,
-        reclamante: action.values.reclamante ?? { dni: 0, nombre: '' },
-        reclamado: action.values.reclamado ?? '',
-        rubros: action.values.rubros ?? ''
+        cuenta: {
+          ...state.cuenta,
+          loading: true,
+        },
+      };
+
+    case 'LOAD_CUENTA_END':
+      return {
+        ...state,
+        cuenta: {
+          ...state.cuenta,
+          loading: false,
+        },
       };
 
     default:

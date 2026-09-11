@@ -9,6 +9,7 @@ export default function ClausulasTemplateFormDialog({ onAccept, onCancel, defaul
   if (!visible) return null;
 
   const { state, dispatch } = useClausulasDialog();
+  const bgControlCuenta = state.cuenta.loading? "bg-dark-subtle" : "";
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -21,7 +22,11 @@ export default function ClausulasTemplateFormDialog({ onAccept, onCancel, defaul
   }, [visible, onCancel]);
 
   useEffect(() => {
-    dispatch({ type: 'SET_DEFAULT_VALUES', values: defaultValues  });
+    dispatch({ type: 'INITIAL_LOAD', payload: {
+      reclamante: defaultValues.reclamante ?? { dni: 0, nombre: '' },
+      reclamado: defaultValues.reclamado ?? '',
+      rubros: defaultValues.rubros ?? ''
+    }});
   }, [defaultValues]);
 
   const setField = (e) => {
@@ -38,7 +43,7 @@ export default function ClausulasTemplateFormDialog({ onAccept, onCancel, defaul
   async function requestCBU(e) {
     const alias = e.target.value;
     if (alias.trim() === '') return;
-    dispatch({ type: 'SUBMIT_START' });
+    dispatch({ type: 'LOAD_CUENTA_START' });
     const { ok, data } = await Banking.getData(alias);
     if (ok) {
       const cuenta = {
@@ -49,6 +54,7 @@ export default function ClausulasTemplateFormDialog({ onAccept, onCancel, defaul
       }
       dispatch({ type: 'UPDATE_CUENTA', payload: cuenta });
     }
+    dispatch({ type: 'LOAD_CUENTA_END' });
   }
 
   const validate = (state) => {
@@ -178,25 +184,30 @@ export default function ClausulasTemplateFormDialog({ onAccept, onCancel, defaul
                 <div className="card-body">
                   <div className="row">
                     <div className="col-sm-6">
-                      <label htmlFor="cuenta.alias" className="form-label">Alias</label>
-                      <input type="text" className="form-control" id="cuenta.alias" name="cuenta.alias" value={state.cuenta.alias} 
+                      <label htmlFor="cuenta.alias" className="form-label">
+                        Alias 
+                      </label>
+                      <div class="spinner-grow text-success ms-2" role="status" style={{ width: "0.75em", height: "0.75em", visibility: state.cuenta.loading?"visible":"hidden" }}>
+                        <span class="visually-hidden">Cargando... </span>
+                      </div>
+                      <input type="text" className={ `form-control` } id="cuenta.alias" name="cuenta.alias" value={state.cuenta.alias} 
                         onChange={setField} autoComplete="off" onBlur={requestCBU} />
                     </div>
                     <div className="col-sm-6">
                       <label htmlFor="cuenta.titular" className="form-label">Titular</label>
-                      <input type="text" className="form-control" id="cuenta.titular" name="cuenta.titular" value={state.cuenta.titular} 
+                      <input type="text" className={ `form-control ${bgControlCuenta}`} id="cuenta.titular" name="cuenta.titular" value={state.cuenta.titular} 
                         onChange={setField} autoComplete="off" />
                     </div>
                   </div>
                   <div className="row mt-2">
                     <div className="col-sm-6">
                       <label htmlFor="cuenta.cuilTitular" className="form-label">CUIL Titular</label>
-                      <input type="text" className="form-control text-start" id="cuenta.cuilTitular" name="cuenta.cuilTitular" value={formatCuil(state.cuenta.cuilTitular)}
+                      <input type="text" className={`form-control text-start ${bgControlCuenta}`} id="cuenta.cuilTitular" name="cuenta.cuilTitular" value={formatCuil(state.cuenta.cuilTitular)}
                         onChange={setField} autoComplete="off" placeholder="  -        - " />
                     </div>
                     <div className="col-sm-6">
                       <label htmlFor="cuenta.entidad" className="form-label">Entidad</label>
-                      <input type="text" className="form-control" id="cuenta.entidad" name="cuenta.entidad" value={state.cuenta.entidad} 
+                      <input type="text" className={`form-control ${bgControlCuenta}`} id="cuenta.entidad" name="cuenta.entidad" value={state.cuenta.entidad} 
                         onChange={setField} autoComplete="off" />
                     </div>
                   </div>
