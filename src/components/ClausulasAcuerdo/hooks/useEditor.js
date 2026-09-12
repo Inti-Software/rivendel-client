@@ -41,10 +41,11 @@ export default function useEditor(initialContent, documentFields, onChange) {
     editor?.chain().focus().toggleBold().run();
   }, [editor]);
 
-	const updateTemplate = useCallback((template) => {
+	const updateContent = useCallback((template) => {
 		if (template) {
 			editor?.chain().focus().clearContent().run();
 			editor?.chain().focus().insertContent(template).run();
+      editor.commands.focus('start');
 		}
 	  setShowClausulasFieldsDialog(false);
 	}, [editor]);
@@ -56,6 +57,6 @@ export default function useEditor(initialContent, documentFields, onChange) {
     clausulasFields,
 		setShowClausulasFieldsDialog,
     toggleBold,
-    updateTemplate
+    updateContent
   };
 }

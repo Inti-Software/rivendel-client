@@ -7,13 +7,13 @@ import { fillTemplate } from '../editor.utils';
 export default function Editor({ initialContent, documentFields, onChange }) {
 
   const { editor, showClausulasFieldsDialog, isBold, clausulasFields, setShowClausulasFieldsDialog, 
-    toggleBold, updateTemplate } = useEditor(initialContent, documentFields, onChange);
+    toggleBold, updateContent } = useEditor(initialContent, documentFields, onChange);
 
   return (
     <div className="rte-wrapper border border-1 bg-secondary-subtle rounded-2 border-dark p-1">
       <ClausulasTemplateFormDialog 
-        onAccept={(e, state) => updateTemplate(fillTemplate(state))} 
-        onCancel={() => updateTemplate(null) } 
+        onAccept={(e, state) => updateContent(fillTemplate(state))} 
+        onCancel={() => updateContent(null) } 
         defaultValues={clausulasFields} 
         visible={showClausulasFieldsDialog} 
       />
@@ -35,7 +35,7 @@ export default function Editor({ initialContent, documentFields, onChange }) {
         </button>
         <button
           type="button"
-          onClick={() => updateTemplate(fillTemplate(null))}
+          onClick={() => updateContent(fillTemplate(null))}
           className="btn btn-outline-dark rte-btn ms-1"
           title="Insertar plantilla"
         >

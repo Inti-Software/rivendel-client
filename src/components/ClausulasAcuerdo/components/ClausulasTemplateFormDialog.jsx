@@ -1,87 +1,21 @@
-import useClausulasDialog from '../hooks/useForm.js';
-import { lazy, useEffect } from 'react';
+import useFormDialog from '../hooks/useForm.js';
+import { lazy } from 'react';
 import { formatCuil } from '../../Shared/utis.js';
-import { Banking } from '../../../api/endpoints/banking.js'
-import { numeroALetras } from '../../Reclamos/numeros-a-letras.js';
+import { handleKeyDown, onBlurAliasCuenta } from '../eventHandlers';
 
 const DatePicker = lazy(() => import('../../Reclamos/components/DatePicker.jsx'));
 
 export default function ClausulasTemplateFormDialog({ onAccept, onCancel, defaultValues, visible = true }) {
   if (!visible) return null;
 
-  const { state, dispatch } = useClausulasDialog();
+  const { state, dispatch } = useFormDialog(visible, onCancel, defaultValues);
   const bgControlCuenta = state.cuenta.loading? "bg-dark-subtle" : "";
-
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.key === "Escape" && visible) {
-        onCancel();
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [visible, onCancel]);
-
-  useEffect(() => {
-    dispatch({ type: 'INITIAL_LOAD', payload: {
-      reclamante: defaultValues.reclamante ?? { dni: 0, nombre: '' },
-      reclamado: defaultValues.reclamado ?? '',
-      rubros: defaultValues.rubros ?? ''
-    }});
-  }, [defaultValues]);
-
-  useEffect(() => {
-    dispatch({ type: 'SET_FIELD', field: 'importeLetras', value: "PESOS " + numeroALetras(state.importe) });
-  }, [state.importe]);
 
   const setField = (e) => {
     dispatch({ type: 'SET_FIELD', field: e.target.id, value: e.target.value });
   };
 
   const setDateField = (field, value) => { dispatch({ type: "SET_FIELD", field, value }) };
-
-  function handleKeyDown(event) {
-    if (event.key === "Enter") handleSubmit(event);
-    if (event.key === "Escape") onCancel(event);
-  }
-
-  async function requestCBU(e) {
-    const alias = e.target.value;
-    if (alias.trim() === '') return;
-    dispatch({ type: 'LOAD_CUENTA_START' });
-    const { ok, data } = await Banking.getData(alias);
-    if (ok) {
-      const cuenta = {
-        titular: data.titular,
-        cuilTitular: data.cuilTitular,
-        entidad: data.bancoDestino,
-        alias: alias
-      }
-      dispatch({ type: 'UPDATE_CUENTA', payload: cuenta });
-    }
-    dispatch({ type: 'LOAD_CUENTA_END' });
-  }
-
-  const validate = (state) => {
-    const errors = [];
-    if (state.nombre.trim() === '') errors.push('Ingrese el nombre del patrocinante');
-    return errors;
-  };
-
-  function handleSubmit(event) {
-    event.preventDefault();
-
-    const validationErrors = validate(state);
-    if (errors.length > 0) {
-      dispatch({ type: 'SET_ERRORS', errors: validationErrors });
-      return;
-    }
-
-    dispatch({ type: 'SUBMIT_START' });
-    const { initializing, errors, redirect, loading, ...result } = state;
-    dispatch({ type: 'SUBMIT_SUCCESS' });
-    onAccept(event, result);
-  }
 
   return (
     <div
@@ -99,7 +33,8 @@ export default function ClausulasTemplateFormDialog({ onAccept, onCancel, defaul
               <div className="mb-3 row">
                 <div className="col-sm-6">
                   <label htmlFor="puesto" className="form-label">Puesto</label>
-                  <input type="text" className="form-control" id="puesto" name="puesto" value={state.puesto} onChange={setField} autoComplete="off" />
+                  <input type="text" className="form-control" id="puesto" name="puesto" value={state.puesto} 
+                    onChange={setField} autoComplete="off" autoFocus />
                 </div>
                 <div className="col-sm-3">
                   <label htmlFor="fecha" className="form-label">Despido</label>
@@ -196,7 +131,7 @@ export default function ClausulasTemplateFormDialog({ onAccept, onCancel, defaul
                         <span className="visually-hidden">Cargando... </span>
                       </div>
                       <input type="text" className={ `form-control` } id="cuenta.alias" name="cuenta.alias" value={state.cuenta.alias} 
-                        onChange={setField} autoComplete="off" onBlur={requestCBU} />
+                        onChange={setField} autoComplete="off" onBlur={(e) => onBlurAliasCuenta(e, dispatch)} />
                     </div>
                     <div className="col-sm-6">
                       <label htmlFor="cuenta.titular" className="form-label">Titular</label>
@@ -218,7 +153,6 @@ export default function ClausulasTemplateFormDialog({ onAccept, onCancel, defaul
                   </div>
                 </div>
               </div>
-              <pre>{JSON.stringify(state, null, ' ')}</pre>
             </div>
           </div>
           <div className="modal-footer">

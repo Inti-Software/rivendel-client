@@ -21,14 +21,9 @@ function parseLocalDate(value) {
   return Number.isNaN(parsed.getTime()) ? null : parsed;
 }
 
-export default function DatePicker({
-  id,
-  name,
-  value,
-  setField,
-  showTime = true,
-  className = 'form-control text-center d-inline w-auto',
-}) {
+export default function DatePicker({id, name, value, setField, showTime = true,
+  className = 'form-control text-center d-inline w-auto' }) {
+    
   registerLocale('es', es);
 
   return (

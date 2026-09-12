@@ -1,4 +1,5 @@
 import { useReducer, useEffect } from 'react';
+import { numeroALetras } from '../../Reclamos/numeros-a-letras.js';
 
 const initialState = {
   puesto: '',
@@ -24,9 +25,6 @@ const initialState = {
     entidad: '',
     alias: '',
   },
-  initializing: true,
-  errors: [],
-  redirect: false,
   loading: false,
 };
 
@@ -56,40 +54,10 @@ function formReducer(state, action) {
       };
     }
 
-    case 'SET_ERRORS':
-      return {
-        ...state,
-        errors: action.errors,
-      };
-
-    case 'SUBMIT_START':
-      return {
-        ...state,
-        errors: [],
-        loading: true,
-      };
-
-    case 'SUBMIT_SUCCESS': {
-      return initialState;
-    }
-
-    case 'SUBMIT_FAIL': {
-      const errors =
-        typeof action.errors === 'string'
-          ? [action.errors || 'Error en la solicitud']
-          : action.errors || ['Error en la solicitud'];
-      return {
-        ...state,
-        errors: errors,
-        loading: false,
-      };
-    }
-
     case 'INITIAL_LOAD': {
       return {
         ...state,
         ...action.payload,
-        initializing: false,
       };
     }
 
@@ -122,12 +90,30 @@ function formReducer(state, action) {
   }
 }
 
-export default function useForm() {
+export default function useFormDialog(visible, onCancel, defaultValues) {
   const [state, dispatch] = useReducer(formReducer, initialState);
 
   useEffect(() => {
-    dispatch({ type: 'INITIAL_LOAD' });
-  }, []);
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape" && visible) {
+        onCancel();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [visible, onCancel]);
+
+  useEffect(() => {
+    dispatch({ type: 'INITIAL_LOAD', payload: {
+      reclamante: defaultValues.reclamante ?? { dni: 0, nombre: '' },
+      reclamado: defaultValues.reclamado ?? '',
+      rubros: defaultValues.rubros ?? ''
+    }});
+  }, [defaultValues]);
+
+  useEffect(() => {
+    dispatch({ type: 'SET_FIELD', field: 'importeLetras', value: "PESOS " + numeroALetras(state.importe) });
+  }, [state.importe]);
 
   return { state, dispatch };
 }
