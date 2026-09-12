@@ -37,8 +37,8 @@ function grupoATexto(num) {
  */
 export function numeroALetras(numero, { unMilLegal = false } = {}) {
   if (!Number.isFinite(numero)) return '';
-  if (numero === 0) return 'cero';
-  if (numero < 0) return `menos ${numeroALetras(-numero, { unMilLegal })}`;
+  if (numero === 0) return 'CERO';
+  if (numero < 0) return `menos ${numeroALetras(-numero, { unMilLegal })}`.toUpperCase();
 
   numero = Math.floor(numero); // esta función es para la parte entera
 
