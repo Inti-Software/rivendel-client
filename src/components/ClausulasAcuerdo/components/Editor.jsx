@@ -1,13 +1,13 @@
 import { EditorContent } from '@tiptap/react';
-import './rich-text-editor.css';
-import ClausulasTemplateFormDialog from '../Reclamos/components/ClausulasTemplateFormDialog';
-import useRichTextEditor from './hooks/useRichTextEditor';
-import { fillTemplate } from './editor.utils';
+import '../editor.css';
+import ClausulasTemplateFormDialog from './ClausulasTemplateFormDialog';
+import useEditor from '../hooks/useEditor';
+import { fillTemplate } from '../editor.utils';
 
-export default function RichTextEditor({ initialContent, documentFields, onChange }) {
+export default function Editor({ initialContent, documentFields, onChange }) {
 
   const { editor, showClausulasFieldsDialog, isBold, clausulasFields, setShowClausulasFieldsDialog, 
-    toggleBold, updateTemplate } = useRichTextEditor(initialContent, documentFields, onChange);
+    toggleBold, updateTemplate } = useEditor(initialContent, documentFields, onChange);
 
   return (
     <div className="rte-wrapper border border-1 bg-secondary-subtle rounded-2 border-dark p-1">

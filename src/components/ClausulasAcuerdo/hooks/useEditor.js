@@ -1,8 +1,8 @@
-import { useEditor, useEditorState } from '@tiptap/react';
+import { useEditor as useTipTapEditor, useEditorState } from '@tiptap/react';
 import { useCallback, useEffect, useState } from 'react';
 import { EXTENSIONS, EMPTY_DOC, cleanPastedHTML } from '../editor.utils';
 
-export default function useRichTextEditor(initialContent, documentFields, onChange) {
+export default function useEditor(initialContent, documentFields, onChange) {
   const [showClausulasFieldsDialog, setShowClausulasFieldsDialog] = useState(false);
 	
   const [clausulasFields, setClausulasFields] = useState({
@@ -18,7 +18,7 @@ export default function useRichTextEditor(initialContent, documentFields, onChan
     setClausulasFields(documentFields);
   }, [documentFields]);
 
-  const editor = useEditor({
+  const editor = useTipTapEditor({
     extensions: EXTENSIONS,
     content: initialContent ?? EMPTY_DOC,
     onUpdate: ({ editor }) => {

@@ -10,7 +10,7 @@ import { ProximaAudienciaInput } from "./ProximaAudienciaInput";
 import { lazy, Suspense } from 'react';
 import Spinner from "../../Shared/Spinner";
 import { isNew } from '../../Shared/utis.js';
-import ClausulasEditor from "./ClausulasEditor";
+import ClausulasAcuerdoEditor from "../../ClausulasAcuerdo/components/ClausulasAcuerdoEditor";
 
 const DatePicker = lazy(() => import('./DatePicker'));
 const HourPicker = lazy(() => import('./HourPicker'));
@@ -74,7 +74,7 @@ export default function Form() {
 				<PartesList state={state} esReclamante={false} setField={setField} onAddParte={showSearchParteDialog} />
 			</div>
 
-			<ClausulasEditor content={state.clausulas} visible={state.idResolucion === ACUERDO} reclamo={state.reclamo}
+			<ClausulasAcuerdoEditor content={state.clausulas} visible={state.idResolucion === ACUERDO} reclamo={state.reclamo}
 				onContentChange={(content) => setField('clausulas', content)} />
 
 			<div className="mb-3 d-flex justify-content-end border-top pt-2 border-primary-subtle">

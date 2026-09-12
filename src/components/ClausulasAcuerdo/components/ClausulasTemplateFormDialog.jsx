@@ -1,10 +1,10 @@
-import useClausulasDialog from '../hooks/useClausulasForm.js';
+import useClausulasDialog from '../hooks/useForm.js';
 import { lazy, useEffect } from 'react';
 import { formatCuil } from '../../Shared/utis.js';
 import { Banking } from '../../../api/endpoints/banking.js'
-import { numeroALetras } from '../numeros-a-letras.js';
+import { numeroALetras } from '../../Reclamos/numeros-a-letras.js';
 
-const DatePicker = lazy(() => import('./DatePicker.jsx'));
+const DatePicker = lazy(() => import('../../Reclamos/components/DatePicker.jsx'));
 
 export default function ClausulasTemplateFormDialog({ onAccept, onCancel, defaultValues, visible = true }) {
   if (!visible) return null;
