@@ -3,7 +3,8 @@ import { useCallback, useEffect, useState } from 'react';
 import { EXTENSIONS, EMPTY_DOC, cleanPastedHTML } from '../editor.utils';
 
 export default function useRichTextEditor(initialContent, documentFields, onChange) {
-  const [showClausulasDialog, setShowClausulasDialog] = useState(false);
+  const [showClausulasFieldsDialog, setShowClausulasFieldsDialog] = useState(false);
+	
   const [clausulasFields, setClausulasFields] = useState({
     reclamado: '',
     rubros: '',
@@ -40,18 +41,21 @@ export default function useRichTextEditor(initialContent, documentFields, onChan
     editor?.chain().focus().toggleBold().run();
   }, [editor]);
 
-  const pasteTemplate = useCallback(() => {
-    editor?.chain().focus().clearContent().run();
-    editor?.chain().focus().insertContent(sanitizedTemplate).run();
-  }, [editor]);
+	const updateTemplate = useCallback((template) => {
+		if (template) {
+			editor?.chain().focus().clearContent().run();
+			editor?.chain().focus().insertContent(template).run();
+		}
+	  setShowClausulasFieldsDialog(false);
+	}, [editor]);
 
   return {
     editor,
-    showClausulasDialog,
+    showClausulasFieldsDialog,
     isBold,
-    setShowClausulasDialog,
     clausulasFields,
+		setShowClausulasFieldsDialog,
     toggleBold,
-    pasteTemplate,
+    updateTemplate
   };
 }

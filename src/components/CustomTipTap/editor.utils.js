@@ -33,11 +33,9 @@ const sanitizedTemplate = cleanPastedHTML(defaultTemplate)
   //eliminar espacios al inicio y al final
   .trim();
 
-export function onAcceptClausulasFormDialog(editor, fields) {
-  setShowClausulasDialog(false);
+export function fillTemplate(fields) {
   if (!fields) {
-    editor?.chain().focus().clearContent().run();
-    editor?.chain().focus().insertContent(sanitizedTemplate).run();
+    return sanitizedTemplate;
   }
 
   const strToDate = (dateStr, defaultValue) =>
@@ -88,10 +86,5 @@ export function onAcceptClausulasFormDialog(editor, fields) {
       fields.reclamante.nombre.trim() === '' ? '[RECLAMANTE]' : fields.reclamante.nombre,
     );
 
-  editor?.chain().focus().clearContent().run();
-  editor?.chain().focus().insertContent(template).run();
-}
-
-export function onCancelClausulasFormDialog() {
-  setShowClausulasDialog(false);
+		return template;
 }

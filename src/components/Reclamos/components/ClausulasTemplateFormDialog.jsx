@@ -135,8 +135,8 @@ export default function ClausulasTemplateFormDialog({ onAccept, onCancel, defaul
               </div>
               
               <div className="card mb-3">
-                <div class="card-header bg-secondary-subtle h5 text-center">
-                  <span class="card-title">Cuotas</span>
+                <div className="card-header bg-secondary-subtle h5 text-center">
+                  <span className="card-title">Cuotas</span>
                 </div>
                 <div className="card-body">
                   <div className="row">
@@ -163,8 +163,8 @@ export default function ClausulasTemplateFormDialog({ onAccept, onCancel, defaul
               </div>
 
               <div className="card mb-3">
-                <div class="card-header bg-secondary-subtle h5 text-center">
-                  <span class="card-title">Reclamante</span>
+                <div className="card-header bg-secondary-subtle h5 text-center">
+                  <span className="card-title">Reclamante</span>
                 </div>
                 <div className="card-body">
                   <div className="row">
@@ -183,8 +183,8 @@ export default function ClausulasTemplateFormDialog({ onAccept, onCancel, defaul
               </div>
 
               <div className="card">
-                <div class="card-header bg-secondary-subtle h5 text-center">
-                  <span class="card-title">Cuenta</span>
+                <div className="card-header bg-secondary-subtle h5 text-center">
+                  <span className="card-title">Cuenta</span>
                 </div>
                 <div className="card-body">
                   <div className="row">
@@ -192,8 +192,8 @@ export default function ClausulasTemplateFormDialog({ onAccept, onCancel, defaul
                       <label htmlFor="cuenta.alias" className="form-label">
                         Alias 
                       </label>
-                      <div class="spinner-grow text-success ms-2" role="status" style={{ width: "0.75em", height: "0.75em", visibility: state.cuenta.loading?"visible":"hidden" }}>
-                        <span class="visually-hidden">Cargando... </span>
+                      <div className="spinner-grow text-success ms-2" role="status" style={{ width: "0.75em", height: "0.75em", visibility: state.cuenta.loading?"visible":"hidden" }}>
+                        <span className="visually-hidden">Cargando... </span>
                       </div>
                       <input type="text" className={ `form-control` } id="cuenta.alias" name="cuenta.alias" value={state.cuenta.alias} 
                         onChange={setField} autoComplete="off" onBlur={requestCBU} />

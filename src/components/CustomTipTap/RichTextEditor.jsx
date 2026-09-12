@@ -2,17 +2,21 @@ import { EditorContent } from '@tiptap/react';
 import './rich-text-editor.css';
 import ClausulasTemplateFormDialog from '../Reclamos/components/ClausulasTemplateFormDialog';
 import useRichTextEditor from './hooks/useRichTextEditor';
-import { onAcceptClausulasFormDialog, onCancelClausulasFormDialog } from './editor.utils';
+import { fillTemplate } from './editor.utils';
 
 export default function RichTextEditor({ initialContent, documentFields, onChange }) {
 
-  const { editor, showClausulasDialog, isBold, setShowClausulasDialog, clausulasFields,
-    toggleBold, pasteTemplate, } = useRichTextEditor(initialContent, documentFields, onchange);
+  const { editor, showClausulasFieldsDialog, isBold, clausulasFields, setShowClausulasFieldsDialog, 
+    toggleBold, updateTemplate } = useRichTextEditor(initialContent, documentFields, onChange);
 
   return (
     <div className="rte-wrapper border border-1 bg-secondary-subtle rounded-2 border-dark p-1">
-      <ClausulasTemplateFormDialog onAccept={(e, state) => onAcceptClausulasFormDialog(editor, state)} 
-        onCancel={onCancelClausulasFormDialog} defaultValues={clausulasFields} visible={showClausulasDialog} />
+      <ClausulasTemplateFormDialog 
+        onAccept={(e, state) => updateTemplate(fillTemplate(state))} 
+        onCancel={() => updateTemplate(null) } 
+        defaultValues={clausulasFields} 
+        visible={showClausulasFieldsDialog} 
+      />
       <div
         className="rounded-2 d-flex ps-2 py-1"
         style={{ backgroundColor: '#dadada' }}
@@ -31,7 +35,7 @@ export default function RichTextEditor({ initialContent, documentFields, onChang
         </button>
         <button
           type="button"
-          onClick={pasteTemplate}
+          onClick={() => updateTemplate(fillTemplate(null))}
           className="btn btn-outline-dark rte-btn ms-1"
           title="Insertar plantilla"
         >
@@ -47,7 +51,7 @@ export default function RichTextEditor({ initialContent, documentFields, onChang
         </button>
         <button
           type="button"
-          onClick={() => setShowClausulasDialog(true)}
+          onClick={() => setShowClausulasFieldsDialog(true)}
           className="btn btn-outline-dark rte-btn ms-1"
           title="Insertar plantilla desde formulario"
         >
