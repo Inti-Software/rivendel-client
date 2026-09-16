@@ -45,11 +45,12 @@ const template = (p, isSelected, selectRow) => (
 	</tr> 
 );	
 
-const SearchParteDialog = ({ title, handleAccept, handleCancel }) => (
+const SearchParteDialog = ({ title, visible, handleAccept, handleCancel }) => (
 	<SearchDialogContainer
 		title={title}
 		placeholder="Nombre o CUIL"
 		template={template}
+		visible={visible}
 		searchFn={(term) => Partes.findAll({ query: term })}
 		onAccept={handleAccept}
 		onCancel={handleCancel}

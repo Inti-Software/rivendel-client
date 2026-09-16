@@ -5,8 +5,8 @@ import { DELETE, SEARCH } from "../../Shared/Icons";
 import SearchPatrocinanteDialog from "../../Patrocinantes/components/SearchPatrocinanteDialog";
 import useForm from "../hooks/useForm";
 import { handleSubmit, onAcceptSearchPatrocinante } from '../eventHandlers.js';
-import { getPatrocinante, formatCuil } from '../utils.js';
-import { isNew } from '../../Shared/utis.js';
+import { getPatrocinante } from '../utils.js';
+import { isNew, formatCuil } from '../../Shared/utis.js';
 
 export default function Form() {
 	const { state, tiposDocumento, dispatch, setField, toogleEnableCuil, toogleEnableNroDocumento,

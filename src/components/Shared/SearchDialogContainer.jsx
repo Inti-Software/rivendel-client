@@ -2,32 +2,36 @@ import { useEffect, useRef } from 'react';
 import { SEARCH } from './Icons';
 import useSearchDialog from '../../hooks/useSearchDialog';
 
-const SearchDialogContainer = ({
+
+export default function SearchDialogContainer({
 	title,
 	placeholder,
 	columns = undefined,          // [{ key: 'nombre', label: 'Nombre' }, ...]
 	template = undefined,         // JSX.Element
-	searchFn,         // (term: string) => Promise<Response>
+	searchFn,         						// (term: string) => Promise<Response>
 	onAccept,
 	onCancel,
 	minTermLength = 3,
-	emptyMessage = "No hay datos para mostrar."
-}) => {
+	emptyMessage = "No hay datos para mostrar.",
+	visible = true
+}) {
+	if (!visible) return null;
+
 	const {
 		term, data, selected, selectedId, done, error, loading,
 		setTerm, selectRow, buscarAhora
 	} = useSearchDialog(searchFn, { minTermLength });
+
+	function handleKeyDown(event) {
+		if (event.key === "Enter") buscarAhora();
+		if (event.key === "Escape") onCancel(event);
+	};
 
 	const inputRef = useRef(null);
 
 	useEffect(() => {
 		inputRef.current?.focus();
 	}, []);
-
-	const handleKeyDown = (event) => {
-		if (event.key === "Enter") buscarAhora();
-		if (event.key === "Escape") onCancel(event);
-	};
 
 	const feedbackClassName = error
 		? "bg-danger-subtle border-danger"
@@ -126,5 +130,3 @@ const SearchDialogContainer = ({
 		</div>
 	);
 };
-
-export default SearchDialogContainer;
