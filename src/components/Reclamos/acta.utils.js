@@ -28,7 +28,7 @@ function concatenatePartes(partes, esReclamado, cantidadReclamos) {
   } else {
     s = `por las partes ${esReclamado ? 'reclamadas/empleadoras' : 'reclamantes/trabajadoras'}: `;
   }
-  partes.forEach((parte) => {
+  partes.forEach((parte, i) => {
     const nombre = parte.nombre;
     const sintetico = parte.sintetico;
     const nroDocumento = parte.nroDocumento;
@@ -37,7 +37,7 @@ function concatenatePartes(partes, esReclamado, cantidadReclamos) {
     const localidad = parte.localidad || '';
     const patrocinante = parte.patrocinante || {};
 
-    s += nombre;
+    s += ((i === 0)? '' : ', ') + nombre;
 
     if (nroDocumento !== NO_ESPECIFICADO) {
       s += ` ${sintetico} ${nroDocumento}`;
