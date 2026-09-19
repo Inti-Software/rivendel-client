@@ -156,6 +156,9 @@ export default function ClausulasTemplateFormDialog({ onAccept, onCancel, defaul
             </div>
           </div>
           <div className="modal-footer">
+            <button type="button" class="btn btn-light me-auto" onClick={(e) => onAccept(e, null)} >
+              Cargar plantilla vacía
+            </button>
             <button
               type="button"
               className="btn btn-success"

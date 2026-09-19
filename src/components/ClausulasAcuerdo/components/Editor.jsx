@@ -35,14 +35,6 @@ export default function Editor({ initialContent, documentFields, onChange }) {
         </button>
         <button
           type="button"
-          onClick={() => updateContent(fillTemplate(null))}
-          className="btn btn-outline-dark rte-btn ms-1"
-          title="Insertar plantilla"
-        >
-          <span>Insertar plantilla</span>
-        </button>
-        <button
-          type="button"
           onClick={() => editor.chain().focus().clearContent().run()}
           className="btn btn-outline-dark rte-btn ms-1"
           title="Limpiar contenido"
@@ -55,7 +47,7 @@ export default function Editor({ initialContent, documentFields, onChange }) {
           className="btn btn-outline-dark rte-btn ms-1"
           title="Insertar plantilla desde formulario"
         >
-          <span>Insertar plantilla desde formulario</span>
+          <span>Insertar plantilla</span>
         </button>
       </div>
       <EditorContent editor={editor} className="bg-white mt-1 border border-dark-subtle" />
