@@ -9,12 +9,12 @@ export function getComparecientes(data) {
   const existePatrocinante = (p) =>
     p.patrocinante &&
     (p.nroWhatsappPatrocinante ?? '') === '' &&
-    (p?.incomparendoPatrocinante ?? false) === false;
+    (p.incomparendoPatrocinante ?? false) === false;
   return {
     existenReclamantes: data?.reclamantes?.some(existeParte),
     existenReclamados: data?.reclamados?.some(existeParte),
     existenLetradosReclamantes: data?.reclamantes?.some(existePatrocinante),
-    existenLetradosReclamados: data?.reclamados?.some(existePatrocinante)
+    existenLetradosReclamados: data?.reclamados?.some(existePatrocinante),
   };
 }
 
@@ -38,7 +38,7 @@ function concatenatePartes(partes, esReclamado, cantidadReclamos) {
     const patrocinante = parte.patrocinante || {};
 
     s += nombre;
-    
+
     if (nroDocumento !== NO_ESPECIFICADO) {
       s += ` ${sintetico} ${nroDocumento}`;
     }
@@ -99,18 +99,21 @@ function concatenatePartes(partes, esReclamado, cantidadReclamos) {
   });
 
   return s;
-};
+}
 
 export function joinPartes(data, tipoIncomparecencia) {
   let reclamantes = [];
   let reclamados = [];
+  let filtro = () => {};
   if (tipoIncomparecencia === PRESENCIALES) {
-    reclamantes = data?.reclamantes?.filter((r) => r.incomparendoParte === false || r.incomparendoPatrocinante === false);
-    reclamados = data?.reclamados?.filter((r) => r.incomparendoParte === false || r.incomparendoPatrocinante === false);
+    filtro = (r) => r.incomparendoParte === false || (r.patrocinante && r.incomparendoPatrocinante === false);
   } else {
-    reclamantes = data?.reclamantes?.filter((r) => r.incomparendoParte === true && r.incomparendoPatrocinante === true);
-    reclamados = data?.reclamados?.filter((r) => r.incomparendoParte === true && r.incomparendoPatrocinante === true);
+    filtro = (r) =>
+      r.incomparendoParte === true &&
+      (!r.patrocinante || (r.patrocinante && (r.incomparendoPatrocinante ?? true) === true));
   }
+  reclamantes = data?.reclamantes?.filter(filtro);
+  reclamados = data?.reclamados?.filter(filtro);
 
   const partesReclamantes = concatenatePartes(reclamantes, false, data?.cantidad);
   const partesReclamados = concatenatePartes(reclamados, true, data?.cantidad);
@@ -128,4 +131,4 @@ export function joinPartes(data, tipoIncomparecencia) {
   }
 
   return partes;
-};
+}
