@@ -58,7 +58,6 @@ async function onResponseUseRejected(error) {
     
     originalRequest._retryCount += 1;
     originalRequest._delay = (originalRequest._delay < MAX_DELAY_MS)? originalRequest._delay * 2 : MAX_DELAY_MS;
-    console.log(originalRequest._delay)
     await wait(originalRequest._delay);
     setBackendDown(BACKEND_STATUS_ERROR);
 
