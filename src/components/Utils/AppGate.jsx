@@ -1,4 +1,4 @@
-import { BACKEND_STATUS_UP, BACKEND_STATUS_DOWN, BACKEND_STATUS_CHECKING, setBackendDown } from '../../stores/backendStatus';
+import { BACKEND_STATUS_UP, BACKEND_STATUS_DOWN, BACKEND_STATUS_CHECKING, setBackendDown } from '../../stores/backend-status';
 import { useBackendStatus } from '../../contexts/Constants';
 import WakeUpSpinner from './WakeUpSpinner';
 import { Health } from '../../api/endpoints/health';

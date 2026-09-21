@@ -1,11 +1,11 @@
 let googleCalendarConnected = false;
 let calendarListeners = new Set();
 
-export function getGoogleCalendarConnected() {
+export function getCalendarConnected() {
   return googleCalendarConnected;
 }
 
-export function setGoogleCalendarConnected(value) {
+export function setCalendarConnected(value) {
   googleCalendarConnected = value;
   calendarListeners.forEach((l) => l(googleCalendarConnected));
 }
