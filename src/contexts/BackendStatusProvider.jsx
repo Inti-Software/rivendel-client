@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { BackendStatusContext } from './Constants';
-import { getBackendDown, subscribeBackendStatus } from '../stores/backendStatus';
+import { getBackendDown, subscribeBackendStatus } from '../stores/backend-status';
 
 export function BackendStatusProvider({ children }) {
   const [isBackendDown, setIsBackendDown] = useState(getBackendDown());

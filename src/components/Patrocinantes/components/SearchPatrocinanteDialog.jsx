@@ -1,5 +1,5 @@
 import { Patrocinantes } from '../../../api/repositories/patrocinantes';
-import SearchDialogContainer from '../../Shared/SearchDialogContainer';
+import ModalSearchDialog from '../../SearchDialog/ModalSearchDialog';
 
 const COLUMNS = [
 	{ key: "nombre", label: "Nombre" },
@@ -8,7 +8,7 @@ const COLUMNS = [
 ];
 
 const SearchPatrocinanteDialog = ({ handleAccept, handleCancel }) => (
-	<SearchDialogContainer
+	<ModalSearchDialog
 		title="Patrocinantes"
 		placeholder="Nombre o Nro. de Matrícula"
 		columns={COLUMNS}

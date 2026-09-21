@@ -27,7 +27,6 @@ const NroWhatsappInput = ({ parte, esPatrocinante, esReclamante, onChange }) => 
 							placeholder="38541234567"
 							value={nroWhatsapp}
 							onChange={handleInputChange}
-							autoFocus
 				/>)}
 		</div>
 	)

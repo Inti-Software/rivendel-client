@@ -1,6 +1,6 @@
 import { Partes } from '../../../api/repositories/partes';
 import { getDomicilio } from "../../Patrocinantes/utils";
-import SearchDialogContainer from '../../Shared/SearchDialogContainer';
+import ModalSearchDialog from '../../SearchDialog/ModalSearchDialog';
 
 const template = (p, isSelected, selectRow) => (
 	<tr key={p.id} onClick={() => selectRow(p.id)} style={{ cursor: "pointer" }}>
@@ -46,7 +46,7 @@ const template = (p, isSelected, selectRow) => (
 );	
 
 const SearchParteDialog = ({ title, visible, handleAccept, handleCancel }) => (
-	<SearchDialogContainer
+	<ModalSearchDialog
 		title={title}
 		placeholder="Nombre o CUIL"
 		template={template}
