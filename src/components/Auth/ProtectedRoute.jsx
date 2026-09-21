@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
-import { getAuthenticated, subscribeAuthenticated } from '../../stores/authenticated.js';
-import { getAuthResolved, subscribeAuthResolved } from '../../stores/authState.js';
+import { getAuthenticated, subscribeAuthenticated } from '../../stores/auth-status.js';
+import { getAuthResolved, subscribeAuthResolved } from '../../stores/auth-resolution.js';
 import WakeUpSpinner from '../Utils/WakeUpSpinner.jsx';
 
 export default function ProtectedRoute() {

@@ -1,4 +1,4 @@
-import { setAuthenticated } from "../stores/authenticated";
+import { setAuthenticated } from "./auth-status";
 import { setUserName } from "../stores/userName";
 import { setGoogleCalendarConnected } from "../stores/googleCalendar";
 
