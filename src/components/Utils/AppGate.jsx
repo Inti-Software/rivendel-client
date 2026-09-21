@@ -26,7 +26,7 @@ export function AppGate({ children }) {
   }  
 
   if (isBackendDown !== BACKEND_STATUS_UP) {
-    return <WakeUpSpinner message="Iniciando el servidor, puede tardar unos segundos..." />;
+    return <WakeUpSpinner message="El servidor se está iniciando, puede tardar unos segundos." />;
   }
 
   return children;
