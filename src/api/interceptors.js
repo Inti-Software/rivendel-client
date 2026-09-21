@@ -1,6 +1,7 @@
 import { authHttp } from "./http.js";
 import { refresh } from "../auth/auth.api.js";
-import { getToken, clearAuthData, setAuthData } from "../stores/token.js";
+import { getToken } from "../stores/token.js";
+import { clearAuthData, setAuthData } from "../auth/auth.service.js";
 import { BACKEND_STATUS_DOWN, BACKEND_STATUS_UP, BACKEND_STATUS_ERROR, setBackendDown } from '../stores/backendStatus.js';
 
 let isRefreshing = false;
