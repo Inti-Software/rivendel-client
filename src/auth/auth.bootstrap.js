@@ -1,4 +1,4 @@
-import { refresh } from "./auth.api";
+import { refresh } from "../api/auth.repository";
 import { clearAuthData, setAuthData } from "../auth/auth.service";
 import { setAuthenticated } from '../stores/auth-status';
 import { setAuthResolved } from '../stores/auth-resolution';
