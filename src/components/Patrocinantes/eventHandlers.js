@@ -1,4 +1,4 @@
-import { Patrocinantes } from '../../api/endpoints/patrocinantes';
+import { Patrocinantes } from '../../api/repositories/patrocinantes';
 import { isNew } from '../Shared/utis.js';
 
 const validate = (state) => {

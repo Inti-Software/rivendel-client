@@ -1,12 +1,14 @@
 import { authHttp } from "./http.js";
-import { refresh } from "../auth/auth.api.js";
-import { getToken, clearAuthData, setAuthData } from "./tokenStore.js";
-import { BACKEND_STATUS_DOWN, BACKEND_STATUS_UP, BACKEND_STATUS_ERROR, setBackendDown } from './backendStatusStore.js';
+import { refresh } from "./auth.repository.js";
+import { getToken } from "../dtos/token.js";
+import { clearAuthData, setAuthData } from "../auth/auth.service.js";
+import { BACKEND_STATUS_DOWN, BACKEND_STATUS_UP, BACKEND_STATUS_ERROR, setBackendDown } from '../stores/backend-status.js';
 
 let isRefreshing = false;
 let failedQueue = [];
-const MAX_RETRIES = 3;
-const RETRY_DELAY_MS = 5000;
+const MAX_RETRIES = 10;
+const INITIAL_DELAY_MS = 1000;
+const MAX_DELAY_MS = 16000;
 
 const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -46,6 +48,7 @@ async function onResponseUseRejected(error) {
 
   if (isNetworkOrTimeoutError) {
     originalRequest._retryCount = originalRequest._retryCount || 0;
+    originalRequest._delay = originalRequest._delay || INITIAL_DELAY_MS;
     
     if (originalRequest._retryCount >= MAX_RETRIES) {
       setBackendDown(BACKEND_STATUS_DOWN);
@@ -54,7 +57,8 @@ async function onResponseUseRejected(error) {
     
     
     originalRequest._retryCount += 1;
-    await wait(RETRY_DELAY_MS);
+    originalRequest._delay = (originalRequest._delay < MAX_DELAY_MS)? originalRequest._delay * 2 : MAX_DELAY_MS;
+    await wait(originalRequest._delay);
     setBackendDown(BACKEND_STATUS_ERROR);
 
     return authHttp(originalRequest);

@@ -1,7 +1,7 @@
 import { useEffect, useReducer, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Users } from "../../../api/endpoints/users";
-import { getGoogleCalendarConnected, setGoogleCalendarConnected, subscribeCalendar } from "../../../auth/authState";
+import { Users } from "../../../api/repositories/users";
+import { getCalendarConnected, setCalendarConnected, subscribeCalendar } from "../../../stores/calendar";
 
 const initialState = {
   nombre: '',
@@ -53,7 +53,7 @@ function formReducer(state, action) {
     }
 
     case 'INITIAL_LOAD': {
-      setGoogleCalendarConnected(action.payload.googleCalendarConnected);
+      setCalendarConnected(action.payload.googleCalendarConnected);
       return {
         ...state,
         ...action.payload,
@@ -68,7 +68,7 @@ function formReducer(state, action) {
 export default function useForm() {
   const [state, dispatch] = useReducer(formReducer, initialState);
   const { id } = useParams();
-  const [connected, setConnected] = useState(getGoogleCalendarConnected());
+  const [connected, setConnected] = useState(getCalendarConnected());
 
   useEffect(() => {
     const fetchData = async () => {

@@ -1,4 +1,4 @@
-import { Partes } from "../../api/endpoints/partes";
+import { Partes } from "../../api/repositories/partes";
 import { isNew } from '../Shared/utis.js';
 
 const esEnteroValido = (s) => {

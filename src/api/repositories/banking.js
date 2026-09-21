@@ -1,6 +1,6 @@
-import HttpRepository from '../httpRepository';
+import BaseRepository from './base-repository';
 
-class BankingRepository extends HttpRepository {
+class BankingRepository extends BaseRepository {
   constructor() {
     super({});
   }

@@ -1,7 +1,7 @@
 import { useReducer, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Partes } from '../../../api/endpoints/partes';
-import { TiposDocumento } from '../../../api/endpoints/tiposDocumentos';
+import { Partes } from '../../../api/repositories/partes';
+import { TiposDocumento } from '../../../api/repositories/tipos-documentos';
 
 const initialState = {
   id: 0,

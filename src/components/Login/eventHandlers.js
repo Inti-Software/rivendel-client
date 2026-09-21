@@ -1,4 +1,4 @@
-import { login } from '../../auth/auth.api.js';
+import { login } from '../../api/auth.repository';
 
 export const handleLogin = (e, state, dispatch) => {
   e.preventDefault();

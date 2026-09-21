@@ -1,5 +1,5 @@
-import { Reclamos } from '../../api/endpoints/reclamos';
-import { Partes } from '../../api/endpoints/partes';
+import { Reclamos } from '../../api/repositories/reclamos';
+import { Partes } from '../../api/repositories/partes';
 import { validateReclamo } from './validators';
 import { mapFormToApi } from './mappers';
 

@@ -1,9 +1,9 @@
 import { useGoogleCalendar } from '../hooks/useGoogleCalendar';
-import { getGoogleCalendarConnected, subscribeCalendar } from '../../../auth/authState';
+import { getCalendarConnected, subscribeCalendar } from '../../../stores/calendar';
 import { useEffect, useState } from 'react';
 
 export function Button() {
-  const [connected, setConnected] = useState(getGoogleCalendarConnected());
+  const [connected, setConnected] = useState(getCalendarConnected());
   const { connect, disconnect, loading } = useGoogleCalendar();
 
   useEffect(() => {

@@ -1,5 +1,5 @@
 import { useEffect, useReducer } from 'react';
-import useDebounce from './useDebounce';
+import useDebounce from '../../Shared/hooks/useDebounce';
 
 const initialState = {
 	term: "",
@@ -35,10 +35,14 @@ function reducer(state, action) {
 const DEFAULT_MIN_LENGTH = 3;
 const DEFAULT_DEBOUNCE_MS = 300;
 
-export default function useSearchDialog(searchFn, options = {}) {
+export default function useSearchDialog(searchFn, defaultControl, options = {}) {
 	const { minTermLength = DEFAULT_MIN_LENGTH, debounceMs = DEFAULT_DEBOUNCE_MS } = options;
 	const [state, dispatch] = useReducer(reducer, initialState);
 	const debouncedTerm = useDebounce(state.term, debounceMs);
+
+	useEffect(() => {
+		defaultControl?.focus();
+	}, []);
 
 	const ejecutarBusqueda = (rawTerm) => {
 		const term = rawTerm.trim();
@@ -83,6 +87,6 @@ export default function useSearchDialog(searchFn, options = {}) {
 		setTerm,
 		selectRow,
 		// búsqueda manual (botón / Enter) usa el término actual, no el debounced
-		buscarAhora: () => ejecutarBusqueda(state.term)
+		buscar: () => ejecutarBusqueda(state.term)
 	};
 }

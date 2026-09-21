@@ -1,29 +1,11 @@
 import { useState, useEffect } from 'react';
-import { Health } from '../api/endpoints/health';
 import { BackendStatusContext } from './Constants';
-import { getBackendDown, subscribeBackendStatus } from '../api/backendStatusStore';
+import { getBackendDown, subscribeBackendStatus } from '../stores/backend-status';
 
 export function BackendStatusProvider({ children }) {
   const [isBackendDown, setIsBackendDown] = useState(getBackendDown());
-  //const isBackendDown = getBackendDown();
 
-  useEffect(() => {
-    setIsBackendDown(getBackendDown());
-    const unsubscribe = subscribeBackendStatus(setIsBackendDown);
-
-    const checkBackend = async () => {
-      try {
-        await Health.get();
-        setIsBackendDown(false);
-      } catch (err) {
-        setIsBackendDown(true);
-      }
-    };
-
-    checkBackend();
-
-    return unsubscribe;
-  }, []);
+  useEffect(() => subscribeBackendStatus(setIsBackendDown), []);
 
   return (
     <BackendStatusContext.Provider value={{ isBackendDown }}>

@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { setGoogleCalendarConnected } from '../../../auth/authState';
+import { setCalendarConnected } from '../../../stores/calendar';
 import Spinner from '../../Shared/Spinner';
 
 export function Callback() {
@@ -13,7 +13,7 @@ export function Callback() {
     const returnUrl = searchParams.get('returnUrl') ?? '/';
 
     if (status === 'connected') {
-      setGoogleCalendarConnected(true);
+      setCalendarConnected(true);
       toast.success('Google Calendar conectado correctamente');
     } else if (status === 'error') {
       toast.error('No se pudo conectar Google Calendar');

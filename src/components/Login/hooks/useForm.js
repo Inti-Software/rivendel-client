@@ -1,4 +1,5 @@
-import { setAuthData, getToken } from '../../../api/tokenStore.js';
+import { setAuthData } from '../../../auth/auth.service.js';
+import { getToken } from '../../../dtos/token.js';
 import { useReducer, useEffect } from "react";
 
 const initialState = {

@@ -1,4 +1,4 @@
-import { authHttp, publicHttp } from "../api/http";
+import { authHttp, publicHttp } from "./http";
 
 export async function login(email, password) {
   try {

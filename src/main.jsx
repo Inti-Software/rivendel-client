@@ -25,8 +25,8 @@ import { Callback as GoogleCalendarCallback } from './components/GoogleCalendar/
 import { BackendStatusProvider } from './contexts/BackendStatusProvider.jsx';
 import { AppGate } from './components/Utils/AppGate.jsx';
 
-await initializeAuth();
 setupInterceptors();
+initializeAuth();
 dayjs.locale('es');
 const root = createRoot(document.getElementById('root'));
 root.render(

@@ -1,6 +1,6 @@
-import HttpRepository from "../httpRepository";
+import BaseRepository from "./base-repository";
 
-export const Users = new HttpRepository({
+export const Users = new BaseRepository({
 	get: () => ({ method: "GET", url: `/users` }),
 	update: ({
 		nombre,

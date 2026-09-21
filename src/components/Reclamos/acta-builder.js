@@ -1,4 +1,4 @@
-import { Reclamos } from '../../api/endpoints/reclamos.js';
+import { Reclamos } from '../../api/repositories/reclamos.js';
 import ReportData from './DTOs/reportData.js';
 import { ACUERDO } from './tiposResoluciones.js';
 import { tiptapDocumentToPdfMake } from './tiptap-to-pdfmake.js';

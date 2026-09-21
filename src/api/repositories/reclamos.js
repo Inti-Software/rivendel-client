@@ -1,7 +1,7 @@
-import HttpRepository from "./../httpRepository";
 import { RECORDS_PER_PAGE } from "./../constants";
+import BaseRepository from "./base-repository";
 
-export const Reclamos = new HttpRepository({
+export const Reclamos = new BaseRepository({
 	get: (id) => ({ method: "get", url: `/reclamos/${id}` }),
 	findAll: ({ query, currentPage, recordsPerPage = RECORDS_PER_PAGE }) => ({
 		method: "get",

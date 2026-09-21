@@ -1,4 +1,4 @@
-import { Banking } from '../../api/endpoints/banking.js'
+import { Banking } from '../../api/repositories/banking.js'
 
 export function handleKeyDown(event) {
   if (event.key === 'Enter') handleSubmit(event);
