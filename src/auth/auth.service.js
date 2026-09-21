@@ -1,7 +1,7 @@
 import { setAuthenticated } from "../stores/auth-status";
-import { setUserName } from "../stores/userName";
+import { setUserName } from "../dtos/userName";
 import { setGoogleCalendarConnected } from "../stores/googleCalendar";
-import { setToken } from "../stores/token";
+import { setToken } from "../dtos/token";
 
 export function setAuthData(data) {
 	setToken(data.accessToken);

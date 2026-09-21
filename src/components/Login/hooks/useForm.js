@@ -1,5 +1,5 @@
 import { setAuthData } from '../../../auth/auth.service.js';
-import { getToken } from '../../../stores/token.js';
+import { getToken } from '../../../dtos/token.js';
 import { useReducer, useEffect } from "react";
 
 const initialState = {
