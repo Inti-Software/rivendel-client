@@ -3,6 +3,8 @@ let isAuthenticatedListeners = new Set();
 let userName = null;
 let googleCalendarConnected = false;
 let calendarListeners = new Set();
+let authResolved = false;
+let authResolvedListeners = new Set();
 
 export function getGoogleCalendarConnected() {
   return googleCalendarConnected;
@@ -38,4 +40,18 @@ export function getAuthenticated() {
 export function subscribe(listener) {
   isAuthenticatedListeners.add(listener);
   return () => isAuthenticatedListeners.delete(listener);
+}
+
+export function setAuthResolved(value) {
+  authResolved = value;
+  authResolvedListeners.forEach((l) => l(authResolved));
+}
+
+export function getAuthResolved() {
+  return authResolved;
+}
+
+export function subscribeAuthResolved(listener) {
+  authResolvedListeners.add(listener);
+  return () => authResolvedListeners.delete(listener);
 }

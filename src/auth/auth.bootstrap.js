@@ -1,6 +1,6 @@
 import { refresh } from "./auth.api";
 import { clearAuthData, setAuthData } from "../api/tokenStore";
-import { setAuthenticated } from './authState';
+import { setAuthenticated, setAuthResolved } from './authState';
 
 export async function initializeAuth() {
   try {
@@ -10,5 +10,7 @@ export async function initializeAuth() {
   } catch {
     clearAuthData();
     setAuthenticated(false);
+  } finally {
+    setAuthResolved(true);
   }
 }
