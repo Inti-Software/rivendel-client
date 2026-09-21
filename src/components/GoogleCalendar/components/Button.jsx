@@ -1,5 +1,5 @@
 import { useGoogleCalendar } from '../hooks/useGoogleCalendar';
-import { getGoogleCalendarConnected, subscribeCalendar } from '../../../auth/authState';
+import { getGoogleCalendarConnected, subscribeCalendar } from '../../../stores/authState';
 import { useEffect, useState } from 'react';
 
 export function Button() {

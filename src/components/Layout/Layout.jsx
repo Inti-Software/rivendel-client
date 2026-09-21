@@ -2,7 +2,7 @@ import "./layout.css";
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { logout } from "../../auth/auth.api";
-import { getUserName } from "../../auth/authState";
+import { getUserName } from "../../stores/authState";
 import { useNotification } from "../../contexts/Constants";
 import { DEAL, PERSON, BOXARROWLEFT } from "../Shared/Icons";
 import { useTourInicial } from "./hooks/useTourInicial";
