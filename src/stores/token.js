@@ -1,4 +1,4 @@
-import { setAuthenticated, setUserName } from "../stores/authState";
+import { setAuthenticated, setUserName } from "../stores/userName";
 import { setGoogleCalendarConnected } from "../stores/googleCalendar";
 
 let accessToken = null;

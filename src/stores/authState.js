@@ -1,16 +1,7 @@
 let isAuthenticated = false;
 let isAuthenticatedListeners = new Set();
-let userName = null;
 let authResolved = false;
 let authResolvedListeners = new Set();
-
-export function setUserName(name) {
-  userName = name;
-}
-
-export function getUserName() {
-  return userName;
-}
 
 export function setAuthenticated(value) {
   isAuthenticated = value;
