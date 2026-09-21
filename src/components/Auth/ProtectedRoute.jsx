@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
-import { getAuthenticated, getAuthResolved, subscribeAuthResolved, subscribe } from '../../stores/authState.js';
+import { getAuthenticated, subscribeAuthenticated } from '../../stores/authenticated.js';
+import { getAuthResolved, subscribeAuthResolved } from '../../stores/authState.js';
 import WakeUpSpinner from '../Utils/WakeUpSpinner.jsx';
 
 export default function ProtectedRoute() {
@@ -8,7 +9,7 @@ export default function ProtectedRoute() {
   const [resolved, setResolved] = useState(getAuthResolved());
 
   useEffect(() => {
-    const unsubscribeAuth = subscribe(setIsAuth);
+    const unsubscribeAuth = subscribeAuthenticated(setIsAuth);
     const unsubscribeResolved = subscribeAuthResolved(setResolved);
     return () => {
       unsubscribeAuth();
