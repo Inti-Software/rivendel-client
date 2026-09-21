@@ -1,4 +1,4 @@
-import { Users } from "../../api/endpoints/users";
+import { Users } from "../../api/repositories/users";
 
 const validate = (state) => {
   const errors = [];

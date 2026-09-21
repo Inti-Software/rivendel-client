@@ -1,6 +1,6 @@
-import { authHttp } from "./http";
+import { authHttp } from "../http";
 
-export default class HttpRepository {
+export default class BaseRepository {
   constructor(configuration) {
     this.config = configuration;
   }

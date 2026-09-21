@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { GoogleCalendar } from '../../../api/endpoints/google-calendar';
+import { GoogleCalendar } from '../../../api/repositories/google-calendar';
 import { setCalendarConnected } from '../../../stores/calendar';
 
 export function useGoogleCalendar() {

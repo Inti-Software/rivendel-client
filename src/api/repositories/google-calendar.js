@@ -1,6 +1,6 @@
-import HttpRepository from '../httpRepository';
+import BaseRepository from './base-repository';
 
-class GoogleCalendarRepository extends HttpRepository {
+class GoogleCalendarRepository extends BaseRepository {
   constructor() {
     super({});
   }

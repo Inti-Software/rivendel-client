@@ -1,6 +1,6 @@
 import { useEffect, useReducer, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Users } from "../../../api/endpoints/users";
+import { Users } from "../../../api/repositories/users";
 import { getCalendarConnected, setCalendarConnected, subscribeCalendar } from "../../../stores/calendar";
 
 const initialState = {

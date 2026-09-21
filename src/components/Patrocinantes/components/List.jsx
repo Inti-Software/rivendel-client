@@ -1,5 +1,5 @@
 import { DATA_COLUMN, BUTTON_COLUMN, EDIT_BUTTON, DELETE_BUTTON } from "../../Shared/constants.js";
-import { Patrocinantes } from "../../../api/endpoints/patrocinantes.js";
+import { Patrocinantes } from "../../../api/repositories/patrocinantes.js";
 import Grid from "../../Grid/Grid.jsx";
 import DeleteMessage from "../../Shared/DeleteMessage.jsx"
 import Container from "../../Shared/Container.jsx";

@@ -1,4 +1,4 @@
-import { Reclamos } from "../../../api/endpoints/reclamos.js";
+import { Reclamos } from "../../../api/repositories/reclamos.js";
 import { CUSTOM_COLUMN } from "../../Shared/constants.js";
 import Grid from "../../Grid/Grid.jsx";
 import ListCell from "../components/ListCell.jsx";

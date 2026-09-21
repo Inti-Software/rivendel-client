@@ -1,4 +1,4 @@
-import { Patrocinantes } from '../../../api/endpoints/patrocinantes';
+import { Patrocinantes } from '../../../api/repositories/patrocinantes';
 import SearchDialogContainer from '../../Shared/SearchDialogContainer';
 
 const COLUMNS = [

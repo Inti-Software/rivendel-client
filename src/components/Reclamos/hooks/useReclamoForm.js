@@ -1,6 +1,6 @@
 import { useReducer, useEffect } from "react";
 import { reducer, initialState } from "../reducer";
-import { Reclamos } from "../../../api/endpoints/reclamos";
+import { Reclamos } from "../../../api/repositories/reclamos";
 import { mapApiToForm } from "../mappers";
 import { POSTERGADO } from "../tiposResoluciones.js";
 

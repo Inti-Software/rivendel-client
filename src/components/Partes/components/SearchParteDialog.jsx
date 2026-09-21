@@ -1,4 +1,4 @@
-import { Partes } from '../../../api/endpoints/partes';
+import { Partes } from '../../../api/repositories/partes';
 import { getDomicilio } from "../../Patrocinantes/utils";
 import SearchDialogContainer from '../../Shared/SearchDialogContainer';
 

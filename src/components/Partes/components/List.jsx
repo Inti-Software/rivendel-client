@@ -1,4 +1,4 @@
-import { Partes } from "../../../api/endpoints/partes";
+import { Partes } from "../../../api/repositories/partes";
 import { CUSTOM_COLUMN } from "../../Shared/constants";
 import Grid from "../../Grid/Grid";
 import ListCell from "./ListCell.jsx";
