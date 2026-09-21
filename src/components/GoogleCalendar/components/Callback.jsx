@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { setGoogleCalendarConnected } from '../../../stores/authState';
+import { setGoogleCalendarConnected } from '../../../stores/googleCalendar';
 import Spinner from '../../Shared/Spinner';
 
 export function Callback() {

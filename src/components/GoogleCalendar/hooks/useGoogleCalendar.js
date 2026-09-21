@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { GoogleCalendar } from '../../../api/endpoints/google-calendar';
-import { setGoogleCalendarConnected } from '../../../stores/authState';
+import { setGoogleCalendarConnected } from '../../../stores/googleCalendar';
 
 export function useGoogleCalendar() {
   const [loading, setLoading] = useState(false);

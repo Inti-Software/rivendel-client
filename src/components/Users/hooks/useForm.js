@@ -1,7 +1,7 @@
 import { useEffect, useReducer, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Users } from "../../../api/endpoints/users";
-import { getGoogleCalendarConnected, setGoogleCalendarConnected, subscribeCalendar } from "../../../stores/authState";
+import { getGoogleCalendarConnected, setGoogleCalendarConnected, subscribeCalendar } from "../../../stores/googleCalendar";
 
 const initialState = {
   nombre: '',
