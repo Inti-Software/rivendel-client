@@ -15,14 +15,14 @@ const GridEditButton = ({path, style, className}) => {
 
 const GridDeleteButton = ({path, style, className, onDelete}) => {
 	return (
-		<a href={path || "/#"} 
+		<Link to={path || "/#"} 
 			title="Eliminar"
 			onClick={onDelete}
 			className={"btn btn-outline-danger btn-sm ms-2" + (className ? ` ${className}` : "")}
 			style={style || {}}
 			>
 			{DELETE}
-		</a>
+		</Link>
 	);
 }
 

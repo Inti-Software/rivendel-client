@@ -35,9 +35,13 @@ const parteBase = {
   patrocinante: null,
 };
 
+
 describe('<ListPartes />', () => {
+  const onDelete = vi.fn((e) => e.preventDefault());
+  
   beforeEach(() => {
     capturedProps = undefined;
+    vi.clearAllMocks();
   });
 
   it('renderiza el Grid con endpoint y config de búsqueda correctos', () => {
@@ -52,7 +56,7 @@ describe('<ListPartes />', () => {
   it('arma una columna CUSTOM_COLUMN con el contenido de ListCell', () => {
     renderList();
 
-    const row = capturedProps.columnBuilder({ data: parteBase, onDelete: vi.fn() });
+    const row = capturedProps.columnBuilder({ data: parteBase, onDelete });
 
     expect(row.key).toBe(3);
     expect(row.columns).toHaveLength(1);
@@ -63,7 +67,7 @@ describe('<ListPartes />', () => {
   it("muestra '- Sin patrocinante -' cuando la parte no tiene patrocinante asociado", () => {
     renderList();
 
-    const row = capturedProps.columnBuilder({ data: parteBase, onDelete: vi.fn() });
+    const row = capturedProps.columnBuilder({ data: parteBase, onDelete });
     render(<MemoryRouter>{row.columns[0].content}</MemoryRouter>);
 
     expect(screen.getByText('- Sin patrocinante -')).toBeInTheDocument();
@@ -81,7 +85,7 @@ describe('<ListPartes />', () => {
         localidad: '',
       },
     };
-    const row = capturedProps.columnBuilder({ data: parteConPatrocinante, onDelete: vi.fn() });
+    const row = capturedProps.columnBuilder({ data: parteConPatrocinante, onDelete });
     render(<MemoryRouter>{row.columns[0].content}</MemoryRouter>);
 
     expect(screen.getByText('MP-555')).toBeInTheDocument();
@@ -91,7 +95,6 @@ describe('<ListPartes />', () => {
   it('al hacer click en eliminar, llama a onDelete con el id correcto y el mensaje de confirmación', () => {
     renderList();
 
-    const onDelete = vi.fn();
     const row = capturedProps.columnBuilder({ data: parteBase, onDelete });
     render(<MemoryRouter>{row.columns[0].content}</MemoryRouter>);
 
@@ -111,7 +114,6 @@ describe('<ListPartes />', () => {
     renderList();
 
     const parteSinCuil = { ...parteBase, cuil: '0', nroDocumento: '0' };
-    const onDelete = vi.fn();
     const row = capturedProps.columnBuilder({ data: parteSinCuil, onDelete });
     const { unmount: unmountRow } = render(<MemoryRouter>{row.columns[0].content}</MemoryRouter>);
 
@@ -141,7 +143,7 @@ describe('<ListPartes />', () => {
     };
     const row = capturedProps.columnBuilder({
       data: parteConPatrocinanteSinDomicilio,
-      onDelete: vi.fn(),
+      onDelete,
     });
     render(<MemoryRouter>{row.columns[0].content}</MemoryRouter>);
 
@@ -162,7 +164,7 @@ describe('<ListPartes />', () => {
     };
     const row = capturedProps.columnBuilder({
       data: parteConPatrocinanteSinDomicilio,
-      onDelete: vi.fn(),
+      onDelete,
     });
     render(<MemoryRouter>{row.columns[0].content}</MemoryRouter>);
 
@@ -182,7 +184,7 @@ describe('<ListPartes />', () => {
     };
     const row = capturedProps.columnBuilder({
       data: parteConPatrocinanteSinDomicilio,
-      onDelete: vi.fn(),
+      onDelete,
     });
     render(<MemoryRouter>{row.columns[0].content}</MemoryRouter>);
 
