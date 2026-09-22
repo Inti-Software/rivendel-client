@@ -1,32 +1,27 @@
-const NroWhatsappInput = ({ parte, esPatrocinante, esReclamante, onChange }) => {
+import { handleChkComparecenciaChange, handleNroWhatsappChange } from '../eventHandlers.utils'
+
+const NroWhatsappInput = ({ parte, esPatrocinante, esReclamante, visible, onChange }) => {
+	if (!visible) return null;
+
 	const nroWhatsapp = esPatrocinante ? parte.nroWhatsappPatrocinante : parte.nroWhatsappParte;
-  const estaActivo = nroWhatsapp !== null && nroWhatsapp !== undefined;
-
-	function handleCheckboxChange(e) {
-		const checked = e.target.checked;
-		const nuevoValor = checked ? "" : null;
-		onChange(nuevoValor, parte.id, esPatrocinante, esReclamante);
-	}
-
-  const handleInputChange = (e) => {
-    onChange(e.target.value, parte.id, esPatrocinante, esReclamante);
-  };
+  const inputVisible = nroWhatsapp !== null && nroWhatsapp !== undefined;
+	const payload = { idParte: parte.id, esPatrocinante, esReclamante, onChange };
 
 	return (
 		<div className={(esPatrocinante ? "col-6" : "col-5") + " d-flex align-items-center gap-2 mb-1"}>
 			<label className="me-2">
 					<input 	type="checkbox" 
-									defaultChecked={estaActivo}
-									onChange={handleCheckboxChange} 
+									defaultChecked={inputVisible}
+									onChange={(e) => handleChkComparecenciaChange(e, payload)} 
 					/> &nbsp;{esPatrocinante ? "Patrocinio " : "Comparecencia "} Online
 			</label>
-			{estaActivo &&
+			{inputVisible &&
 			(<input	type="number" 
 							className="form-control-inline form-control-sm border-0" 
 							style={{ backgroundColor: "#fff", borderBottom: "1px solid #ced4da" }}
 							placeholder="38541234567"
 							value={nroWhatsapp}
-							onChange={handleInputChange}
+							onChange={(e) => handleNroWhatsappChange(e, payload)}
 				/>)}
 		</div>
 	)

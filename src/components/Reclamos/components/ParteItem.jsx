@@ -39,54 +39,50 @@ const ParteItem = ({p, esReclamante, state, setField}) => (
 					</div>
 				</div>
 				<div>
-					<span className="text-secondary d-flex border-bottom border-secondary-subtle mt-2 small fw-medium">Patrocinante</span>
-						{(p.patrocinante == null) ? (
-						<div className="row py-1">
-							<div className="col-11 text-center">
-								<span className="border rounded border-warning bg-warning-subtle m-auto p-1" 
-									style={{"fontSize": "0.75em"}}>No hay datos para mostrar.</span>
+					<span className="text-secondary d-flex border-bottom border-secondary-subtle mt-2 small fw-medium">
+						Patrocinante
+					</span>
+					{(p.patrocinante == null) ? (
+					<div className="row py-1">
+						<div className="col-11 text-center">
+							<span className="border rounded border-warning bg-warning-subtle m-auto p-1" 
+								style={{"fontSize": "0.75em"}}>Esta parte no tiene patrocinante</span>
+						</div>
+					</div>
+					):(
+					<>
+						<div className="row">
+							<div className="col-2">
+								<span className="fw-bold">Nº Matr.: </span> {p.patrocinante?.nroMatricula}
 							</div>
-							<div className="col-1 d-flex justify-content-end align-items-end">
-								<button className="btn btn-sm btn-outline-danger" title="Eliminar"
-									onClick={() => removeParte(p.id, esReclamante, state, setField)}>
-										{DELETE}
-								</button>
+							<div className="col-4">
+								<span className="fw-bold">Nombre: </span>{p.patrocinante?.nombre}
+							</div>
+							<div className="col-4">
+								<span className="fw-bold">Domicilio: </span> 
+								{getDomicilio(p.patrocinante)}
+							</div>
+							<div className="col d-flex align-items-start mt-1 justify-content-end" style={{ fontSize: "0.75em" }}>
+								<label className="me-2">
+									<input type="checkbox" defaultChecked={p.incomparendoPatrocinante} 
+										onChange={e => setFieldParte("incomparendoPatrocinante", e.target.value, p.id, null, esReclamante, state, setField) } /> Incomparendo
+								</label>
 							</div>
 						</div>
-						):(
-						<>
-							<div className="row">
-								<div className="col-2">
-									<span className="fw-bold">Nº Matr.: </span> {p.patrocinante?.nroMatricula}
-								</div>
-								<div className="col-4">
-									<span className="fw-bold">Nombre: </span>{p.patrocinante?.nombre}
-								</div>
-								<div className="col-4">
-									<span className="fw-bold">Domicilio: </span> 
-									{getDomicilio(p.patrocinante)}
-								</div>
-								<div className="col d-flex align-items-start mt-1 justify-content-end" style={{ fontSize: "0.75em" }}>
-									<label className="me-2">
-										<input type="checkbox" defaultChecked={p.incomparendoPatrocinante} 
-											onChange={e => setFieldParte("incomparendoPatrocinante", e.target.value, p.id, null, esReclamante, state, setField) } /> Incomparendo
-									</label>
-								</div>
-							</div>
-							<div className="row pt-2">
-								<NroWhatsappInput parte={p} esPatrocinante={false} esReclamante={esReclamante} 
-									onChange={(value, id) => setFieldParte("nroWhatsapp", value, id, false, esReclamante, state, setField)} />
-								<NroWhatsappInput parte={p} esPatrocinante={true} esReclamante={esReclamante} 
-									onChange={(value, id) => setFieldParte("nroWhatsapp", value, id, true, esReclamante, state, setField)} />
-								<div className="col-1 d-flex justify-content-end align-items-end">
-									<button className="btn btn-sm btn-outline-danger mb-1" title="Eliminar Parte"
-										onClick={() => removeParte(p.id, esReclamante, state, setField)}>
-											{DELETE}
-									</button>
-								</div>
-							</div>
-						</>
-						)}
+					</>
+					)}
+					<div className="row pt-2">
+						<NroWhatsappInput parte={p} esPatrocinante={false} esReclamante={esReclamante} visible={true}
+							onChange={(value, id) => setFieldParte("nroWhatsapp", value, id, false, esReclamante, state, setField)} />						
+						<NroWhatsappInput parte={p} esPatrocinante={true} esReclamante={esReclamante} visible={p.patrocinante??null !== null}
+							onChange={(value, id) => setFieldParte("nroWhatsapp", value, id, true, esReclamante, state, setField)} />
+						<div className="col d-flex justify-content-end align-items-end">
+							<button className="btn btn-sm btn-outline-danger mb-1" title="Eliminar Parte"
+								onClick={() => removeParte(p.id, esReclamante, state, setField)}>
+									{DELETE}
+							</button>
+						</div>
+					</div>
 				</div>
 			</div>
 		</td>

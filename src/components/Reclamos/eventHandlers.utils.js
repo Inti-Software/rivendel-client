@@ -18,9 +18,16 @@ export const handleOnChange = (e, setField) => {
   setField(e.target.id, v);
 };
 
-export const handleSubmit = async (e, isCreateOperation, state, setErrors, submitStart, 
-	submitSuccess, submitFail, navigate) => {
-
+export const handleSubmit = async (
+  e,
+  isCreateOperation,
+  state,
+  setErrors,
+  submitStart,
+  submitSuccess,
+  submitFail,
+  navigate,
+) => {
   e.preventDefault();
   const errors = validateReclamo(state);
   if (errors.length > 0) {
@@ -67,4 +74,14 @@ export const onAcceptSearchParte = (e, parte, state, hidePartesDialog, setField,
     getParte(parte.id, f, partes, setField, setErrors);
   }
   hidePartesDialog();
+};
+
+export function handleChkComparecenciaChange(e, payload) {
+  const checked = e.target.checked;
+  const nuevoValor = checked ? '' : null;
+  payload.onChange(nuevoValor, payload.idParte, payload.esPatrocinante, payload.esReclamante);
+}
+
+export const handleNroWhatsappChange = (e, payload) => {
+  payload.onChange(e.target.value, payload.idParte, payload.esPatrocinante, payload.esReclamante);
 };
