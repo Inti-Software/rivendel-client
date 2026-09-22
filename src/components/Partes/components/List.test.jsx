@@ -147,4 +147,45 @@ describe('<ListPartes />', () => {
 
     expect(screen.getByText(NO_ESPECIFICADO)).toBeInTheDocument();
   });
+
+  it("muestra 'NO_ESPECIFICADO, La Banda' cuando el patrocinante no tiene domicilio pero sí localidad", () => {
+    renderList();
+
+    const parteConPatrocinanteSinDomicilio = {
+      ...parteBase,
+      patrocinante: {
+        nroMatricula: 'MP-777',
+        nombre: 'Dra. Mengana',
+        domicilio: '',
+        localidad: 'La Banda',
+      },
+    };
+    const row = capturedProps.columnBuilder({
+      data: parteConPatrocinanteSinDomicilio,
+      onDelete: vi.fn(),
+    });
+    render(<MemoryRouter>{row.columns[0].content}</MemoryRouter>);
+
+    expect(screen.getByText(NO_ESPECIFICADO + ', La Banda')).toBeInTheDocument();
+  });
+
+  it("muestra sólo el domicilio cuando el patrocinante no tiene localidad", () => {
+    renderList();
+
+    const parteConPatrocinanteSinDomicilio = {
+      ...parteBase,
+      patrocinante: {
+        nroMatricula: 'MP-777',
+        domicilio: 'Calle Falsa 456',
+        localidad: '',
+      },
+    };
+    const row = capturedProps.columnBuilder({
+      data: parteConPatrocinanteSinDomicilio,
+      onDelete: vi.fn(),
+    });
+    render(<MemoryRouter>{row.columns[0].content}</MemoryRouter>);
+
+    expect(screen.getByText('Calle Falsa 456')).toBeInTheDocument();
+  });
 });
