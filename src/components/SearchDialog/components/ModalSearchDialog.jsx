@@ -1,7 +1,7 @@
 import { useRef } from 'react';
-import { SEARCH } from '../Shared/Icons';
-import useSearchDialog from './hooks/useSearchDialog';
-import { handleKeyDown } from './event-handlers';
+import { SEARCH } from '../../Shared/Icons';
+import useSearchDialog from '../hooks/useSearchDialog';
+import { handleKeyDown } from '../event-handlers';
 import Content from './Content';
 
 export default function ModalSearchDialog({
