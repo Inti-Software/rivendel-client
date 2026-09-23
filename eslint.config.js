@@ -15,6 +15,7 @@ export default [
       globals: {
         ...globals.browser,
         ...globals.es2020,
+        ...globals.node,
       },
       parserOptions: {
         ecmaFeatures: { jsx: true }, // Permite entender JSX
@@ -55,11 +56,14 @@ export default [
       }],
       'react/prop-types': 'off',
       'no-unreachable': 'error',
-      "react/jsx-key": "error"
     },
     settings: {
       react: { version: '19.2.0' }, // Detecta automáticamente tu versión de React
     },
+  },
+  {
+    files: ['src/components/Shared/Icons.jsx'],
+    rules: { 'react-refresh/only-export-components': 'off' },
   },
   prettierConfig, // Siempre al final para evitar conflictos
 ];

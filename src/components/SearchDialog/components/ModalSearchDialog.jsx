@@ -20,7 +20,7 @@ export default function ModalSearchDialog({
 	const inputRef = useRef(null);
 
 	const {term, data, selected, selectedId, done, error, loading,
-		setTerm, selectRow, buscar} = useSearchDialog(searchFn, inputRef.current, { minTermLength });
+		setTerm, selectRow, buscar} = useSearchDialog(searchFn, inputRef, { minTermLength });
 
 
 	const contentClassName = error

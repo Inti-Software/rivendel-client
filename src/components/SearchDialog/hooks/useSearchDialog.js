@@ -41,8 +41,8 @@ export default function useSearchDialog(searchFn, defaultControl, options = {}) 
 	const debouncedTerm = useDebounce(state.term, debounceMs);
 
 	useEffect(() => {
-		defaultControl?.focus();
-	}, []);
+		defaultControl?.current?.focus();
+	}, [defaultControl]);
 
 	const ejecutarBusqueda = (rawTerm) => {
 		const term = rawTerm.trim();

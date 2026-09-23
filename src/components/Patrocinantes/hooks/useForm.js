@@ -1,6 +1,6 @@
-import { useEffect, useReducer } from "react";
-import { useParams } from "react-router-dom";
-import { Patrocinantes } from "../../../api/repositories/patrocinantes";
+import { useEffect, useReducer } from 'react';
+import { useParams } from 'react-router-dom';
+import { Patrocinantes } from '../../../api/repositories/patrocinantes';
 
 const initialState = {
   id: 0,
@@ -65,33 +65,36 @@ function formReducer(state, action) {
 
 export default function useForm() {
   const [state, dispatch] = useReducer(formReducer, initialState);
-	const { id } = useParams();
+  const { id } = useParams();
 
-	useEffect(() => {
-		if (isNaN(id)) return;
+  useEffect(() => {
+    if (isNaN(id)) return;
 
-		try {
-			const fetchData = async () => {
-				const response = await Patrocinantes.get(id);
-				if (response.ok) {
-					const data = response.data;
-					dispatch({ type: "INITIAL_LOAD", payload: {
-						id: data.id,
-						nombre: data.nombre,
-						nroMatricula: data.nroMatricula,
-						domicilio: data.domicilio,
-						localidad: data.localidad,
-						nroCasillero: data.nroCasillero
-					}});
-				} else {					
-					dispatch({ type: "INITIAL_LOAD", payload: {} });
-				}
-			};
-			fetchData();
-		} catch (err) {
-			dispatch({ type: "INITIAL_LOAD", payload: {} });
-		}
-	}, [id]);
+    try {
+      const fetchData = async () => {
+        const response = await Patrocinantes.get(id);
+        if (response.ok) {
+          const data = response.data;
+          dispatch({
+            type: 'INITIAL_LOAD',
+            payload: {
+              id: data.id,
+              nombre: data.nombre,
+              nroMatricula: data.nroMatricula,
+              domicilio: data.domicilio,
+              localidad: data.localidad,
+              nroCasillero: data.nroCasillero,
+            },
+          });
+        } else {
+          dispatch({ type: 'INITIAL_LOAD', payload: {} });
+        }
+      };
+      fetchData();
+    } catch {
+      dispatch({ type: 'INITIAL_LOAD', payload: {} });
+    }
+  }, [id]);
 
   return { state, dispatch };
 }

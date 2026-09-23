@@ -74,7 +74,7 @@ const ParteItem = ({p, esReclamante, state, setField}) => (
 					<div className="row pt-2">
 						<NroWhatsappInput parte={p} esPatrocinante={false} esReclamante={esReclamante} visible={true}
 							onChange={(value, id) => setFieldParte("nroWhatsapp", value, id, false, esReclamante, state, setField)} />						
-						<NroWhatsappInput parte={p} esPatrocinante={true} esReclamante={esReclamante} visible={p.patrocinante??null !== null}
+						<NroWhatsappInput parte={p} esPatrocinante={true} esReclamante={esReclamante} visible={p.patrocinante != null}
 							onChange={(value, id) => setFieldParte("nroWhatsapp", value, id, true, esReclamante, state, setField)} />
 						<div className="col d-flex justify-content-end align-items-end">
 							<button className="btn btn-sm btn-outline-danger mb-1" title="Eliminar Parte"

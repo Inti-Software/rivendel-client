@@ -20,7 +20,7 @@ export function Callback() {
     }
 
     navigate(returnUrl, { replace: true });
-  }, []);
+  }, [navigate, searchParams]);
 
   return (
     <div className="text-center mt-5">

@@ -12,7 +12,7 @@ const PartesList = ({ state, esReclamante, setField, onAddParte }) => {
 					<div className="pt-2">
 						<span className="pe-2">{title}</span>							
 						<span>|</span>
-						<span className="p-2 rounded text-secondary" id="agregar-parte" onClick={(e) => onAddParte(esReclamante)}>
+						<span className="p-2 rounded text-secondary" id="agregar-parte" onClick={() => onAddParte(esReclamante)}>
 							{PLUSCIRCLE(12, 12)} Añadir
 						</span>
 					</div>

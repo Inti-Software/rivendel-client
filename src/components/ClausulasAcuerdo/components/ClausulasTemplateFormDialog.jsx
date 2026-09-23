@@ -6,9 +6,8 @@ import { handleKeyDown, onBlurAliasCuenta } from '../eventHandlers';
 const DatePicker = lazy(() => import('../../Reclamos/components/DatePicker.jsx'));
 
 export default function ClausulasTemplateFormDialog({ onAccept, onCancel, defaultValues, visible = true }) {
-  if (!visible) return null;
-
   const { state, dispatch } = useFormDialog(visible, onCancel, defaultValues);
+  if (!visible) return null;
   const bgControlCuenta = state.cuenta.loading? "bg-dark-subtle" : "";
 
   const setField = (e) => {
@@ -21,7 +20,7 @@ export default function ClausulasTemplateFormDialog({ onAccept, onCancel, defaul
     <div
       className="modal show modal-backdrop-50 d-flex align-items-center justify-content-center"
       tabIndex="-1"
-      onKeyDown={handleKeyDown}
+      onKeyDown={(e) => handleKeyDown(e, onAccept, onCancel)}
     >
       <div className="modal-dialog w-50" style={{ height: '70vh', minHeight: '50vh', maxWidth: '50vw' }}>
         <div className="modal-content h-100 w-100 d-flex flex-column">
@@ -156,7 +155,7 @@ export default function ClausulasTemplateFormDialog({ onAccept, onCancel, defaul
             </div>
           </div>
           <div className="modal-footer">
-            <button type="button" class="btn btn-light me-auto" onClick={(e) => onAccept(e, null)} >
+            <button type="button" className="btn btn-light me-auto" onClick={(e) => onAccept(e, null)} >
               Cargar plantilla vacía
             </button>
             <button

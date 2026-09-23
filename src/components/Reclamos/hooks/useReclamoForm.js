@@ -24,12 +24,9 @@ export default function useReclamoForm (id) {
 
 		const load = async () => {
 			const result = await Reclamos.get(id);
-			let payload = {};
-			if (result.ok) {
-				payload = mapApiToForm(result.data);
-			} else {
-				payload = { errors: [result.error] };
-			}
+			const payload = result.ok
+				? mapApiToForm(result.data)
+				: { errors: [result.error] };
 			initialLoad(payload);
 		};
 		load();

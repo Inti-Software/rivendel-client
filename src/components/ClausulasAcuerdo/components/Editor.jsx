@@ -6,15 +6,15 @@ import { fillTemplate } from '../editor.utils';
 
 export default function Editor({ initialContent, documentFields, onChange }) {
 
-  const { editor, showClausulasFieldsDialog, isBold, clausulasFields, setShowClausulasFieldsDialog, 
-    toggleBold, updateContent } = useEditor(initialContent, documentFields, onChange);
+  const { editor, showClausulasFieldsDialog, isBold, setShowClausulasFieldsDialog, 
+    toggleBold, updateContent } = useEditor(initialContent, onChange);
 
   return (
     <div className="rte-wrapper border border-1 bg-secondary-subtle rounded-2 border-dark p-1">
       <ClausulasTemplateFormDialog 
         onAccept={(e, state) => updateContent(fillTemplate(state))} 
         onCancel={() => updateContent(null) } 
-        defaultValues={clausulasFields} 
+        defaultValues={documentFields} 
         visible={showClausulasFieldsDialog} 
       />
       <div

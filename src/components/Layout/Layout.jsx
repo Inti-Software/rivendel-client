@@ -29,7 +29,7 @@ function Layout({ children }) {
     if (!getTourVisto()) {
       iniciarTour();
     }
-  }, []);
+  }, [getTourVisto, iniciarTour]);
 
   useState(() => {
     if (error) {
