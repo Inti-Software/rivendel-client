@@ -262,7 +262,7 @@ const newErrorDocument = (message) => ({
   ],
 });
 
-async function buildDocument(id) {
+export async function buildDocument(id) {
   const response = await Reclamos.get(id);
   let doc;
   if (!response.ok) {
