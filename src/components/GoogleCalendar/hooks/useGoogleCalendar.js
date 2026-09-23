@@ -7,20 +7,30 @@ export function useGoogleCalendar() {
 
   const connect = async () => {
     setLoading(true);
-    const response = await GoogleCalendar.authUrl();
-    if (response.ok) {
-      window.location.href = response.data.url;
+    try {
+      const response = await GoogleCalendar.authUrl();
+      if (response.ok) {
+        window.location.href = response.data.url;
+      }
+    } catch {
+      // La UI no necesita propagar errores de navegación o autorización.
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   const disconnect = async () => {
     setLoading(true);
-    const response = await GoogleCalendar.disconnect();
-    if (response.ok) {
-      setCalendarConnected(false);
+    try {
+      const response = await GoogleCalendar.disconnect();
+      if (response.ok) {
+        setCalendarConnected(false);
+      }
+    } catch {
+      // La UI conserva el estado de conexión si la desconexión falla.
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   return { connect, disconnect, loading };
