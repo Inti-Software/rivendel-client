@@ -48,18 +48,17 @@ export default [
       'object-property-newline': ['error', { 'allowAllPropertiesOnSameLine': true }],
 
       'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
-      'no-unused-vars': ['warn', { 'varsIgnorePattern': 'React' }],
+      "react/jsx-key": "error",
+      'no-unused-vars': ['error', {
+        varsIgnorePattern: '^(React|_)',
+        argsIgnorePattern: '^_',
+      }],
       'react/prop-types': 'off',
       'no-unreachable': 'error',
-      "@typescript-eslint/no-unused-vars": ["error", {
-        "argsIgnorePattern": "^_", // Ignora variables que comienzan con "_
-        "varsIgnorePattern": "^_", // Si quieres ignorar variables también, descomenta esta línea
-      }],
-      "unused-imports/no-unused-imports": "error",
       "react/jsx-key": "error"
     },
     settings: {
-      react: { version: 'detect' }, // Detecta automáticamente tu versión de React
+      react: { version: '19.2.0' }, // Detecta automáticamente tu versión de React
     },
   },
   prettierConfig, // Siempre al final para evitar conflictos
