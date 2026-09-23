@@ -1,5 +1,6 @@
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { useRef } from "react";
 import useSearchDialog from "./useSearchDialog.js";
 
 const HookHarness = ({ searchFn, options = {}, termToSet = "  ana  " }) => {
@@ -18,6 +19,13 @@ const HookHarness = ({ searchFn, options = {}, termToSet = "  ana  " }) => {
       <button onClick={() => state.selectRow(2)}>select</button>
     </div>
   );
+};
+
+const FocusHarness = ({ searchFn }) => {
+  const inputRef = useRef(null);
+  useSearchDialog(searchFn, inputRef);
+
+  return <input ref={inputRef} aria-label="búsqueda" />;
 };
 
 describe("useSearchDialog", () => {
@@ -43,6 +51,12 @@ describe("useSearchDialog", () => {
     await act(async () => vi.advanceTimersByTime(20));
 
     expect(searchFn).not.toHaveBeenCalled();
+  });
+
+  it("enfoca el control recibido después de montarse", () => {
+    render(<FocusHarness searchFn={vi.fn()} />);
+
+    expect(screen.getByRole("textbox", { name: "búsqueda" })).toHaveFocus();
   });
 
   it("busca automáticamente con debounce y permite seleccionar un resultado", async () => {
