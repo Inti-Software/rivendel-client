@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { authHttp } from "./http.js";
 import { refresh } from "./auth.repository.js";
 import { getToken } from "../dtos/token.js";
-import { clearAuthData, setAuthData } from "../auth/auth.service.js";
+import { setAuthData } from "../auth/auth.service.js";
 import {
   BACKEND_STATUS_DOWN,
   BACKEND_STATUS_ERROR,
@@ -31,13 +31,12 @@ vi.mock("../auth/auth.service.js", () => ({
 }));
 
 let requestFulfilled;
-let requestRejected;
 let responseFulfilled;
 let responseRejected;
 
 const loadInterceptors = () => {
   setupInterceptors();
-  [[requestFulfilled, requestRejected]] = authHttp.interceptors.request.use.mock.calls;
+  [[requestFulfilled]] = authHttp.interceptors.request.use.mock.calls;
   [[responseFulfilled, responseRejected]] = authHttp.interceptors.response.use.mock.calls;
 };
 

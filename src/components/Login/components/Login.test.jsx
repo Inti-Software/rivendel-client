@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import Login from "./Login.jsx";
 
 const dispatch = vi.fn();
@@ -24,6 +24,18 @@ vi.mock("../hooks/useForm.js", () => ({
 const renderLogin = () => render(<MemoryRouter><Login /></MemoryRouter>);
 
 describe("<Login />", () => {
+  beforeEach(() => {
+    Object.assign(hookState, {
+      email: "",
+      password: "",
+      showPassword: false,
+      error: "",
+      redirect: false,
+      loading: false,
+    });
+    dispatch.mockClear();
+  });
+
   it("renderiza el formulario de acceso", () => {
     renderLogin();
 
@@ -38,7 +50,6 @@ describe("<Login />", () => {
     renderLogin();
 
     expect(screen.getByText("Credenciales inválidas")).toHaveClass("alert-danger");
-    hookState.error = "";
   });
 
   it("despacha el cambio de visibilidad al pulsar el botón de contraseña", () => {
