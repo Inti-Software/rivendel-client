@@ -6,6 +6,7 @@ import { getUserName } from "../../dtos/userName";
 import { useNotification } from "../../contexts/Constants";
 import { DEAL, PERSON, BOXARROWLEFT } from "../Shared/Icons";
 import { useTourInicial } from "./hooks/useTourInicial";
+import { safeNavigate } from "../../utils/navigation.js";
 
 const NavLink = ({relativeUrl, text, id}) => {
   const location = useLocation()
@@ -48,7 +49,7 @@ function Layout({ children }) {
     e.preventDefault();
     try {
       await logout();
-      window.location.href = "/";
+      safeNavigate('/', { replace: true });
     } catch {
       setError(true);
     }

@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import ListReclamos from "./List.jsx";
@@ -49,6 +49,12 @@ const onDelete = vi.fn((e) => e.preventDefault());
 describe("<ListReclamos />", () => {
   beforeEach(() => {
     capturedProps = undefined;
+    vi.spyOn(window.history, "pushState").mockImplementation(() => {});
+    vi.spyOn(window.history, "replaceState").mockImplementation(() => {});
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
   });
 
   it("renderiza el Grid con el endpoint y la config de búsqueda correctos", () => {

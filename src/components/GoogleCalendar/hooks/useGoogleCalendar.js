@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { GoogleCalendar } from '../../../api/repositories/google-calendar';
 import { setCalendarConnected } from '../../../stores/calendar';
+import { safeNavigate } from '../../../utils/navigation.js';
 
 export function useGoogleCalendar() {
   const [loading, setLoading] = useState(false);
@@ -10,7 +11,7 @@ export function useGoogleCalendar() {
     try {
       const response = await GoogleCalendar.authUrl();
       if (response.ok) {
-        window.location.href = response.data.url;
+        safeNavigate(response.data.url);
       }
     } catch {
       // La UI no necesita propagar errores de navegación o autorización.

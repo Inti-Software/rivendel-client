@@ -25,6 +25,7 @@ const HookHarness = () => {
 
 describe("useForm (Login)", () => {
   beforeEach(() => {
+    vi.restoreAllMocks();
     setToken(null);
   });
 
