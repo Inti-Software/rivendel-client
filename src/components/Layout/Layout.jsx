@@ -1,5 +1,5 @@
 import "./layout.css";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { logout } from "../../api/auth.repository";
 import { getUserName } from "../../dtos/userName";
@@ -23,7 +23,6 @@ const NavLink = ({relativeUrl, text, id}) => {
 
 function Layout({ children }) {
   const { showError } = useNotification();
-  const [error, setError] = useState(false);
   const { iniciarTour, getTourVisto } = useTourInicial();
 
   useEffect(() => {
@@ -31,13 +30,6 @@ function Layout({ children }) {
       iniciarTour();
     }
   }, [getTourVisto, iniciarTour]);
-
-  useState(() => {
-    if (error) {
-      showError("Error al cerrar sesión. Intente nuevamente.");
-      setError(false);
-    }
-  }, [error, showError]);
 
   const items = [
     { relativeUrl: '/patrocinantes', text: 'Patrocinantes', id: 'patrocinantes' },
@@ -51,7 +43,7 @@ function Layout({ children }) {
       await logout();
       safeNavigate('/', { replace: true });
     } catch {
-      setError(true);
+      showError("Error al cerrar sesión. Intente nuevamente.");
     }
   };
 
