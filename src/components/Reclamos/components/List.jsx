@@ -1,8 +1,8 @@
 import { Reclamos } from "../../../api/repositories/reclamos.js";
 import { CUSTOM_COLUMN } from "../../Shared/constants.js";
-import Grid from "../../Grid/Grid.jsx";
+import Grid from "../../Grid/components/Grid.jsx";
 import ListCell from "../components/ListCell.jsx";
-import Container from "../../Shared/Container.jsx";
+import Container from "../../Shared/components/Container.jsx";
 
 const ListReclamos = () => {
 	const rowGenerator = ({ data, onDelete }) => {

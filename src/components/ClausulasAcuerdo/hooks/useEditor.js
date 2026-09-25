@@ -1,23 +1,10 @@
 import { useEditor as useTipTapEditor, useEditorState } from '@tiptap/react';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { EXTENSIONS, EMPTY_DOC, cleanPastedHTML } from '../editor.utils';
 
-export default function useEditor(initialContent, documentFields, onChange) {
+export default function useEditor(initialContent, onChange) {
   const [showClausulasFieldsDialog, setShowClausulasFieldsDialog] = useState(false);
 	
-  const [clausulasFields, setClausulasFields] = useState({
-    reclamado: '',
-    rubros: '',
-    reclamante: {
-      dni: 0,
-      nombre: '',
-    },
-  });
-
-  useEffect(() => {
-    setClausulasFields(documentFields);
-  }, [documentFields]);
-
   const editor = useTipTapEditor({
     extensions: EXTENSIONS,
     content: initialContent ?? EMPTY_DOC,
@@ -54,7 +41,6 @@ export default function useEditor(initialContent, documentFields, onChange) {
     editor,
     showClausulasFieldsDialog,
     isBold,
-    clausulasFields,
 		setShowClausulasFieldsDialog,
     toggleBold,
     updateContent

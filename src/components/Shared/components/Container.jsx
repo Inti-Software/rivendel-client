@@ -1,17 +1,14 @@
 import { Link } from "react-router-dom";
 import { FILEEARMARKPLUS } from "./Icons";
-import { useEffect, useState } from "react";
+import { useMemo } from "react";
 
 const Container = ({children, title = "", pathToNew}) => {
-	const [headerTitle, setHeaderTitle] = useState(title)
-
-	useEffect(() => {
-		let filteredTitle = title
-		if (!title) {
-			const t = document.title
-			filteredTitle = t.includes("|")? t.substring(0, t.indexOf("|")).trim() : t;			
-		}
-		setHeaderTitle(filteredTitle)
+	const headerTitle = useMemo(() => {
+		if (title) return title;
+		const pageTitle = document.title;
+		return pageTitle.includes("|")
+			? pageTitle.substring(0, pageTitle.indexOf("|")).trim()
+			: pageTitle;
 	}, [title])
 
 	return (

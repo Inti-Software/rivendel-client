@@ -3,6 +3,7 @@ import { refresh } from "./auth.repository.js";
 import { getToken } from "../dtos/token.js";
 import { clearAuthData, setAuthData } from "../auth/auth.service.js";
 import { BACKEND_STATUS_DOWN, BACKEND_STATUS_UP, BACKEND_STATUS_ERROR, setBackendDown } from '../stores/backend-status.js';
+import { safeNavigate } from '../utils/navigation.js';
 
 let isRefreshing = false;
 let failedQueue = [];
@@ -96,7 +97,7 @@ async function onResponseUseRejected(error) {
     } catch (err) {
       processQueue(err, null);
       clearAuthData();
-      window.location.href = "/";
+      safeNavigate('/', { replace: true });
       return Promise.reject(err);
     } finally {
       isRefreshing = false;

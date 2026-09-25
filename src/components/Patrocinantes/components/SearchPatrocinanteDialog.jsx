@@ -1,5 +1,5 @@
 import { Patrocinantes } from '../../../api/repositories/patrocinantes';
-import ModalSearchDialog from '../../SearchDialog/ModalSearchDialog';
+import ModalSearchDialog from '../../SearchDialog/components/ModalSearchDialog';
 
 const COLUMNS = [
 	{ key: "nombre", label: "Nombre" },

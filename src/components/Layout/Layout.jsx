@@ -1,11 +1,12 @@
 import "./layout.css";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { logout } from "../../api/auth.repository";
 import { getUserName } from "../../dtos/userName";
 import { useNotification } from "../../contexts/Constants";
-import { DEAL, PERSON, BOXARROWLEFT } from "../Shared/Icons";
+import { DEAL, PERSON, BOXARROWLEFT } from "../Shared/components/Icons.jsx";
 import { useTourInicial } from "./hooks/useTourInicial";
+import { safeNavigate } from "../../utils/navigation.js";
 
 const NavLink = ({relativeUrl, text, id}) => {
   const location = useLocation()
@@ -22,21 +23,13 @@ const NavLink = ({relativeUrl, text, id}) => {
 
 function Layout({ children }) {
   const { showError } = useNotification();
-  const [error, setError] = useState(false);
   const { iniciarTour, getTourVisto } = useTourInicial();
 
   useEffect(() => {
     if (!getTourVisto()) {
       iniciarTour();
     }
-  }, []);
-
-  useState(() => {
-    if (error) {
-      showError("Error al cerrar sesión. Intente nuevamente.");
-      setError(false);
-    }
-  }, [error, showError]);
+  }, [getTourVisto, iniciarTour]);
 
   const items = [
     { relativeUrl: '/patrocinantes', text: 'Patrocinantes', id: 'patrocinantes' },
@@ -48,9 +41,9 @@ function Layout({ children }) {
     e.preventDefault();
     try {
       await logout();
-      window.location.href = "/";
+      safeNavigate('/', { replace: true });
     } catch {
-      setError(true);
+      showError("Error al cerrar sesión. Intente nuevamente.");
     }
   };
 

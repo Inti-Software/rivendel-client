@@ -1,7 +1,7 @@
 import { useNavigate, Link } from "react-router-dom";
-import ValidationErrors from "../../Shared/ValidationErrors";
-import DataBindedSelect from "../../Forms/DataBindedSelect";
-import { DELETE, SEARCH } from "../../Shared/Icons";
+import ValidationErrors from "../../Shared/components/ValidationErrors";
+import DataBindedSelect from "../../Shared/components/DataBindedSelect.jsx";
+import { DELETE, SEARCH } from "../../Shared/components/Icons";
 import SearchPatrocinanteDialog from "../../Patrocinantes/components/SearchPatrocinanteDialog";
 import useForm from "../hooks/useForm";
 import { handleSubmit, onAcceptSearchPatrocinante } from '../eventHandlers.js';

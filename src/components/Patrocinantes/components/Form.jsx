@@ -1,4 +1,4 @@
-import ValidationErrors from "../../Shared/ValidationErrors";
+import ValidationErrors from "../../Shared/components/ValidationErrors";
 import { handleSubmit } from '../eventHandlers.js';
 import useForm from '../hooks/useForm.js';
 import { Link, useNavigate } from 'react-router-dom';

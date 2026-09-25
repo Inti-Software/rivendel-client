@@ -1,7 +1,7 @@
 import { useRef } from 'react';
-import { SEARCH } from '../Shared/Icons';
-import useSearchDialog from './hooks/useSearchDialog';
-import { handleKeyDown } from './event-handlers';
+import { SEARCH } from '../../Shared/components/Icons';
+import useSearchDialog from '../hooks/useSearchDialog';
+import { handleKeyDown } from '../event-handlers';
 import Content from './Content';
 
 export default function ModalSearchDialog({
@@ -20,7 +20,7 @@ export default function ModalSearchDialog({
 	const inputRef = useRef(null);
 
 	const {term, data, selected, selectedId, done, error, loading,
-		setTerm, selectRow, buscar} = useSearchDialog(searchFn, inputRef.current, { minTermLength });
+		setTerm, selectRow, buscar} = useSearchDialog(searchFn, inputRef, { minTermLength });
 
 
 	const contentClassName = error

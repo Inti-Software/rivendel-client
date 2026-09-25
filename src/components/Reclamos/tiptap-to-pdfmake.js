@@ -8,8 +8,8 @@
 //  - Negrita parcial dentro de una frase o palabra
 //  - Runs consecutivos con mismo estado de negrita (se fusionan)
 
-const PARAGRAPH_SPACING_PT = 10;
-const EMPTY_PARAGRAPH_HEIGHT_PT = 12;
+const _PARAGRAPH_SPACING_PT = 10;
+const _EMPTY_PARAGRAPH_HEIGHT_PT = 12;
 
 /**
  * Punto de entrada principal.

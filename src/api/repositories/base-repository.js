@@ -1,4 +1,5 @@
 import { authHttp } from "../http";
+import { RECORDS_PER_PAGE } from "../constants";
 
 export default class BaseRepository {
   constructor(configuration) {
@@ -27,7 +28,8 @@ export default class BaseRepository {
     }
 
     const totalRecords = result.data.totalRecords || 0;
-    const totalPages = Math.ceil(totalRecords / params.recordsPerPage);
+    const recordsPerPage = params.recordsPerPage || RECORDS_PER_PAGE;
+    const totalPages = Math.ceil(totalRecords / recordsPerPage);
 
     return { ...result, data: { data: result.data.data || result.data, totalPages } };
   }

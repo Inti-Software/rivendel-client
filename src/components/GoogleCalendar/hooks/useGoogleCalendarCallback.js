@@ -28,5 +28,5 @@ export function useGoogleCalendarCallback({ onSuccess, onError } = {}) {
         return prev;
       });
     }
-  }, []);
+  }, [onError, onSuccess, searchParams, setSearchParams]);
 }

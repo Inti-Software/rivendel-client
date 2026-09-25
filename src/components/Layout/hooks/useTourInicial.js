@@ -6,6 +6,10 @@ export function useTourInicial() {
   const TOUR_TAG = 'tour-v1';
   const driverRef = useRef(null);  
 
+  function setTourVisto(value) {
+    localStorage.setItem(TOUR_TAG, value);
+  }
+
   useEffect(() => {
     driverRef.current = driver({
       showProgress: true,
@@ -69,10 +73,6 @@ export function useTourInicial() {
 
   function getTourVisto() {
     return localStorage.getItem(TOUR_TAG);
-  }
-
-  function setTourVisto(value) {
-    localStorage.setItem(TOUR_TAG, value);
   }
 
   return { iniciarTour, getTourVisto };

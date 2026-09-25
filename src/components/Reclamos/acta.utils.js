@@ -102,18 +102,13 @@ function concatenatePartes(partes, esReclamado, cantidadReclamos) {
 }
 
 export function joinPartes(data, tipoIncomparecencia) {
-  let reclamantes = [];
-  let reclamados = [];
-  let filtro = () => {};
-  if (tipoIncomparecencia === PRESENCIALES) {
-    filtro = (r) => r.incomparendoParte === false || (r.patrocinante && r.incomparendoPatrocinante === false);
-  } else {
-    filtro = (r) =>
+  const filtro = tipoIncomparecencia === PRESENCIALES
+    ? (r) => r.incomparendoParte === false || (r.patrocinante && r.incomparendoPatrocinante === false)
+    : (r) =>
       r.incomparendoParte === true &&
       (!r.patrocinante || (r.patrocinante && (r.incomparendoPatrocinante ?? true) === true));
-  }
-  reclamantes = data?.reclamantes?.filter(filtro);
-  reclamados = data?.reclamados?.filter(filtro);
+  const reclamantes = data?.reclamantes?.filter(filtro);
+  const reclamados = data?.reclamados?.filter(filtro);
 
   const partesReclamantes = concatenatePartes(reclamantes, false, data?.cantidad);
   const partesReclamados = concatenatePartes(reclamados, true, data?.cantidad);

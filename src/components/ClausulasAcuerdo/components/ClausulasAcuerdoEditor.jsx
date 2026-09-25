@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react';
-import Spinner from "../../Shared/Spinner";
+import Spinner from "../../Shared/components/Spinner";
 
 const Editor = lazy(() => import('./Editor'));
 

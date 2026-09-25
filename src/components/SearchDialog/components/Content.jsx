@@ -1,6 +1,6 @@
-import TabularResults from './TabularResults';
-import TemplateResults from './TemplateResults';
-import DefaultTemplate from './DefaultTemplate';
+import TabularResults from '../components/TabularResults';
+import TemplateResults from '../components/TemplateResults';
+import DefaultTemplate from '../components/DefaultTemplate';
 
 export default function Content({ data, columns, template, emptyMessage, selectedId, selectRow, className, visible, error}) {
 	if (data.length > 0) {

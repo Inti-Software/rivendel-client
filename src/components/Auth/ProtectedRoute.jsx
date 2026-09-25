@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import { getAuthenticated, subscribeAuthenticated } from '../../stores/auth-status.js';
 import { getAuthResolved, subscribeAuthResolved } from '../../stores/auth-resolution.js';
-import WakeUpSpinner from '../Utils/WakeUpSpinner.jsx';
+import WakeUpSpinner from '../AppGate/WakeUpSpinner.jsx';
 
 export default function ProtectedRoute() {
   const [isAuth, setIsAuth] = useState(getAuthenticated());

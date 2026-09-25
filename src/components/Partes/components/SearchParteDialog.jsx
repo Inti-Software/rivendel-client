@@ -1,6 +1,6 @@
 import { Partes } from '../../../api/repositories/partes';
 import { getDomicilio } from "../../Patrocinantes/utils";
-import ModalSearchDialog from '../../SearchDialog/ModalSearchDialog';
+import ModalSearchDialog from '../../SearchDialog/components/ModalSearchDialog';
 
 const template = (p, isSelected, selectRow) => (
 	<tr key={p.id} onClick={() => selectRow(p.id)} style={{ cursor: "pointer" }}>

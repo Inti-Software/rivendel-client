@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { setCalendarConnected } from '../../../stores/calendar';
-import Spinner from '../../Shared/Spinner';
+import Spinner from '../../Shared/components/Spinner';
 
 export function Callback() {
   const [searchParams] = useSearchParams();
@@ -20,7 +20,7 @@ export function Callback() {
     }
 
     navigate(returnUrl, { replace: true });
-  }, []);
+  }, [navigate, searchParams]);
 
   return (
     <div className="text-center mt-5">

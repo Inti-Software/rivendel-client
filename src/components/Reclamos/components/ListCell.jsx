@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import { RECLAMANTE, RECLAMADO } from "../../Shared/constants.js";
-import DeleteMessage from "../../Shared/DeleteMessage.jsx"
-import { GridEditButton, GridDeleteButton, GridPrintButton } from "../../Grid/GridButtons.jsx";
+import DeleteMessage from "../../Shared/components/DeleteMessage.jsx"
+import { GridEditButton, GridDeleteButton, GridPrintButton } from "../../Grid/components/GridButtons.jsx";
 import { ANULADO, ACUERDO, FRACASO, getResolucionText, PENDIENTE, POSTERGADO } from "../tiposResoluciones.js";
 
 const getDeleteMessage = (rec) => {

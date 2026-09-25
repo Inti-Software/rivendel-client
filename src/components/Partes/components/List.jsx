@@ -1,8 +1,8 @@
 import { Partes } from "../../../api/repositories/partes";
 import { CUSTOM_COLUMN } from "../../Shared/constants";
-import Grid from "../../Grid/Grid";
+import Grid from "../../Grid/components/Grid";
 import ListCell from "./ListCell.jsx";
-import Container from "../../Shared/Container.jsx";
+import Container from "../../Shared/components/Container.jsx";
 
 const ListPartes = () => {
 	const rowGenerator = ({ data, onDelete }) => {

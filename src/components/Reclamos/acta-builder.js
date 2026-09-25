@@ -5,7 +5,7 @@ import { tiptapDocumentToPdfMake } from './tiptap-to-pdfmake.js';
 import { PRESENCIALES, INCOMPARENDOS, getComparecientes, joinPartes } from './acta.utils.js';
 
 const PARAGRAPH_SPACING_PT = 10;
-const EMPTY_PARAGRAPH_HEIGHT_PT = 12;
+const _EMPTY_PARAGRAPH_HEIGHT_PT = 12;
 const EMPTY_SIGN = ' ';
 
 const preTitulo = (data) => ({
@@ -262,7 +262,7 @@ const newErrorDocument = (message) => ({
   ],
 });
 
-async function buildDocument(id) {
+export async function buildDocument(id) {
   const response = await Reclamos.get(id);
   let doc;
   if (!response.ok) {

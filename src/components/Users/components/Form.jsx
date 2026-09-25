@@ -1,5 +1,5 @@
 import { useNavigate, Link } from "react-router-dom";
-import ValidationErrors from "../../Shared/ValidationErrors";
+import ValidationErrors from "../../Shared/components/ValidationErrors";
 import { Button } from "../../GoogleCalendar/components/Button";
 import useForm from "../hooks/useForm";
 import { handleSubmit } from '../eventHandlers.js';
