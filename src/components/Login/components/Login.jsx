@@ -1,4 +1,4 @@
-import { DEAL } from '../../Shared/Icons.jsx'
+import { DEAL } from '../../Shared/components/Icons.jsx'
 import { Navigate } from 'react-router-dom';
 import useForm from "../hooks/useForm.js";
 import { handleLogin } from '../eventHandlers.js';

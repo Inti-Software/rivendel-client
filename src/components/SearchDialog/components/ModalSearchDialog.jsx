@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { SEARCH } from '../../Shared/Icons';
+import { SEARCH } from '../../Shared/components/Icons';
 import useSearchDialog from '../hooks/useSearchDialog';
 import { handleKeyDown } from '../event-handlers';
 import Content from './Content';

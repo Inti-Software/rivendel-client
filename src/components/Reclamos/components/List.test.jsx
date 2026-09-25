@@ -10,7 +10,7 @@ import createActa from "../acta-builder.js";
 // Mockeamos Grid: List solo arma columnBuilder/props, la lógica de fetching/paginación
 // de Grid ya se prueba (o debería probarse) aparte.
 let capturedProps;
-vi.mock("../../Grid/Grid.jsx", () => ({
+vi.mock("../../Grid/components/Grid.jsx", () => ({
   default: (props) => {
     capturedProps = props;
     return <div data-testid="grid-mock" />;

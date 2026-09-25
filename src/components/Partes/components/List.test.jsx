@@ -9,7 +9,7 @@ import { NO_ESPECIFICADO } from '../../Shared/constants.js';
 // Igual que en el test de Patrocinantes: mockeamos Grid para no depender de su
 // fetching/paginación interna, y capturamos las props que List le pasa.
 let capturedProps;
-vi.mock('../../Grid/Grid', () => ({
+vi.mock('../../Grid/components/Grid', () => ({
   default: (props) => {
     capturedProps = props;
     return <div data-testid="grid-mock" />;

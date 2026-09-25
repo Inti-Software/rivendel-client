@@ -10,7 +10,7 @@ vi.mock("./Editor", () => ({
   ),
 }));
 
-vi.mock("../../Shared/Spinner", () => ({
+vi.mock("../../Shared/components/Spinner", () => ({
   default: () => <div data-testid="spinner">Cargando...</div>,
 }));
 

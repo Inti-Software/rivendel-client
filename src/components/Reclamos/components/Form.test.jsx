@@ -22,10 +22,11 @@ vi.mock("../../Partes/components/SearchParteDialog", () => ({
   default: ({ title, visible }) => (visible ? <div>{title}</div> : null),
 }));
 
-vi.mock("../../Forms/DataBindedSelect", () => ({
-  default: ({ data, selectedValue, setSelectedValue }) => (
+vi.mock("../../Shared/components/DataBindedSelect.jsx", () => ({
+  default: ({ data, selectedValue, setSelectedValue, id }) => (
     <select
-      data-testid="resolucion"
+      id={id ?? "resolucion"}
+      data-testid={id ?? "resolucion"}
       value={selectedValue ?? 0}
       onChange={(e) => setSelectedValue(e.target.value)}
     >
@@ -59,7 +60,7 @@ vi.mock("../../ClausulasAcuerdo/components/ClausulasAcuerdoEditor", () => ({
   default: ({ visible }) => (visible ? <div data-testid="clausulas-editor" /> : null),
 }));
 
-vi.mock("./DatePicker", () => ({
+vi.mock("../../Shared/components/DatePicker.jsx", () => ({
   default: ({ id, name, value, setField }) => (
     <input
       id={id}

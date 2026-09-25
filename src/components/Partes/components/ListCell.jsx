@@ -1,6 +1,6 @@
 import { NO_ESPECIFICADO } from "../../Shared/constants";
-import DeleteMessage from "../../Shared/DeleteMessage.jsx"
-import { GridEditButton, GridDeleteButton } from "../../Grid/GridButtons.jsx";
+import DeleteMessage from "../../Shared/components/DeleteMessage.jsx"
+import { GridEditButton, GridDeleteButton } from "../../Grid/components/GridButtons.jsx";
 
 const getDomicilio = (p) => {
 	let s = NO_ESPECIFICADO

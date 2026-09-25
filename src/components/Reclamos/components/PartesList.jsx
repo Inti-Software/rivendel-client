@@ -1,4 +1,4 @@
-import { PLUSCIRCLE } from "../../Shared/Icons";
+import { PLUSCIRCLE } from "../../Shared/components/Icons";
 import ParteItem from "./ParteItem";
 import { Fragment } from 'react';
 

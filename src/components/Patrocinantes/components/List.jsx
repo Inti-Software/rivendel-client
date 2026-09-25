@@ -1,8 +1,8 @@
 import { DATA_COLUMN, BUTTON_COLUMN, EDIT_BUTTON, DELETE_BUTTON } from "../../Shared/constants.js";
 import { Patrocinantes } from "../../../api/repositories/patrocinantes.js";
-import Grid from "../../Grid/Grid.jsx";
-import DeleteMessage from "../../Shared/DeleteMessage.jsx"
-import Container from "../../Shared/Container.jsx";
+import Grid from "../../Grid/components/Grid.jsx";
+import DeleteMessage from "../../Shared/components/DeleteMessage.jsx"
+import Container from "../../Shared/components/Container.jsx";
 
 export default function List() {
 	const headers = ["Nombre", "Matrícula", "Domicilio", "Localidad", "Casillero", ""];	

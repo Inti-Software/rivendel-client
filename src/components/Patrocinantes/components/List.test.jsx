@@ -10,7 +10,7 @@ import { Patrocinantes } from "../../../api/repositories/patrocinantes.js";
 // y que columnBuilder arma bien cada fila. Ese path debe coincidir EXACTO con el
 // specifier que usa List.jsx para importar Grid (asumiendo este test en la misma carpeta).
 let capturedProps;
-vi.mock("../../Grid/Grid.jsx", () => ({
+vi.mock("../../Grid/components/Grid.jsx", () => ({
   default: (props) => {
     capturedProps = props;
     return <div data-testid="grid-mock" />;

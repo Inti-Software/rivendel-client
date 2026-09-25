@@ -12,7 +12,7 @@ vi.mock("react-toastify", () => ({
   },
 }));
 
-vi.mock("../../Shared/Spinner", () => ({
+vi.mock("../../Shared/components/Spinner", () => ({
   default: ({ text }) => <span>{text}</span>,
 }));
 

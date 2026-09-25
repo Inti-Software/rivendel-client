@@ -1,8 +1,8 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { NotificationContext } from "../../contexts/Constants.jsx";
-import { BUTTON_COLUMN, DATA_COLUMN, DELETE_BUTTON, EDIT_BUTTON } from "../Shared/constants.js";
+import { NotificationContext } from "../../../contexts/Constants.jsx";
+import { BUTTON_COLUMN, DATA_COLUMN, DELETE_BUTTON, EDIT_BUTTON } from "../../Shared/constants.js";
 import Grid from "./Grid.jsx";
 
 const showSuccess = vi.fn();

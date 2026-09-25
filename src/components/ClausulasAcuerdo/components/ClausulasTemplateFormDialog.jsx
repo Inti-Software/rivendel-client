@@ -3,7 +3,7 @@ import { lazy } from 'react';
 import { formatCuil } from '../../Shared/utis.js';
 import { handleKeyDown, onBlurAliasCuenta } from '../eventHandlers';
 
-const DatePicker = lazy(() => import('../../Reclamos/components/DatePicker.jsx'));
+const DatePicker = lazy(() => import('../../Shared/components/DatePicker.jsx'));
 
 export default function ClausulasTemplateFormDialog({ onAccept, onCancel, defaultValues, visible = true }) {
   const { state, dispatch } = useFormDialog(visible, onCancel, defaultValues);

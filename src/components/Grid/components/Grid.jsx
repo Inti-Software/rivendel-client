@@ -1,14 +1,14 @@
 import { useState, useEffect } from "react";
-import { useNotification } from "../../contexts/Constants";
-import useDebounce from "../Shared/hooks/useDebounce";
+import { useNotification } from "../../../contexts/Constants";
+import useDebounce from "../../Shared/hooks/useDebounce";
 import { GridEditButton, GridDeleteButton } from "./GridButtons";
-import { SEARCH } from "../Shared/Icons";
-import DeleteDialog from "../Modals/DeleteDialog";
-import { DATA_COLUMN, BUTTON_COLUMN, CUSTOM_COLUMN, EDIT_BUTTON, DELETE_BUTTON } from "../Shared/constants";
-import { RECORDS_PER_PAGE } from "../../api/constants";
-import { useApi } from "./hooks/useApi";
+import { SEARCH } from "../../Shared/components/Icons";
+import DeleteDialog from "./DeleteDialog";
+import { DATA_COLUMN, BUTTON_COLUMN, CUSTOM_COLUMN, EDIT_BUTTON, DELETE_BUTTON } from "../../Shared/constants";
+import { RECORDS_PER_PAGE } from "../../../api/constants";
+import { useApi } from "../hooks/useApi";
 import { useLocation } from "react-router-dom";
-import Spinner from "../Shared/Spinner";
+import Spinner from "../../Shared/components/Spinner";
 
 const Grid = ({ columnBuilder, recordsPerPage = RECORDS_PER_PAGE, headers = [], 
   showSearchBar = false, searchPlaceHolder, endpoints, debug = false }) => {

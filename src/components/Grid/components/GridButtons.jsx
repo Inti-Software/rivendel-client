@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { DELETE, EDIT, PRINT } from "../Shared/Icons";
+import { DELETE, EDIT, PRINT } from "../../Shared/components/Icons";
 
 const GridEditButton = ({path, style, className}) => {
 	return (

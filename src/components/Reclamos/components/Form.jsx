@@ -1,18 +1,18 @@
 import { useNavigate, Link, useParams } from "react-router-dom";
 import SearchParteDialog from "../../Partes/components/SearchParteDialog";
-import DataBindedSelect from "../../Forms/DataBindedSelect";
-import ValidationErrors from "../../Shared/ValidationErrors";
+import DataBindedSelect from "../../Shared/components/DataBindedSelect.jsx";
+import ValidationErrors from "../../Shared/components/ValidationErrors";
 import { ACUERDO, POSTERGADO, RESOLUCIONES } from "../tiposResoluciones";
 import useReclamoForm from "../hooks/useReclamoForm";
 import PartesList from "./PartesList";
 import { handleOnChange, handleSubmit, onAcceptSearchParte } from '../eventHandlers.utils';
 import { ProximaAudienciaInput } from "./ProximaAudienciaInput";
 import { lazy, Suspense } from 'react';
-import Spinner from "../../Shared/Spinner";
+import Spinner from "../../Shared/components/Spinner";
 import { isNew } from '../../Shared/utis.js';
 import ClausulasAcuerdoEditor from "../../ClausulasAcuerdo/components/ClausulasAcuerdoEditor";
 
-const DatePicker = lazy(() => import('./DatePicker'));
+const DatePicker = lazy(() => import('../../Shared/components/DatePicker.jsx'));
 const HourPicker = lazy(() => import('./HourPicker'));
 
 export default function Form() {

@@ -1,3 +1,5 @@
+/* eslint-disable react-refresh/only-export-components */
+
 export const EDIT = (
   <svg
     xmlns="http://www.w3.org/2000/svg"

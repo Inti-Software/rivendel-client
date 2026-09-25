@@ -21,7 +21,7 @@ vi.mock("../hooks/useForm.js", () => ({
   }),
 }));
 
-vi.mock("../../Reclamos/components/DatePicker.jsx", () => ({
+vi.mock("../../Shared/components/DatePicker.jsx", () => ({
   default: () => <input aria-label="fecha picker" />,
 }));
 

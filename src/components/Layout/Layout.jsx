@@ -4,7 +4,7 @@ import { Link, useLocation } from "react-router-dom";
 import { logout } from "../../api/auth.repository";
 import { getUserName } from "../../dtos/userName";
 import { useNotification } from "../../contexts/Constants";
-import { DEAL, PERSON, BOXARROWLEFT } from "../Shared/Icons";
+import { DEAL, PERSON, BOXARROWLEFT } from "../Shared/components/Icons.jsx";
 import { useTourInicial } from "./hooks/useTourInicial";
 import { safeNavigate } from "../../utils/navigation.js";
 
